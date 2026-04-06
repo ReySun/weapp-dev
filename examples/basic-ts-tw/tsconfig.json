@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "module": "esnext",
+    "target": "ES2020",
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
+    "alwaysStrict": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strict": true,
+    "strictPropertyInitialization": true,
+    "moduleResolution": "bundler",
+    "lib": ["ES2020"],
+    "typeRoots": ["./typings"],
+    "paths": {
+      "@/*": ["srcx/*"],
+      "@wupo/domain/*": ["../../packages/domain/src/*"]
+    }
+  },
+  "include": ["./**/*.ts", "../../packages/domain/src/*"],
+  "exclude": ["node_modules"]
+}

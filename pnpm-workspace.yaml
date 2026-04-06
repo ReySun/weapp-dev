@@ -1,0 +1,23 @@
+packages:
+  - packages/*
+  - examples/*
+
+catalog:
+  "@types/lodash-es": ^4.17.12
+  fast-glob: ^3.3.3
+  less: ^4.6.4
+  lodash-es: ^4.17.23
+  rolldown: 1.0.0-rc.12
+  tsdown: ^0.21.7
+  vite: ^8.0.3
+  weapp-tailwindcss: "catalog:"
+
+onlyBuiltDependencies:
+  - "@swc/core"
+  - "@weapp-tailwindcss/merge"
+  - esbuild
+  - oxc-resolver
+  - rolldown
+  - weapp-tailwindcss
+
+shamefullyHoist: true

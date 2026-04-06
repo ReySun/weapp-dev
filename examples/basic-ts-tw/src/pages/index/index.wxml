@@ -1,0 +1,81 @@
+<!-- index.wxml -->
+<navigation-bar title="Weixin" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<scroll-view class="scrollarea px-[111rpx] mt-[222rpx] {{ userInfo.avatarUrl ? 'mx-[888px]' : 'mx-[999rpx]' }}" scroll-y type="list">
+  <!-- 页面模板文件 - 包含 Tailwind CSS 类名 -->
+  <view class="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-3">
+    <!-- 标题区域 -->
+    <view class="text-center mb-7 bg-bg">
+      <text class="text-4xl font-bold text-weapp-blue {{ message ? 'my-[32px]' : '' }}">
+        {{message}}
+      </text>
+      <view class="mt-2 text-sm text-gray-600">使用自定义 Vite 插件 + weapp-tailwindcss</view>
+    </view>
+    <!-- 计数器组件 -->
+    <view class="bg-white rounded-xl shadow-lg p-6 w-full max-w-sm">
+      <view class="text-center mb-4">
+        <text class="text-2xl font-semibold text-gray-800">计数器</text>
+      </view>
+      <view class="flex items-center justify-center mb-4">
+        <text class="text-4xl font-bold text-weapp-green">{{count}}</text>
+      </view>
+      <view class="flex space-x-3">
+        <button class="flex-1 bg-weapp-red text-white py-2 rounded-lg active_cscale-95 transition-transform" bindtap="decrement">
+          -1
+        </button>
+        <button class="flex-1 bg-weapp-green text-white py-2 rounded-lg active_cscale-95 transition-transform" bindtap="increment">
+          +1
+        </button>
+      </view>
+    </view>
+    <!-- 自定义样式示例 -->
+    <view class="mt-8">
+      <view class="text-center text-sm text-gray-500 mb-4">自定义样式示例</view>
+      <view class="grid grid-cols-2 gap-3">
+        <!-- 自定义尺寸 -->
+        <view class="w-[150rpx] h-[80rpx] bg-[#ff6b35] rounded flex items-center justify-center">
+          <text class="text-white text-[24rpx]">w-[150rpx]</text>
+        </view>
+        <!-- 自定义颜色 -->
+        <view class="w-[150rpx] h-[80rpx] bg-[#3498db] rounded flex items-center justify-center">
+          <text class="text-white text-[24rpx]">bg-[#3498db]</text>
+        </view>
+        <!-- 复杂自定义值 -->
+        <view class="col-span-2 p-[20rpx] border-[2rpx] border-dashed border-[#e74c3c] rounded">
+          <text class="text-[28rpx] text-[#2c3e50]">
+            p-[20rpx] border-[2rpx] border-[#e74c3c]
+          </text>
+        </view>
+      </view>
+    </view>
+    <!-- 响应式示例 -->
+    <view class="mt-8 w-full max-w-md">
+      <view class="bg-gradient-to-r from-[#667eea] to-[#764ba2] p-4 rounded-xl">
+        <text class="text-white text-center block">渐变背景 + 响应式宽度</text>
+      </view>
+    </view>
+  </view>
+  <view class="container">
+    <view class="userinfo">
+      <block wx:if="{{canIUseNicknameComp && !hasUserInfo}}">
+        <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+          <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
+        </button>
+        <view class="nickname-wrapper">
+          <text class="nickname-label">昵称</text>
+          <input type="nickname" class="nickname-input" placeholder="请输入昵称" bind:change="onInputChange" />
+        </view>
+      </block>
+      <block wx:elif="{{!hasUserInfo}}">
+        <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile">获取头像昵称</button>
+        <view wx:else>请使用2.10.4及以上版本基础库</view>
+      </block>
+      <block wx:else>
+        <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+      </block>
+    </view>
+    <view class="usermotto">
+      <text class="user-motto">{{motto}}</text>
+    </view>
+  </view>
+</scroll-view>

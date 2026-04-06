@@ -1,0 +1,56 @@
+{
+  "name": "weapp-dev",
+  "version": "1.0.0",
+  "description": "小程序原生开发增强工具",
+  "keywords": [
+    "miniprogram",
+    "rolldown",
+    "tsdown",
+    "vite",
+    "weapp",
+    "weapp-dev",
+    "原生小程序",
+    "微信/支付宝/头条小程序"
+  ],
+  "license": "MIT",
+  "author": "ReySun",
+  "bin": {
+    "wd": "bin/weapp-dev.js",
+    "weapp-dev": "bin/weapp-dev.js"
+  },
+  "type": "module",
+  "exports": {
+    "./config": {
+      "types": "./dist/config.d.mts",
+      "import": "./dist/config.mjs",
+      "require": "./dist/config.mjs"
+    },
+    "./cli": {
+      "types": "./dist/cli.d.mts",
+      "import": "./dist/cli.mjs",
+      "require": "./dist/cli.mjs"
+    }
+  },
+  "scripts": {
+    "dev": "tsdown --watch"
+  },
+  "dependencies": {
+    "vite": "catalog:"
+  },
+  "devDependencies": {
+    "@types/lodash-es": "catalog:",
+    "@weapp-core/escape": "^7.0.0",
+    "fast-glob": "catalog:",
+    "fs-extra": "^11.3.4",
+    "less": "catalog:",
+    "listr2": "^10.2.1",
+    "lodash-es": "catalog:",
+    "node-html-parser": "^7.1.0",
+    "ora": "^9.3.0",
+    "postcss-selector-parser": "^7.1.1",
+    "rolldown": "catalog:",
+    "terminate": "^2.8.0",
+    "tsdown": "catalog:"
+  },
+  "packageManager": "pnpm@10.24.0"
+}

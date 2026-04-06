@@ -1,0 +1,23 @@
+{
+  "name": "weapp-dev-monorepo",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "license": "MIT",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check"
+  },
+  "devDependencies": {
+    "@emnapi/core": "^1.9.1",
+    "@emnapi/runtime": "^1.9.1",
+    "oxfmt": "^0.43.0",
+    "oxlint": "^1.58.0"
+  },
+  "packageManager": "pnpm@10.24.0"
+}

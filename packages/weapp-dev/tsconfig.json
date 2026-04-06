@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    // "baseUrl": ".",
+    "types": [],
+    "target": "es2022",
+    "incremental": true,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "module": "es2022",
+    "moduleResolution": "bundler",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["./src/**/*"]
+}
