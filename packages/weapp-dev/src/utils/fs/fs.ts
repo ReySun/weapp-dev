@@ -1,7 +1,7 @@
+import type { Stats } from "node:fs";
 // https://github.com/rolldown/tsdown/blob/main/src/utils/fs.ts
 // MIT License
 import { access, cp, rm, stat } from "node:fs/promises";
-import type { Stats } from "node:fs";
 
 export function fsExists(path: string): Promise<boolean> {
   return access(path).then(

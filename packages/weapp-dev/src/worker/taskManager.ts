@@ -1,9 +1,10 @@
 import { fork, ChildProcess } from "node:child_process";
 import path from "node:path";
-import terminate from "terminate/promise";
-import { type WorkerTaskType, type WorkerTaskPayload, WorkerTaskEnum } from "./types";
-
 import { fileURLToPath } from "node:url";
+
+import terminate from "terminate/promise";
+
+import { type WorkerTaskType, type WorkerTaskPayload, WorkerTaskEnum } from "./types";
 
 // ESM 下获取 worker.js 路径
 const __filename = fileURLToPath(import.meta.url);

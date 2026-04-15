@@ -1,13 +1,15 @@
 import { readFileSync } from "node:fs";
-import { extractClassesFromWxss } from "./extractClassesFromWxss";
-import { setClassCache } from "./globalClassCache";
-import { taskManager } from "@/worker/taskManager";
-import { WorkerTaskEnum } from "@/worker/types";
+import path from "node:path";
+
+import { WeappDevContext } from "@/utils/context/initContext";
 import { wxssLogger } from "@/utils/logger";
 import { getAppWxssDistPath, getAppWxssSrcPath } from "@/weapp/wxss";
 import { getAllWxssSrcPaths } from "@/weapp/wxss";
-import path from "node:path";
-import { WeappDevContext } from "@/utils/context/initContext";
+import { taskManager } from "@/worker/taskManager";
+import { WorkerTaskEnum } from "@/worker/types";
+
+import { extractClassesFromWxss } from "./extractClassesFromWxss";
+import { setClassCache } from "./globalClassCache";
 
 /**
  * 编译 WXSS 文件
@@ -45,9 +47,7 @@ export async function compileAppWxss() {
 export async function compileAllWxss() {
   const styles = await getAllWxssSrcPaths();
 
-  await Promise.all(
-    styles.map(async (input) => await compileWxss(input, false)),
-  );
+  await Promise.all(styles.map(async (input) => await compileWxss(input, false)));
 
   try {
     const appWxss = await getAppWxssDistPath();

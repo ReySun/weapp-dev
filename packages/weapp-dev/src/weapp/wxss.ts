@@ -1,6 +1,8 @@
-import { getWeappFileFinalExtensions } from "./platform";
-import { WeappDevContext } from "@/utils/context/initContext";
 import FastGlob from "fast-glob";
+
+import { WeappDevContext } from "@/utils/context/initContext";
+
+import { getWeappFileFinalExtensions } from "./platform";
 
 export enum CssProcessorEnum {
   css = "css",

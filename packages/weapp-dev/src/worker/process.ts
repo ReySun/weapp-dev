@@ -1,5 +1,6 @@
-import { type WorkerTaskType, type WorkerTaskPayload, WorkerTaskEnum } from "./types";
 import { compileAllWxss } from "@/compiler/wxss/compileStyle";
+
+import { type WorkerTaskType, type WorkerTaskPayload, WorkerTaskEnum } from "./types";
 
 const taskMap: {
   [K in WorkerTaskType]: (payload: WorkerTaskPayload<K>) => Promise<void>;

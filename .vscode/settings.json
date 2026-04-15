@@ -4,5 +4,9 @@
   "editor.formatOnSaveMode": "file",
   "editor.codeActionsOnSave": {
     "source.fixAll.oxc": "always"
+  },
+  "oxc.fmt.configPath": "oxfmt.config.ts",
+  "[typescript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   }
 }

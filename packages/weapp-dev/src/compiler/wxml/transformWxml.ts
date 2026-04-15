@@ -1,17 +1,16 @@
-import FastGlob from "fast-glob";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { createContext } from "weapp-tailwindcss/core";
-import {
-  isWxmlFileChanged,
-  wxmlFileClassChangedInfo,
-  setWxmlCache,
-} from "./cache";
-import { isIncludeAllClassList } from "@/compiler/wxss/globalClassCache";
 import { dirname, basename } from "node:path";
+
+import FastGlob from "fast-glob";
+import { createContext } from "weapp-tailwindcss/core";
+
 import { compileAppWxss } from "@/compiler/wxss/compileStyle";
+import { isIncludeAllClassList } from "@/compiler/wxss/globalClassCache";
+import { WeappDevContext } from "@/utils/context/initContext";
 import { wxmlLogger } from "@/utils/logger";
 import { getAllWxmlGlobPattern } from "@/weapp/wxml";
-import { WeappDevContext } from "@/utils/context/initContext";
+
+import { isWxmlFileChanged, wxmlFileClassChangedInfo, setWxmlCache } from "./cache";
 
 /**
  * 转换所有 WXML 文件
@@ -71,10 +70,7 @@ export async function transformWxmlFile(
       // 增量构建，检查 css class 是否变更过
       if (isIncremental) {
         start = Date.now();
-        const { isChanged, classList, addedClass } = wxmlFileClassChangedInfo(
-          wxmlFile,
-          content,
-        );
+        const { isChanged, classList, addedClass } = wxmlFileClassChangedInfo(wxmlFile, content);
 
         // css class有变更过
         if (isChanged) {
@@ -92,10 +88,7 @@ export async function transformWxmlFile(
       // 转义 WXML tw class
       const transformed = await wxmlCtx.transformWxml(content);
       // 生成对应的 dist 文件路径
-      const distPath = wxmlFile.replace(
-        new RegExp(`/${srcRoot}/`),
-        `/${outDir}/`,
-      );
+      const distPath = wxmlFile.replace(new RegExp(`/${srcRoot}/`), `/${outDir}/`);
 
       // 创建目录
       const distDir = dirname(distPath);

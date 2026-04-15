@@ -1,7 +1,8 @@
 import { md5 } from "@/utils/md5";
-import { extractWxmlTwClasses } from "./extractWxmlTwClasses";
-import { isEqualSet } from "@/utils/set/isEqualSet";
 import { diffSetString } from "@/utils/set/diffSetString";
+import { isEqualSet } from "@/utils/set/isEqualSet";
+
+import { extractWxmlTwClasses } from "./extractWxmlTwClasses";
 
 interface IWxmlCache {
   fileMd5: string;

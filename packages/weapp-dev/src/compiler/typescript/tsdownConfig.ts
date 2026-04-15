@@ -1,9 +1,11 @@
-import { InlineConfig } from "tsdown";
 import fs from "node:fs";
 import path from "node:path";
-import { deleteDir } from "@/utils/fs/deleteDir";
+
+import { InlineConfig } from "tsdown";
 import type { Plugin } from "vite";
+
 import { WeappDevContext } from "@/utils/context/initContext";
+import { deleteDir } from "@/utils/fs/deleteDir";
 
 export const nodeModulesDir = `_virtual/deps`;
 
@@ -141,9 +143,7 @@ function rewritePnpmImport(): Plugin {
     enforce: "post",
     renderChunk(code, chunk) {
       // ✅ 判断是否包含 src 源码
-      const hasNodeModules = Object.keys(chunk.modules).some((id) =>
-        id.includes(`/node_modules/`),
-      );
+      const hasNodeModules = Object.keys(chunk.modules).some((id) => id.includes(`/node_modules/`));
 
       // ❌ 如果这个 chunk 完全来自 node_modules，不处理
       if (hasNodeModules) {
@@ -154,18 +154,12 @@ function rewritePnpmImport(): Plugin {
 
       // 删除空export {};
       if (chunk.isEntry) {
-        newCode = code.replace(
-          /\n?(\/\/#endregion\s*\n\s*)?export\s*{\s*};?/,
-          "",
-        );
+        newCode = code.replace(/\n?(\/\/#endregion\s*\n\s*)?export\s*{\s*};?/, "");
       }
 
       return {
         // 👇 替换pnpm虚拟路径
-        code: newCode.replace(
-          /node_modules\/\.pnpm\/[^/]+\/node_modules\//g,
-          `${nodeModulesDir}/`,
-        ),
+        code: newCode.replace(/node_modules\/\.pnpm\/[^/]+\/node_modules\//g, `${nodeModulesDir}/`),
         map: null,
       };
     },

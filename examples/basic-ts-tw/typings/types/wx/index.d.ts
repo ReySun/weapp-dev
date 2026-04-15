@@ -35,7 +35,9 @@ declare namespace WechatMiniprogram {
   interface AsyncMethodOptionLike {
     success?: (...args: any[]) => void;
   }
-  type PromisifySuccessResult<P, T extends AsyncMethodOptionLike> = P extends { success: any }
+  type PromisifySuccessResult<P, T extends AsyncMethodOptionLike> = P extends {
+    success: any;
+  }
     ? void
     : P extends { fail: any }
       ? void

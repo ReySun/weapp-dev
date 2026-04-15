@@ -2,6 +2,7 @@
 // 参考：https://github.com/vitest-dev/vitest/blob/main/packages/vitest/src/public/config.ts
 // 参考 https://github.com/weapp-vite/weapp-vite/blob/main/packages/weapp-vite/src/config.ts
 import type { ConfigEnv, UserConfig as ViteUserConfig } from "vite";
+
 import type { WeappDevConfig } from "./config/weappDevConfig";
 
 /**
@@ -11,25 +12,15 @@ export type UserConfig = ViteUserConfig & { weapp?: WeappDevConfig };
 
 export type UserConfigFnNoEnvPlain<T extends UserConfig = UserConfig> = () => T;
 
-export type UserConfigFnNoEnv<T extends UserConfig = UserConfig> = () =>
-  | T
-  | Promise<T>;
+export type UserConfigFnNoEnv<T extends UserConfig = UserConfig> = () => T | Promise<T>;
 
-export type UserConfigFnObjectPlain<T extends UserConfig = UserConfig> = (
-  env: ConfigEnv,
-) => T;
+export type UserConfigFnObjectPlain<T extends UserConfig = UserConfig> = (env: ConfigEnv) => T;
 
-export type UserConfigFnObject<T extends UserConfig = UserConfig> = (
-  env: ConfigEnv,
-) => T;
+export type UserConfigFnObject<T extends UserConfig = UserConfig> = (env: ConfigEnv) => T;
 
-export type UserConfigFnPromise<T extends UserConfig = UserConfig> = (
-  env: ConfigEnv,
-) => Promise<T>;
+export type UserConfigFnPromise<T extends UserConfig = UserConfig> = (env: ConfigEnv) => Promise<T>;
 
-export type UserConfigFn<T extends UserConfig = UserConfig> = (
-  env: ConfigEnv,
-) => T | Promise<T>;
+export type UserConfigFn<T extends UserConfig = UserConfig> = (env: ConfigEnv) => T | Promise<T>;
 
 type UserConfigLoose = UserConfig & Record<string, any>;
 
@@ -56,13 +47,9 @@ declare module "vite" {
  */
 export function defineConfig(config: UserConfig): UserConfig;
 export function defineConfig(config: Promise<UserConfig>): Promise<UserConfig>;
-export function defineConfig(
-  config: UserConfigFnNoEnvPlain,
-): UserConfigFnNoEnvPlain;
+export function defineConfig(config: UserConfigFnNoEnvPlain): UserConfigFnNoEnvPlain;
 export function defineConfig(config: UserConfigFnNoEnv): UserConfigFnNoEnv;
-export function defineConfig(
-  config: UserConfigFnObjectPlain,
-): UserConfigFnObjectPlain;
+export function defineConfig(config: UserConfigFnObjectPlain): UserConfigFnObjectPlain;
 export function defineConfig(config: UserConfigFnPromise): UserConfigFnPromise;
 export function defineConfig(config: UserConfigFn): UserConfigFn;
 export function defineConfig(config: UserConfigLoose): UserConfigLoose;

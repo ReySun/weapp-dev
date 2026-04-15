@@ -1,4 +1,5 @@
 import { InlineConfig } from "vite";
+
 import { getPreserveModulesOutput } from "./rolldownOutput";
 
 export function getDefaultViteConfig(input: string[]): InlineConfig {

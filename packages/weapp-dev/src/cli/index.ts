@@ -1,4 +1,5 @@
 import { cac } from "cac";
+
 import { registerServeCommand } from "./commands/serve";
 
 const cli = cac("weapp-dev");

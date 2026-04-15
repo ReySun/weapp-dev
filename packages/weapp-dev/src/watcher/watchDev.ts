@@ -1,21 +1,17 @@
-import { compileWxss } from "@/compiler/wxss/compileStyle";
-import { transformWxmlFile } from "@/compiler/wxml/transformWxml";
-import chokidar from "chokidar";
 import path, { resolve, basename } from "node:path";
+
+import chokidar from "chokidar";
+import { debounce } from "lodash-es";
+
 import { compileTs } from "@/compiler/typescript/compileTs";
+import { transformWxmlFile } from "@/compiler/wxml/transformWxml";
+import { compileWxss } from "@/compiler/wxss/compileStyle";
+import { WeappDevContext } from "@/utils/context/initContext";
+import { fsCopy, fsRemove, fsStat } from "@/utils/fs/fs";
+import { wxmlLogger, wxssLogger, tsLogger, copyLogger, deleteLogger } from "@/utils/logger";
+import { getWeappFileFinalExtensions } from "@/weapp/platform";
 import { getAllWxmlExts } from "@/weapp/wxml";
 import { WeappCssProcessorList } from "@/weapp/wxss";
-import { debounce } from "lodash-es";
-import { fsCopy, fsRemove, fsStat } from "@/utils/fs/fs";
-import { WeappDevContext } from "@/utils/context/initContext";
-import {
-  wxmlLogger,
-  wxssLogger,
-  tsLogger,
-  copyLogger,
-  deleteLogger,
-} from "@/utils/logger";
-import { getWeappFileFinalExtensions } from "@/weapp/platform";
 
 // 防抖函数映射，以文件路径+事件作为键
 const debounceHandlers = new Map<string, ReturnType<typeof debounce>>();
@@ -108,10 +104,7 @@ async function cleanDistFileOrDir(srcPath: string) {
   const distPath = srcPath
     .replace(new RegExp(`(/*)${srcRoot}/`), `$1${outDir}/`)
     .replace(/\.ts$/, ".js")
-    .replace(
-      new RegExp(`.(${WeappCssProcessorList.join("|")})$`),
-      `.${finalWxssExt}`,
-    );
+    .replace(new RegExp(`.(${WeappCssProcessorList.join("|")})$`), `.${finalWxssExt}`);
 
   const stat = await fsStat(distPath);
   if (!stat) return;

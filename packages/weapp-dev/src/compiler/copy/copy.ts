@@ -1,12 +1,14 @@
 // https://github.com/rolldown/tsdown/blob/main/src/features/copy.ts
 // MIT License
 import path from "node:path";
+
 import { glob, isDynamicPattern } from "tinyglobby";
-import { toArray } from "@/utils/array/toArray";
-import { Awaitable } from "@/utils/types";
+
 import { WeappDevConfig } from "@/config/weappDevConfig";
-import { copyLogger } from "@/utils/logger";
+import { toArray } from "@/utils/array/toArray";
 import { fsCopy } from "@/utils/fs/fs";
+import { copyLogger } from "@/utils/logger";
+import { Awaitable } from "@/utils/types";
 
 export interface CopyEntry {
   /**

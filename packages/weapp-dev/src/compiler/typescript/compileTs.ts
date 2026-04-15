@@ -1,7 +1,9 @@
-import { tsLogger } from "@/utils/logger";
 import { build } from "tsdown";
-import { getTsdownConfig } from "./tsdownConfig";
+
 import { WeappDevContext } from "@/utils/context/initContext";
+import { tsLogger } from "@/utils/logger";
+
+import { getTsdownConfig } from "./tsdownConfig";
 
 export async function compileTs(input: string) {
   const start = Date.now();

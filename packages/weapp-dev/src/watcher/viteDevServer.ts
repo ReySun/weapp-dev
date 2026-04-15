@@ -24,10 +24,7 @@ export async function createViteDevServer() {
         "!node_modules",
       ]),
     ),
-    plugins: [
-      UnifiedViteWeappTailwindcssPlugin(weappTwConfig),
-      writeFileToDisk(),
-    ],
+    plugins: [UnifiedViteWeappTailwindcssPlugin(weappTwConfig), writeFileToDisk()],
   });
   return await createServer(buildConfig);
 }
@@ -47,13 +44,10 @@ function writeFileToDisk(): Plugin {
 
       if (wxssExt) {
         // 转换src目录到dist目录
-        dist = replaceSrcToDist(
-          replaceFileExt(id, (await getWeappFileFinalExtensions()).wxss),
-          {
-            fromDir: srcRoot,
-            toDir: outDir,
-          },
-        );
+        dist = replaceSrcToDist(replaceFileExt(id, (await getWeappFileFinalExtensions()).wxss), {
+          fromDir: srcRoot,
+          toDir: outDir,
+        });
 
         // 需要转换tw class
         if (id.endsWith(`app.${wxssExt}`)) {

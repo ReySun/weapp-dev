@@ -1,15 +1,14 @@
+import { readFileSync } from "node:fs";
+import { writeFile } from "node:fs/promises";
+import { resolve } from "node:path";
+
+import { unescape, MappingChars2String } from "@weapp-core/escape";
+
 import { PKG_CACHE_DIR } from "@/constants/pkg";
 import { deleteDir } from "@/utils/fs/deleteDir";
 import { ensureFile } from "@/utils/fs/ensureFile";
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
-import { unescape, MappingChars2String } from "@weapp-core/escape";
-import { writeFile } from "node:fs/promises";
 
-export const GLOBAL_CLASSES_CACHE_FILE = resolve(
-  PKG_CACHE_DIR,
-  "global-classes.json",
-);
+export const GLOBAL_CLASSES_CACHE_FILE = resolve(PKG_CACHE_DIR, "global-classes.json");
 
 export const classCacheSet = new Set<string>();
 
@@ -38,10 +37,7 @@ export function setClassCache(className: string | string[] | Set<string>) {
   ensureCacheFile(GLOBAL_CLASSES_CACHE_FILE);
 
   // 优化设置这里的缓存时机
-  writeFile(
-    GLOBAL_CLASSES_CACHE_FILE,
-    JSON.stringify(Array.from(classCacheSet)),
-  );
+  writeFile(GLOBAL_CLASSES_CACHE_FILE, JSON.stringify(Array.from(classCacheSet)));
 }
 
 /**

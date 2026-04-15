@@ -1,13 +1,9 @@
-import { DefaultWeappDevConfig, WeappDevConfig } from "@/config/weappDevConfig";
-import { createViteDevServer } from "@/watcher/viteDevServer";
 import { merge } from "lodash-es";
+import { loadConfigFromFile, UserConfig as ViteUserConfig, ViteDevServer } from "vite";
 import { createContext } from "weapp-tailwindcss/core";
 
-import {
-  loadConfigFromFile,
-  UserConfig as ViteUserConfig,
-  ViteDevServer,
-} from "vite";
+import { DefaultWeappDevConfig, WeappDevConfig } from "@/config/weappDevConfig";
+import { createViteDevServer } from "@/watcher/viteDevServer";
 
 interface IWeappDevCtx {
   viteConfig?: ViteUserConfig;
@@ -32,16 +28,10 @@ export const initWeappDevContext = async () => {
   WeappDevContext.viteConfig = viteConfigFile?.config || {};
 
   // 合并 WeappDev 配置
-  WeappDevContext.config = merge(
-    {},
-    DefaultWeappDevConfig,
-    viteConfigFile?.config.weapp || {},
-  );
+  WeappDevContext.config = merge({}, DefaultWeappDevConfig, viteConfigFile?.config.weapp || {});
 
   // 初始化 weapp tailwindcss 上下文
-  WeappDevContext.weappTwCtx = createContext(
-    WeappDevContext.config.weappTwConfig,
-  );
+  WeappDevContext.weappTwCtx = createContext(WeappDevContext.config.weappTwConfig);
 
   // vite dev server实例
   WeappDevContext.viteDevServer = await createViteDevServer();

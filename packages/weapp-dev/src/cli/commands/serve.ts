@@ -1,14 +1,15 @@
+import { resolve } from "path";
+
 import type { CAC } from "cac";
 import { Listr } from "listr2";
 
-import { resolve } from "path";
+import { compileAllTs } from "@/compiler/typescript/compileTs";
 import { transformAllWxmlFiles } from "@/compiler/wxml/transformWxml";
 import { compileAllWxss } from "@/compiler/wxss/compileStyle";
-import { runTimeEnd } from "@/utils/runTimeEnd";
-import { deleteDir } from "@/utils/fs/deleteDir";
-import { watchDev } from "@/watcher/watchDev";
-import { compileAllTs } from "@/compiler/typescript/compileTs";
 import { initWeappDevContext } from "@/utils/context/initContext";
+import { deleteDir } from "@/utils/fs/deleteDir";
+import { runTimeEnd } from "@/utils/runTimeEnd";
+import { watchDev } from "@/watcher/watchDev";
 
 export function registerServeCommand(cli: CAC) {
   cli

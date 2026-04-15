@@ -4,9 +4,7 @@ export type RolldownOutput = NonNullable<
   NonNullable<InlineConfig["build"]>["rolldownOptions"]
 >["output"];
 
-export function getPreserveModulesOutput(
-  isProd: boolean = false,
-): RolldownOutput {
+export function getPreserveModulesOutput(isProd: boolean = false): RolldownOutput {
   return {
     ...(isProd
       ? {
