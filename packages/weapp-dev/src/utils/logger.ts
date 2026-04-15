@@ -32,3 +32,4 @@ export const wxssLogger = createLogger("WXSS");
 export const wxmlLogger = createLogger("WXML");
 export const tsLogger = createLogger("TS");
 export const copyLogger = createLogger("COPY");
+export const deleteLogger = createLogger("DELETE");

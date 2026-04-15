@@ -64,6 +64,9 @@ export function getWxmlFileCachedClassList(file: FilePath) {
 export function wxmlFileClassChangedInfo(file: FilePath, content: string) {
   const beforeClassList = getWxmlFileCachedClassList(file);
   const afterClassList = extractWxmlTwClasses(content);
+  console.log("beforeClassList", beforeClassList);
+  console.log("afterClassList", afterClassList);
+  console.log("addedClass", diffSetString(afterClassList, beforeClassList));
   return {
     isChanged: !isEqualSet(beforeClassList, afterClassList),
     classList: afterClassList,

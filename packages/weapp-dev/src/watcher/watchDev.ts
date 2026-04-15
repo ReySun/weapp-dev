@@ -1,62 +1,161 @@
 import { compileWxss } from "@/compiler/wxss/compileStyle";
 import { transformWxmlFile } from "@/compiler/wxml/transformWxml";
 import chokidar from "chokidar";
-import { resolve } from "node:path";
+import path, { resolve, basename } from "node:path";
 import { compileTs } from "@/compiler/typescript/compileTs";
 import { getAllWxmlExts } from "@/weapp/wxml";
 import { WeappCssProcessorList } from "@/weapp/wxss";
-// import { debounce } from "lodash-es";
-// import { Stats } from "node:fs";
+import { debounce } from "lodash-es";
+import { fsCopy, fsRemove, fsStat } from "@/utils/fs/fs";
+import { WeappDevContext } from "@/utils/context/initContext";
+import {
+  wxmlLogger,
+  wxssLogger,
+  tsLogger,
+  copyLogger,
+  deleteLogger,
+} from "@/utils/logger";
+import { getWeappFileFinalExtensions } from "@/weapp/platform";
 
-export function watchDev() {
-  console.log("开始监听...");
-  const watcher = chokidar.watch("src/**/*", {
+// 防抖函数映射，以文件路径+事件作为键
+const debounceHandlers = new Map<string, ReturnType<typeof debounce>>();
+
+// 获取或创建防抖处理函数
+function getDebounceHandler(path: string, event: string) {
+  const key = `${path}:${event}`;
+  if (!debounceHandlers.has(key)) {
+    debounceHandlers.set(
+      key,
+      debounce(
+        async () => {
+          try {
+            await handleFileEvent(path, event);
+          } catch (error) {
+            console.error(`处理文件事件失败 ${path}:`, error);
+          } finally {
+            // 处理完成后清理防抖函数，避免内存泄漏
+            debounceHandlers.delete(key);
+          }
+        },
+        200,
+        { leading: false, trailing: true },
+      ),
+    );
+  }
+  return debounceHandlers.get(key)!;
+}
+
+// 处理文件事件的核心函数
+async function handleFileEvent(path: string, event: string) {
+  const fileExt = path.split(".").pop();
+  const absolutePath = resolve(process.cwd(), path);
+  // console.log(`absolutePath: ${absolutePath}, event: ${event}`);
+
+  switch (event) {
+    case "change":
+    case "add":
+      // wxml系列
+      if (getAllWxmlExts().includes(fileExt)) {
+        wxmlLogger.info(`${event}: ${path}`);
+        await transformWxmlFile(absolutePath, true);
+      }
+      // wxss系列
+      else if (WeappCssProcessorList.includes(fileExt as any)) {
+        wxssLogger.info(`${event}: ${path}`);
+        await compileWxss(absolutePath);
+      }
+      // ts文件
+      else if (path.endsWith(".ts")) {
+        tsLogger.info(`${event}: ${path}`);
+        await compileTs(path);
+      }
+      // json文件
+      else if (path.endsWith(".json")) {
+        copyLogger.info(`${event}: ${path}`);
+        await copyFile(absolutePath);
+      }
+      // wxs文件
+      else if (path.endsWith(".wxs")) {
+        copyLogger.info(`${event}: ${path}`);
+        await copyFile(absolutePath);
+      }
+      break;
+
+    case "unlink":
+    case "unlinkDir":
+      deleteLogger.info(`${event}: ${path}`);
+      await cleanDistFileOrDir(path);
+      break;
+  }
+}
+
+// 复制JSON文件到dist目录
+async function copyFile(srcPath: string) {
+  const { config } = WeappDevContext;
+  const { srcRoot, outDir } = config;
+  const distPath = srcPath.replace(new RegExp(`/${srcRoot}/`), `/${outDir}/`);
+
+  await fsCopy(srcPath, distPath);
+  copyLogger.success(`${basename(srcPath)} 复制完成`);
+}
+
+// 清理dist目录中的对应文件
+async function cleanDistFileOrDir(srcPath: string) {
+  const { config } = WeappDevContext;
+  const finalWxssExt = (await getWeappFileFinalExtensions()).wxss;
+
+  const { srcRoot, outDir } = config;
+  const distPath = srcPath
+    .replace(new RegExp(`(/*)${srcRoot}/`), `$1${outDir}/`)
+    .replace(/\.ts$/, ".js")
+    .replace(
+      new RegExp(`.(${WeappCssProcessorList.join("|")})$`),
+      `.${finalWxssExt}`,
+    );
+
+  const stat = await fsStat(distPath);
+  if (!stat) return;
+
+  await fsRemove(distPath);
+  // console.log(`清理${stat.isFile() ? "文件" : "目录"} ${distPath}`);
+}
+
+export async function watchDev() {
+  const { config } = WeappDevContext;
+  console.log(path.resolve(`${config.srcRoot}/**/*`));
+  let isReady = false;
+  const watcher = chokidar.watch(path.resolve(`${config.srcRoot}/**/*`), {
     usePolling: false,
     awaitWriteFinish: {
       stabilityThreshold: 100,
-      // pollInterval: 50,
     },
   });
 
-  watcher.on("change", async (path) => {
-    console.log("change: ", path);
-    const fileExt = path.split(".").pop();
+  watcher.on("change", (path) => {
+    getDebounceHandler(path, "change")();
+  });
 
-    // wxml系列
-    if (getAllWxmlExts().includes(fileExt)) {
-      transformWxmlFile(resolve(process.cwd(), path), true);
-    }
-    // wxss系列
-    else if (WeappCssProcessorList.includes(fileExt as any)) {
-      compileWxss(resolve(process.cwd(), path));
-    }
-    // ts文件
-    else if (path.endsWith(".ts")) {
-      compileTs(path);
+  watcher.on("add", (path) => {
+    // 只在ready事件触发后处理add事件，避免初始化时的大量事件
+    if (isReady) {
+      getDebounceHandler(path, "add")();
     }
   });
 
-  watcher.on("add", async (_path) => {
-    // console.log("add: ", path);
+  watcher.on("unlink", (path) => {
+    getDebounceHandler(path, "unlink")();
   });
 
-  watcher.on("unlink", async (path) => {
-    console.log("unlink: ", path);
+  watcher.on("unlinkDir", (path) => {
+    getDebounceHandler(path, "unlinkDir")();
   });
 
-  watcher.on("unlinkDir", async (path) => {
-    console.log("unlinkDir: ", path);
+  watcher.on("error", (error) => {
+    console.error("监听错误:", error);
+  });
+
+  watcher.on("ready", () => {
+    isReady = true;
+    console.log("监听就绪");
   });
 }
-
-// const debounceWatch = debounce(
-//   (path: string, stats?: Stats) => {
-//     // transformWxmlFile(resolve(process.cwd(), path));
-//     console.log("debounce change: ", path);
-//     if (path.endsWith(".wxml")) {
-//       transformWxmlFile(resolve(process.cwd(), path));
-//     }
-//   },
-//   500,
-//   { leading: true, trailing: false },
-// );

@@ -32,7 +32,7 @@ export const WeappFinalFileExts: Record<
   tt: TtWeappFinalExtEnum,
 };
 
-export function getWeappFileFinalExtensions() {
+export async function getWeappFileFinalExtensions() {
   const { platform } = WeappDevContext.config;
   return WeappFinalFileExts[platform];
 }

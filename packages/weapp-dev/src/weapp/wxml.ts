@@ -5,17 +5,19 @@ import { WeappFinalFileExts } from "./platform";
  * 获取所有 WXML 文件 glob 模式
  * @returns
  */
-export const getAllWxmlGlobPattern = () => {
+export async function getAllWxmlGlobPattern() {
+  const { srcRoot } = WeappDevContext.config;
+
   const wxml = getAllWxmlExts();
 
-  return `${WeappDevContext.config.srcRoot}/**/*.{${wxml.join(",")}}`;
-};
+  return `${srcRoot}/**/*.{${wxml.join(",")}}`;
+}
 
 /**
  * 获取所有 WXML 文件扩展名
  * @returns
  */
-export const getAllWxmlExts = () => {
+export function getAllWxmlExts() {
   const wxml: string[] = [];
 
   for (const key in WeappFinalFileExts) {
@@ -26,4 +28,4 @@ export const getAllWxmlExts = () => {
   }
 
   return wxml;
-};
+}

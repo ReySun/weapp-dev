@@ -2,6 +2,7 @@ import { LogLevel } from "vite";
 import { CopyOptions, CopyOptionsFn } from "@/compiler/copy/copy";
 import { WeappCssProcessorKey } from "@/weapp/wxss";
 import { WeappPlatform } from "@/weapp/platform";
+import { createContext } from "weapp-tailwindcss/core";
 
 /**
  * WeappDev 开发配置
@@ -77,6 +78,8 @@ export interface WeappDevConfig {
    * ```
    */
   copy?: CopyOptions | CopyOptionsFn;
+
+  weappTwConfig?: Parameters<typeof createContext>[0];
 }
 
 export const DefaultWeappDevConfig: WeappDevConfig = {
@@ -87,4 +90,5 @@ export const DefaultWeappDevConfig: WeappDevConfig = {
   format: "esm",
   cssProcessor: "less",
   emptyOutDir: true,
+  weappTwConfig: {},
 };

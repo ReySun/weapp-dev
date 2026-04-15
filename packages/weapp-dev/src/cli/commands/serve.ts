@@ -8,10 +8,7 @@ import { runTimeEnd } from "@/utils/runTimeEnd";
 import { deleteDir } from "@/utils/fs/deleteDir";
 import { watchDev } from "@/watcher/watchDev";
 import { compileAllTs } from "@/compiler/typescript/compileTs";
-import {
-  initWeappDevContext,
-  WeappDevContext,
-} from "@/utils/context/initContext";
+import { initWeappDevContext } from "@/utils/context/initContext";
 
 export function registerServeCommand(cli: CAC) {
   cli
@@ -30,10 +27,9 @@ export function registerServeCommand(cli: CAC) {
     .option("--force", "force the optimizer to ignore the cache and re-bundle")
     .action(async (_root: string, _options) => {
       try {
-        // 初始化 WeappDev 上下文
-        await initWeappDevContext();
+        const { config } = await initWeappDevContext();
 
-        if (WeappDevContext.config.emptyOutDir) {
+        if (config.emptyOutDir) {
           deleteDir(resolve(process.cwd(), "dist"));
         }
 

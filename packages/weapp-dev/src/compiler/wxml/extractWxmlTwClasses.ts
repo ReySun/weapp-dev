@@ -1,6 +1,7 @@
 import { parse } from "node-html-parser";
 
-const isClassLike = (key: string) => key.toLowerCase().endsWith("class");
+const isClassLike = (key: string) =>
+  key.toLowerCase().endsWith("class") || key.toLowerCase().startsWith("class");
 
 export function extractWxmlTwClasses(wxml: string) {
   const root = parse(wxml, {

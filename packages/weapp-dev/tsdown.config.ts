@@ -13,6 +13,7 @@ export default defineConfig(() => {
     dts: true,
     minify: false,
     hash: false,
+    unbundle: false,
     deps: {
       skipNodeModulesBundle: true,
     },

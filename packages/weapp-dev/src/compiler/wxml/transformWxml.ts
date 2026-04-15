@@ -1,6 +1,5 @@
 import FastGlob from "fast-glob";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, basename } from "node:path";
 import { createContext } from "weapp-tailwindcss/core";
 import {
   isWxmlFileChanged,
@@ -8,6 +7,7 @@ import {
   setWxmlCache,
 } from "./cache";
 import { isIncludeAllClassList } from "@/compiler/wxss/globalClassCache";
+import { dirname, basename } from "node:path";
 import { compileAppWxss } from "@/compiler/wxss/compileStyle";
 import { wxmlLogger } from "@/utils/logger";
 import { getAllWxmlGlobPattern } from "@/weapp/wxml";
@@ -18,7 +18,9 @@ import { WeappDevContext } from "@/utils/context/initContext";
  * @param ctx
  */
 export async function transformAllWxmlFiles() {
-  const wxml = FastGlob.globSync(getAllWxmlGlobPattern(), { absolute: true });
+  const wxml = FastGlob.globSync(await getAllWxmlGlobPattern(), {
+    absolute: true,
+  });
 
   if (!wxml.length) {
     return;
@@ -26,6 +28,9 @@ export async function transformAllWxmlFiles() {
 
   await transformWxmlFile(wxml);
 }
+
+// 这个ctx只负责转换wxml的class
+let wxmlCtx: ReturnType<typeof createContext> = null;
 
 /**
  * 转换 WXML 文件
@@ -38,12 +43,19 @@ export async function transformWxmlFile(
 ) {
   const singleFile = typeof _wxmlList === "string";
   const wxmlList = singleFile ? [_wxmlList] : _wxmlList;
+  const { weappTwConfig, srcRoot, outDir } = WeappDevContext.config;
 
   if (!wxmlList || !wxmlList.length) {
     return;
   }
-
-  const ctx = createContext({ logLevel: "silent" });
+  if (!wxmlCtx) {
+    wxmlCtx = createContext({
+      ...weappTwConfig,
+      // 不需要cssEntries。加上cssEntries会导致wxml转换巨慢，影响开发体验。
+      // 这个ctx只负责转换wxml
+      cssEntries: [],
+    });
+  }
 
   for (const wxmlFile of wxmlList) {
     try {
@@ -78,11 +90,11 @@ export async function transformWxmlFile(
       }
 
       // 转义 WXML tw class
-      const transformed = await ctx.transformWxml(content);
+      const transformed = await wxmlCtx.transformWxml(content);
       // 生成对应的 dist 文件路径
       const distPath = wxmlFile.replace(
-        new RegExp(`/${WeappDevContext.config.srcRoot}/`),
-        `/${WeappDevContext.config.outDir}/`,
+        new RegExp(`/${srcRoot}/`),
+        `/${outDir}/`,
       );
 
       // 创建目录

@@ -20,16 +20,16 @@ export const WeappCssProcessorList = Object.values(CssProcessorEnum);
  * 获取 WXSS 文件最终路径
  * @returns
  */
-export const getAppWxssDistPath = () => {
+export const getAppWxssDistPath = async () => {
   const { outDir } = WeappDevContext.config;
-  return `${outDir}/app.${getWeappFileFinalExtensions().wxss}`;
+  return `${outDir}/app.${(await getWeappFileFinalExtensions()).wxss}`;
 };
 
 /**
  * 获取 WXSS 文件源路径
  * @returns
  */
-export const getAppWxssSrcPath = () => {
+export const getAppWxssSrcPath = async () => {
   const { cssProcessor, srcRoot } = WeappDevContext.config;
   return `${srcRoot}/app.${cssProcessor}`;
 };
@@ -38,9 +38,10 @@ export const getAppWxssSrcPath = () => {
  * 获取所有 WXSS 文件源路径
  * @returns
  */
-export const getAllWxssSrcPaths = () => {
+export const getAllWxssSrcPaths = async () => {
+  const { srcRoot } = WeappDevContext.config;
   const styles = FastGlob.globSync([
-    `${WeappDevContext.config.srcRoot}/**/*.{${WeappCssProcessorList.join(",")}}`,
+    `${srcRoot}/**/*.{${WeappCssProcessorList.join(",")}}`,
     "!node_modules",
   ]);
   return styles;
