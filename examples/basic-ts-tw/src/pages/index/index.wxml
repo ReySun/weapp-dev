@@ -1,6 +1,6 @@
 <!-- index.wxml -->
 <navigation-bar title="Weixin" back="{{false}}" color="black" background="#FFF"></navigation-bar>
-<scroll-view class="scrollarea px-[111rpx] mt-[222rpx] {{ userInfo.avatarUrl ? 'mx-[888px]' : 'mx-[999rpx]' }}" scroll-y type="list">
+<scroll-view  scroll-y type="list">
   <!-- 页面模板文件 - 包含 Tailwind CSS 类名 -->
   <view class="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-3">
     <!-- 标题区域 -->

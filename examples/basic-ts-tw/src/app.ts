@@ -1,3 +1,9 @@
+import { lodashFix } from "weapp-dev/lodashFix";
+lodashFix();
+import { cloneDeep } from "lodash-es";
+
+console.log(cloneDeep({}));
+
 // app.ts
 App<IAppOption>({
   globalData: {},

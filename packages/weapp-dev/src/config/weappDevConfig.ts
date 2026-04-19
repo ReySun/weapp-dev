@@ -89,6 +89,7 @@ export const DefaultWeappDevConfig: WeappDevConfig = {
   logLevel: "info",
   platform: "weapp",
   format: "esm",
+  cwd: process.cwd(),
   cssProcessor: "less",
   emptyOutDir: true,
   weappTwConfig: {},

@@ -1,12 +1,16 @@
+import { unlink } from "node:fs/promises";
 import path, { resolve, basename } from "node:path";
 
 import chokidar from "chokidar";
 import { debounce } from "lodash-es";
 
+import { copy } from "@/compiler/copy/copy";
+import { getMatchedCopyEntry } from "@/compiler/copy/copyAssets";
 import { compileTs } from "@/compiler/typescript/compileTs";
 import { transformWxmlFile } from "@/compiler/wxml/transformWxml";
 import { compileWxss } from "@/compiler/wxss/compileStyle";
 import { WeappDevContext } from "@/utils/context/initContext";
+import { deleteFile } from "@/utils/fs/deleteFile";
 import { fsCopy, fsRemove, fsStat } from "@/utils/fs/fs";
 import { wxmlLogger, wxssLogger, tsLogger, copyLogger, deleteLogger } from "@/utils/logger";
 import { getWeappFileFinalExtensions } from "@/weapp/platform";
@@ -47,22 +51,33 @@ async function handleFileEvent(path: string, event: string) {
   const absolutePath = resolve(process.cwd(), path);
   // console.log(`absolutePath: ${absolutePath}, event: ${event}`);
 
+  // 匹配需要copy的文件
+  const matchedCopyEntry = await getMatchedCopyEntry(absolutePath);
+
   switch (event) {
     case "change":
     case "add":
+      if (matchedCopyEntry) {
+        await copy({
+          copy: [matchedCopyEntry],
+        });
+        copyLogger.success(`${event}: ${path}`);
+        return;
+      }
+
       // wxml系列
       if (getAllWxmlExts().includes(fileExt)) {
-        wxmlLogger.info(`${event}: ${path}`);
+        // wxmlLogger.info(`${event}: ${path}`);
         await transformWxmlFile(absolutePath, true);
       }
       // wxss系列
       else if (WeappCssProcessorList.includes(fileExt as any)) {
-        wxssLogger.info(`${event}: ${path}`);
+        // wxssLogger.info(`${event}: ${path}`);
         await compileWxss(absolutePath);
       }
       // ts文件
       else if (path.endsWith(".ts")) {
-        tsLogger.info(`${event}: ${path}`);
+        // tsLogger.info(`${event}: ${path}`);
         await compileTs(path);
       }
       // json文件
@@ -78,9 +93,14 @@ async function handleFileEvent(path: string, event: string) {
       break;
 
     case "unlink":
-    case "unlinkDir":
+      // case "unlinkDir":
+      if (matchedCopyEntry) {
+        await cleanDistFileOrDirFromSrc(matchedCopyEntry.from);
+      } else {
+        await cleanDistFileOrDirFromSrc(path);
+      }
+
       deleteLogger.info(`${event}: ${path}`);
-      await cleanDistFileOrDir(path);
       break;
   }
 }
@@ -96,7 +116,7 @@ async function copyFile(srcPath: string) {
 }
 
 // 清理dist目录中的对应文件
-async function cleanDistFileOrDir(srcPath: string) {
+async function cleanDistFileOrDirFromSrc(srcPath: string) {
   const { config } = WeappDevContext;
   const finalWxssExt = (await getWeappFileFinalExtensions()).wxss;
 
@@ -115,7 +135,7 @@ async function cleanDistFileOrDir(srcPath: string) {
 
 export async function watchDev() {
   const { config } = WeappDevContext;
-  console.log(path.resolve(`${config.srcRoot}/**/*`));
+
   let isReady = false;
   const watcher = chokidar.watch(path.resolve(`${config.srcRoot}/**/*`), {
     usePolling: false,
@@ -139,9 +159,9 @@ export async function watchDev() {
     getDebounceHandler(path, "unlink")();
   });
 
-  watcher.on("unlinkDir", (path) => {
-    getDebounceHandler(path, "unlinkDir")();
-  });
+  // watcher.on("unlinkDir", (path) => {
+  //   getDebounceHandler(path, "unlinkDir")();
+  // });
 
   watcher.on("error", (error) => {
     console.error("监听错误:", error);
@@ -149,6 +169,6 @@ export async function watchDev() {
 
   watcher.on("ready", () => {
     isReady = true;
-    console.log("监听就绪");
+    console.log("监听就绪...");
   });
 }

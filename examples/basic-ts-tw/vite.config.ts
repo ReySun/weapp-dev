@@ -1,22 +1,24 @@
-import { normalizePath } from "vite";
-import { UnifiedViteWeappTailwindcssPlugin } from "weapp-tailwindcss/vite";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+
+import { normalizePath } from "vite";
 import { defineConfig } from "weapp-dev/config";
 
 export default defineConfig({
-  plugins: [
-    UnifiedViteWeappTailwindcssPlugin({
+  plugins: [],
+  weapp: {
+    copy: [{ from: "src/**/*.txt", to: "dist" }],
+    weappTwConfig: {
+      logLevel: "silent",
       rem2rpx: true,
+      customAttributes: {
+        "*": [/[a-z]+Class|[^-\s]+-class|className/],
+      },
       cssEntries: [
         // 你 @import "weapp-tailwindcss"; 那个文件绝对路径
         path.resolve(import.meta.dirname, "./src/app.less"),
       ],
-      logLevel: "silent",
-    }),
-  ],
-  weapp: {
-    copy: [{ from: "src/app.json" }],
+    },
   },
   css: {
     preprocessorOptions: {
@@ -36,9 +38,7 @@ export default defineConfig({
     alias: [
       {
         find: "@",
-        replacement: normalizePath(
-          fileURLToPath(new URL("./srcx", import.meta.url)),
-        ),
+        replacement: normalizePath(fileURLToPath(new URL("./srcx", import.meta.url))),
       },
     ],
   },

@@ -3,7 +3,10 @@
   "miniprogramRoot": "dist/",
   "compileType": "miniprogram",
   "setting": {
-    "useCompilerPlugins": ["typescript", "less"],
+    "useCompilerPlugins": [
+      "typescript",
+      "less"
+    ],
     "babelSetting": {
       "ignore": [],
       "disablePlugins": [],
@@ -11,14 +14,14 @@
     },
     "coverView": false,
     "postcss": false,
-    "minified": false,
-    "enhance": false,
+    "minified": true,
+    "enhance": true,
     "showShadowRootInWxmlPanel": false,
     "packNpmRelationList": [],
     "ignoreUploadUnusedFiles": true,
     "compileHotReLoad": false,
     "skylineRenderEnable": true,
-    "es6": false,
+    "es6": true,
     "compileWorklet": false,
     "uglifyFileName": false,
     "uploadWithSourceMap": true,
@@ -27,8 +30,8 @@
     "minifyWXML": true,
     "localPlugins": false,
     "condition": false,
-    "swc": false,
-    "disableSWC": true,
+    "swc": true,
+    "disableSWC": false,
     "disableUseStrict": false
   },
   "simulatorType": "wechat",

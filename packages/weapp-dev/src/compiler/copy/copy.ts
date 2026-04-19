@@ -42,6 +42,9 @@ export type CopyOptionsFn = (options: WeappDevConfig) => Awaitable<CopyOptions>;
 type ResolvedCopyEntry = CopyEntry & { from: string; to: string };
 
 export async function copy(options: WeappDevConfig): Promise<void> {
+  if (!options.cwd) {
+    options.cwd = process.cwd();
+  }
   if (!options.copy) return;
 
   const resolved = await resolveCopyEntries(options);
@@ -61,6 +64,10 @@ export async function copy(options: WeappDevConfig): Promise<void> {
 }
 
 export async function resolveCopyEntries(options: WeappDevConfig): Promise<ResolvedCopyEntry[]> {
+  if (!options.cwd) {
+    options.cwd = process.cwd();
+  }
+
   const copy = toArray(
     typeof options.copy === "function" ? await options.copy(options) : options.copy,
   );
@@ -91,7 +98,7 @@ export async function resolveCopyEntries(options: WeappDevConfig): Promise<Resol
   ).flat();
 
   if (!resolved.length) {
-    copyLogger.warn(`No files matched for copying.`);
+    // copyLogger.warn(`No files matched for copying.`);
   }
 
   return resolved;

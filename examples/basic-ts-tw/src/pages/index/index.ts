@@ -1,5 +1,6 @@
 // index.ts
-
+// import a from "../../assets/tabbar_mine_active.png";
+// console.log(a);
 // 获取应用实例
 const app = getApp<IAppOption>();
 const defaultAvatarUrl =
@@ -7,6 +8,7 @@ const defaultAvatarUrl =
 Component({
   data: {
     motto: "Hello World",
+    // a,
     userInfo: {
       avatarUrl: defaultAvatarUrl,
       nickName: "",
