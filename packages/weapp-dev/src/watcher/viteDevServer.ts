@@ -12,7 +12,7 @@ import { replaceSrcToDist } from "@/utils/string/replaceSrcToDist";
 import { getWeappFileFinalExtensions } from "@/weapp/platform";
 import { getAllWxssSrcPaths, WeappCssProcessorList } from "@/weapp/wxss";
 
-export async function createViteDevServer() {
+export async function getWxssViteConfig(isProd = false) {
   const { config, viteConfig } = WeappDevContext;
   const { weappTwConfig } = config;
 
@@ -24,8 +24,17 @@ export async function createViteDevServer() {
         "!node_modules",
       ]),
     ),
-    plugins: [UnifiedViteWeappTailwindcssPlugin(weappTwConfig), writeFileToDisk()],
+    plugins: [
+      UnifiedViteWeappTailwindcssPlugin({ ...weappTwConfig, logLevel: "silent" }),
+      ...(isProd ? [] : [writeFileToDisk()]),
+    ],
   });
+
+  return buildConfig;
+}
+
+export async function createViteDevServer() {
+  const buildConfig = await getWxssViteConfig();
   return await createServer(buildConfig);
 }
 

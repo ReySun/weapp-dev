@@ -33,3 +33,4 @@ export const wxmlLogger = createLogger("WXML");
 export const tsLogger = createLogger("TS");
 export const copyLogger = createLogger("COPY");
 export const deleteLogger = createLogger("DELETE");
+export const npmLogger = createLogger("NPM");

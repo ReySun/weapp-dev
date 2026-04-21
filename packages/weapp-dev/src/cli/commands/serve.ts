@@ -1,18 +1,12 @@
 import { resolve } from "path";
 
 import type { CAC } from "cac";
-import { Listr } from "listr2";
 
-import { copy, resolveCopyEntries } from "@/compiler/copy/copy";
-import { copyAssets } from "@/compiler/copy/copyAssets";
-import { buildMainNpm } from "@/compiler/npm/buildNpm";
-import { compileAllTs } from "@/compiler/typescript/compileTs";
-import { transformAllWxmlFiles } from "@/compiler/wxml/transformWxml";
-import { compileAllWxss } from "@/compiler/wxss/compileStyle";
 import { initWeappDevContext } from "@/utils/context/initContext";
 import { deleteDir } from "@/utils/fs/deleteDir";
-import { runTimeEnd } from "@/utils/runTimeEnd";
 import { watchDev } from "@/watcher/watchDev";
+
+import { buildAllTasks } from "./tasks";
 
 export function registerServeCommand(cli: CAC) {
   cli
@@ -31,96 +25,14 @@ export function registerServeCommand(cli: CAC) {
     .option("--force", "force the optimizer to ignore the cache and re-bundle")
     .action(async (_root: string, _options) => {
       try {
-        const { config } = await initWeappDevContext();
+        const { config } = await initWeappDevContext(true);
 
         if (config.emptyOutDir) {
           deleteDir(resolve(process.cwd(), "dist"));
         }
 
-        // copy({
-        //   copy: [
-        //     {
-        //       from: "/Users/reysun/Code/ai-code/weapp-dev-monorepo/examples/basic-ts-tw/src/components/bbb.json",
-        //       to: "dist",
-        //       flatten: false,
-        //     },
-        //   ],
-        // });
-
-        const tasks = new Listr(
-          [
-            {
-              title: "初始化构建",
-              task: (_, task) =>
-                task.newListr([
-                  // ✅ 1. 先构建 npm（串行）
-                  {
-                    title: "构建 npm",
-                    task: async (_, task) => {
-                      task.title = `构建 npm ${await runTimeEnd(() => buildMainNpm())}ms`;
-                    },
-                  },
-
-                  // ✅ 2. 并发执行 wxss + wxml
-                  // {
-                  //   title: "编译资源",
-                  //   task: (_, task) =>
-                  //     task.newListr(
-                  //       [
-                  //         {
-                  //           title: "编译 WXSS",
-                  //           task: async (_, task) => {
-                  //             task.title = `编译 WXSS ${await runTimeEnd(() => compileAllWxss())}ms`;
-                  //           },
-                  //         },
-                  //         {
-                  //           title: "编译 WXML",
-                  //           task: async (_, task) => {
-                  //             task.title = `编译 WXML ${await runTimeEnd(() => transformAllWxmlFiles())}ms`;
-                  //           },
-                  //         },
-                  //       ],
-                  //       {
-                  //         concurrent: true, // 👈 这里只并发
-                  //         rendererOptions: { collapseSubtasks: false },
-                  //       },
-                  //     ),
-                  // },
-
-                  {
-                    title: "编译 WXSS",
-                    task: async (_, task) => {
-                      task.title = `编译 WXSS ${await runTimeEnd(() => compileAllWxss())}ms`;
-                    },
-                  },
-                  {
-                    title: "编译 WXML",
-                    task: async (_, task) => {
-                      task.title = `编译 WXML ${await runTimeEnd(() => transformAllWxmlFiles())}ms`;
-                    },
-                  },
-                  {
-                    title: "复制 JSON",
-                    task: async (_, task) => {
-                      task.title = `复制 JSON ${await runTimeEnd(() => copyAssets())}ms`;
-                    },
-                  },
-
-                  // ✅ 3. 最后执行 TS
-                  {
-                    title: "编译 TS",
-                    task: async (_, task) => {
-                      task.title = `编译 TS ${await runTimeEnd(() => compileAllTs())}ms`;
-                    },
-                  },
-                ]),
-            },
-          ],
-          { rendererOptions: { collapseSubtasks: false } },
-        );
-
-        await tasks.run();
-        watchDev();
+        await buildAllTasks(false);
+        // watchDev();
       } catch (error) {
         console.error("Error starting dev server:");
         console.error(error);

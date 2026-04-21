@@ -4,6 +4,7 @@ import { createContext } from "weapp-tailwindcss/core";
 
 import { DefaultWeappDevConfig, WeappDevConfig } from "@/config/weappDevConfig";
 import { createViteDevServer } from "@/watcher/viteDevServer";
+import { getAllWxssSrcPaths } from "@/weapp/wxss";
 
 interface IWeappDevCtx {
   viteConfig?: ViteUserConfig;
@@ -18,7 +19,7 @@ export const WeappDevContext: IWeappDevCtx = {
   config: DefaultWeappDevConfig,
 } as Readonly<IWeappDevCtx>;
 
-export const initWeappDevContext = async () => {
+export const initWeappDevContext = async (isDev = false) => {
   // 加载 vite 配置
   const viteConfigFile = await loadConfigFromFile({
     command: "build",
@@ -34,7 +35,13 @@ export const initWeappDevContext = async () => {
   WeappDevContext.weappTwCtx = createContext(WeappDevContext.config.weappTwConfig);
 
   // vite dev server实例
-  WeappDevContext.viteDevServer = await createViteDevServer();
+  if (isDev) {
+    console.time("initWeappDevContext viteDevServer");
+    WeappDevContext.viteDevServer = await createViteDevServer();
+    // const styles = await getAllWxssSrcPaths();
+    // await WeappDevContext.viteDevServer.transformRequest(styles[styles.length - 1]);
+    console.timeEnd("initWeappDevContext viteDevServer");
+  }
 
   return WeappDevContext;
 };

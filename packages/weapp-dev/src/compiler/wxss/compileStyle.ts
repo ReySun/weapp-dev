@@ -1,8 +1,13 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 
+import pLimit from "p-limit";
+import { build, mergeConfig } from "vite";
+
+import { getDefaultViteConfig } from "@/config/viteConfig";
 import { WeappDevContext } from "@/utils/context/initContext";
 import { wxssLogger } from "@/utils/logger";
+import { getWxssViteConfig } from "@/watcher/viteDevServer";
 import { getAppWxssDistPath, getAppWxssSrcPath } from "@/weapp/wxss";
 import { getAllWxssSrcPaths } from "@/weapp/wxss";
 import { taskManager } from "@/worker/taskManager";
@@ -44,10 +49,16 @@ export async function compileAppWxss() {
 /**
  * 编译所有 WXSS 文件
  */
-export async function compileAllWxss() {
+export async function compileAllWxss(isProd: boolean = false) {
   const styles = await getAllWxssSrcPaths();
 
-  await Promise.all(styles.map(async (input) => await compileWxss(input, false)));
+  if (!isProd) {
+    // const limit = pLimit(2000); // 👈 推荐 4~8
+    await Promise.all(styles.map(async (input) => await compileWxss(input, false)));
+  } else {
+    const buildConfig = await getWxssViteConfig(isProd);
+    await build(buildConfig);
+  }
 
   try {
     const appWxss = await getAppWxssDistPath();

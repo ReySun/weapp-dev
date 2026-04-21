@@ -36,6 +36,11 @@ export async function getTsdownConfig(params?: {
         emptyImportMeta: true,
       },
     },
+    env: WeappDevContext.viteConfig.env,
+    envFile: WeappDevContext.viteConfig.envFile,
+    envPrefix: WeappDevContext.viteConfig.envPrefix || ["TSDOWN_", "VITE_"],
+    define: WeappDevContext.viteConfig.define,
+    fixedExtension: false,
     outExtensions() {
       return {
         js: ".js",

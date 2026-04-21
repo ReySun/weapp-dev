@@ -81,6 +81,53 @@ export interface WeappDevConfig {
   copy?: CopyOptions | CopyOptionsFn;
 
   weappTwConfig?: Parameters<typeof createContext>[0];
+
+  npm?: WeappDevNpmConfig;
+}
+
+interface WeappDevNpmDependencies {
+  dependencies: string[];
+}
+
+interface WeappDevNpmConfig {
+  /**
+   * 是否启用 npm 构建
+   * @default true
+   */
+  enable?: boolean;
+  /**
+   * 是否缓存 npm 构建结果
+   * @default true
+   */
+  cache?: boolean;
+  /**
+   * 主包依赖
+   *
+   * 一般不需要设置这个，package.json 中 dependencies的依赖会自动被添加到主包的依赖中。
+   *
+   * 设置了也没用，只要package.json 中 dependencies 有依赖便会打包。
+   *
+   * @deprecated
+   */
+  mainPackage?: WeappDevNpmDependencies;
+  /**
+   * 子包依赖
+   *
+   * 依赖仅在子包中使用时，可以这么设置。注意，设置子包的依赖后，主包中将不会存在该依赖。
+   *
+   * @example
+   * ```ts
+   * {
+   *   sub1: {
+   *     dependencies: ['mp-html'],
+   *   },
+   *   sub2: {
+   *     dependencies: ['dayjs'],
+   *   },
+   * }
+   * ```
+   */
+  subPackages?: Record<string, WeappDevNpmDependencies>;
 }
 
 export const DefaultWeappDevConfig: WeappDevConfig = {
@@ -93,4 +140,8 @@ export const DefaultWeappDevConfig: WeappDevConfig = {
   cssProcessor: "less",
   emptyOutDir: true,
   weappTwConfig: {},
+  npm: {
+    enable: true,
+    cache: true,
+  },
 };

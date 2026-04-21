@@ -36,3 +36,5 @@ export async function getWeappFileFinalExtensions() {
   const { platform } = WeappDevContext.config;
   return WeappFinalFileExts[platform];
 }
+
+export const weappNpmDir = "miniprogram_npm";
