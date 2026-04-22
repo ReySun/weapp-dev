@@ -32,7 +32,7 @@ export function registerServeCommand(cli: CAC) {
         }
 
         await buildAllTasks(false);
-        // watchDev();
+        watchDev();
       } catch (error) {
         console.error("Error starting dev server:");
         console.error(error);

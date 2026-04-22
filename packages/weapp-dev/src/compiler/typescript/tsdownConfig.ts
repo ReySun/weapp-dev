@@ -5,9 +5,22 @@ import { InlineConfig } from "tsdown";
 import type { Plugin } from "vite";
 
 import { WeappDevContext } from "@/utils/context/initContext";
-import { deleteDir } from "@/utils/fs/deleteDir";
+import { tsLogger } from "@/utils/logger";
 
-export const nodeModulesDir = `_virtual/deps`;
+import { copyDistNodeModules, deleteDistNodeModules } from "./hooks";
+import { vitePluginRewritePnpmImport } from "./plugins";
+
+let buildStartTime: number | null = null;
+const graph = new Map<string, { importers: string[]; importedIds: string[] }>();
+const moduleToPkg = new Map<string, Set<string>>();
+const entryLikeSet = new Set<string>();
+
+function resetBuildCache() {
+  buildStartTime = null;
+  graph.clear();
+  moduleToPkg.clear();
+  entryLikeSet.clear();
+}
 
 export async function getTsdownConfig(params?: {
   isProd?: boolean;
@@ -18,7 +31,7 @@ export async function getTsdownConfig(params?: {
 
   return {
     logLevel: "warn",
-    watch: false,
+    watch: !isProd,
     report: false,
     dts: false,
     clean: false,
@@ -26,7 +39,7 @@ export async function getTsdownConfig(params?: {
     outDir: config.outDir,
     format: config.format,
     minify: isProd,
-    unbundle: !isProd,
+    unbundle: false,
     hash: isProd,
     // 增量更新ts不关心复制文件
     copy: !isIncremental ? (config.copy as any) : undefined,
@@ -36,6 +49,8 @@ export async function getTsdownConfig(params?: {
         emptyImportMeta: true,
       },
     },
+    tsconfig: false,
+    alias: WeappDevContext.viteConfig.resolve.alias as any,
     env: WeappDevContext.viteConfig.env,
     envFile: WeappDevContext.viteConfig.envFile,
     envPrefix: WeappDevContext.viteConfig.envPrefix || ["TSDOWN_", "VITE_"],
@@ -47,126 +62,180 @@ export async function getTsdownConfig(params?: {
         dts: ".d.ts",
       };
     },
-    outputOptions: isProd
-      ? {
-          chunkFileNames: () => {
-            return "deps/chunk-[hash].js";
-          },
-          entryFileNames: (chunkInfo) => {
-            // TODO: 优化 chunkFileNames 逻辑
-            const reg = new RegExp(
-              `${config.srcRoot}/(utils|hooks|constants|router|wrapper|plugins|storage|store|behaviors)/`,
-            );
-            if (reg.test(chunkInfo.facadeModuleId)) {
-              return "deps/chunk-[hash].js";
-            }
-            return "[name].js";
-          },
-        }
-      : {
-          esModule: false,
-        },
+    // outputOptions: isProd
+    //   ? {
+    //       chunkFileNames: () => {
+    //         return "deps/chunk-[hash].js";
+    //       },
+    //       entryFileNames: (chunkInfo) => {
+    //         // TODO: 优化 chunkFileNames 逻辑
+    //         const reg = new RegExp(
+    //           `${config.srcRoot}/(utils|hooks|constants|router|wrapper|plugins|storage|store|behaviors)/`,
+    //         );
+    //         if (reg.test(chunkInfo.facadeModuleId)) {
+    //           return "deps/chunk-[hash].js";
+    //         }
+    //         return "[name].js";
+    //       },
+    //     }
+    //   : {},
     hooks: {
-      "build:done": async () => {
-        try {
-          await copyDistNodeModules();
-          await deleteDistNodeModules();
-        } catch {
-          //
-        }
-      },
+      // "build:prepare": async () => {
+      //   console.log("build:prepare");
+      // },
+      // "build:before": async () => {
+      //   console.log("build:build");
+      // },
+      // "build:done": async (ctx) => {
+      //   try {
+      //     console.log("build:done");
+      //     if (ctx.options.unbundle) {
+      //       await copyDistNodeModules();
+      //       await deleteDistNodeModules();
+      //     }
+      //   } catch {
+      //     //
+      //   }
+      // },
     },
-    plugins: [rewritePnpmImport()],
+    onSuccess() {
+      if (buildStartTime) {
+        tsLogger.info(`build time: ${Date.now() - buildStartTime}ms`);
+        resetBuildCache();
+      }
+    },
+    plugins: [AutoWeappSplitPlugin()],
   };
 }
 
-/**
- * 获取所有 pnpm 包
- */
-export async function getAllPkgsFromNodeModules() {
-  const { config } = WeappDevContext;
-
-  const base = path.resolve(`${config.outDir}/node_modules/.pnpm`);
-
-  if (!fs.existsSync(base)) return [];
-
-  const result: string[] = [];
-
-  const pkgs = fs.readdirSync(base);
-
-  pkgs.forEach((pkgDir) => {
-    const nmPath = path.join(base, pkgDir, "node_modules");
-
-    if (!fs.existsSync(nmPath)) return;
-
-    fs.readdirSync(nmPath).forEach((name) => {
-      if (name.startsWith("@")) {
-        // scoped
-        const scopeDir = path.join(nmPath, name);
-        fs.readdirSync(scopeDir).forEach((sub) => {
-          result.push(`${name}/${sub}`);
-        });
-      } else {
-        result.push(name);
-      }
-    });
-  });
-
-  return Array.from(new Set(result));
-}
-
-/**
- * 复制 dist/node_modules 到目标目录
- */
-export async function copyDistNodeModules() {
-  const { config } = WeappDevContext;
-
-  const pkgs = await getAllPkgsFromNodeModules();
-
-  pkgs.forEach((pkgName) => {
-    const realPath = fs.realpathSync(path.resolve(`node_modules`, pkgName));
-
-    const target = path.resolve(`${config.outDir}/${nodeModulesDir}`, pkgName);
-
-    fs.cpSync(realPath, target, {
-      recursive: true,
-    });
-  });
-}
-
-/**
- * 删除 dist 目录下的 node_modules 目录
- */
-export async function deleteDistNodeModules() {
-  const { config } = WeappDevContext;
-  deleteDir(path.resolve(`${config.outDir}/node_modules`));
-}
-
-function rewritePnpmImport(): Plugin {
+function AutoWeappSplitPlugin({ srcRoot = "src" } = {}): Plugin {
   return {
-    name: "rewrite-pnpm-import",
-    enforce: "post",
-    renderChunk(code, chunk) {
-      // ✅ 判断是否包含 src 源码
-      const hasNodeModules = Object.keys(chunk.modules).some((id) => id.includes(`/node_modules/`));
+    name: "auto-weapp-split",
 
-      // ❌ 如果这个 chunk 完全来自 node_modules，不处理
-      if (hasNodeModules) {
-        return null;
+    moduleParsed() {
+      // console.log(info);
+      // graph.set(info.id, {
+      //   importedIds: info.importedIds,
+      //   importers: info.importers,
+      // });
+    },
+
+    buildStart() {
+      if (!buildStartTime) {
+        resetBuildCache();
+        buildStartTime = Date.now();
+      }
+      console.log("buildStart");
+    },
+
+    buildEnd() {
+      console.time("buildEnd");
+      for (const id of this.getModuleIds()) {
+        const info = this.getModuleInfo(id);
+
+        graph.set(id, {
+          importedIds: info.importedIds,
+          importers: info.importers,
+        });
       }
 
-      let newCode = code;
-
-      // 删除空export {};
-      if (chunk.isEntry) {
-        newCode = code.replace(/\n?(\/\/#endregion\s*\n\s*)?export\s*{\s*};?/, "");
+      // 1️⃣ 找 entry-like
+      for (const [id, info] of graph) {
+        if (isEntryLike(id, info)) {
+          entryLikeSet.add(id);
+        }
       }
 
-      return {
-        // 👇 替换pnpm虚拟路径
-        code: newCode.replace(/node_modules\/\.pnpm\/[^/]+\/node_modules\//g, `${nodeModulesDir}/`),
-        map: null,
+      // 2️⃣ 依赖扩散
+      for (const id of entryLikeSet) {
+        const pkg = getPackageName(id);
+        collect(id, pkg);
+      }
+      console.timeEnd("buildEnd");
+    },
+
+    outputOptions(options) {
+      options.entryFileNames = "[name].js";
+      options.chunkFileNames = "[name].js";
+      options.codeSplitting = {
+        groups: [
+          {
+            name: (moduleId, ctx) => {
+              // console.log(moduleId);
+              const cleanId = moduleId.split("?")[0];
+
+              if (entryLikeSet.has(cleanId)) return null;
+
+              const info = ctx.getModuleInfo(moduleId);
+
+              // 🚨 关键1：只被一个模块引用 → 内联
+              if (!info || info.importers.length <= 1) {
+                // console.log("只被一个模块引用 → 内联");
+                return null; // 不分组 → 内联
+              }
+
+              const pkgs = moduleToPkg.get(cleanId);
+
+              // 🚨 关键2：没有归属 → 主包 common
+              if (!pkgs || pkgs.size === 0) {
+                // console.log("没有归属 → 主包 common");
+                return "common";
+              }
+
+              // 🚨 关键3：只属于一个包
+              if (pkgs.size === 1) {
+                const name = [...pkgs][0];
+                // console.log(`只属于一个包 name: ${name}`);
+
+                if (name === "main") return "common";
+
+                return `${name}/common`;
+              }
+              // console.log("########################################################");
+
+              // 🚨 关键4：跨包 → 主包 common
+              return "common";
+            },
+          },
+        ],
       };
+
+      return options;
     },
   };
+}
+
+export function isEntryLike(id, info) {
+  if (!id.endsWith(".ts")) return false;
+
+  // Page / Component
+  const wxml = id.replace(/\.ts$/, ".wxml");
+  if (fs.existsSync(wxml)) return true;
+
+  // 孤立入口
+  if (info.importers.length === 0) return true;
+
+  return false;
+}
+
+function getPackageName(id) {
+  const rel = path.relative(WeappDevContext.config.srcRoot, id);
+  const [top] = rel.split(path.sep);
+
+  // if (top === "pages") return "main";
+  return top;
+}
+
+function collect(id, pkg, visited = new Set()) {
+  if (visited.has(id)) return;
+  visited.add(id);
+
+  if (!moduleToPkg.has(id)) {
+    moduleToPkg.set(id, new Set());
+  }
+
+  moduleToPkg.get(id).add(pkg);
+
+  const deps = graph.get(id)?.importedIds || [];
+  deps.forEach((dep) => collect(dep, pkg, visited));
 }

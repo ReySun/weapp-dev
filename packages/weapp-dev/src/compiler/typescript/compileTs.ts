@@ -1,10 +1,15 @@
 import { build } from "tsdown";
 
-import { WeappDevContext } from "@/utils/context/initContext";
 import { tsLogger } from "@/utils/logger";
 
 import { getTsdownConfig } from "./tsdownConfig";
+import { getEntryTsFiles } from "./utils";
 
+/**
+ * 编译单个TS 文件
+ * @deprecated 请使用 `compileAllTs` 编译，并使用watch模式
+ * @param input
+ */
 export async function compileTs(input: string) {
   const start = Date.now();
 
@@ -18,9 +23,10 @@ export async function compileTs(input: string) {
 }
 
 export async function compileAllTs(isProd: boolean = false) {
-  const { srcRoot } = WeappDevContext.config;
-  await build({
-    entry: [`${srcRoot}/**/*.ts`, `!${srcRoot}/**/*.d.ts`],
+  const entryTsFiles = getEntryTsFiles();
+
+  return await build({
+    entry: entryTsFiles,
     ...(await getTsdownConfig({ isProd })),
   });
 }

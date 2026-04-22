@@ -37,20 +37,25 @@
     }
   },
   "scripts": {
-    "dev": "tsdown --watch"
+    "dev": "tsdown --watch",
+    "build": "tsdown",
+    "weappJsonToTs": "tsx scripts/weappJsonToTs.ts"
   },
   "dependencies": {
     "vite": "catalog:"
   },
   "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
     "@types/lodash-es": "catalog:",
     "@typescript/native-preview": "7.0.0-dev.20260417.1",
     "@weapp-core/escape": "^7.0.0",
+    "@weapp-dev/miniprogram-json-schema": "workspace:*",
     "fast-glob": "catalog:",
     "fs-extra": "^11.3.4",
     "less": "catalog:",
     "listr2": "^10.2.1",
     "lodash-es": "catalog:",
+    "miniprogram-api-typings": "catalog:",
     "miniprogram-ci": "catalog:",
     "node-html-parser": "^7.1.0",
     "ora": "^9.3.0",

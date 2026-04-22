@@ -3,6 +3,7 @@
 // 参考 https://github.com/weapp-vite/weapp-vite/blob/main/packages/weapp-vite/src/config.ts
 import type { ConfigEnv, UserConfig as ViteUserConfig } from "vite";
 
+import { TsdownViteUserConfig } from "./config/tsdownVite";
 import type { WeappDevConfig } from "./config/weappDevConfig";
 
 /**
@@ -34,7 +35,7 @@ export type UserConfigExport<T extends UserConfig = UserConfig> =
 
 // 扩展 vite 的 UserConfig
 declare module "vite" {
-  interface UserConfig {
+  interface UserConfig extends TsdownViteUserConfig {
     weapp?: WeappDevConfig;
   }
 }

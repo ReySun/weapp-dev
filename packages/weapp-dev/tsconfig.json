@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     // "baseUrl": ".",
-    "types": [],
+    "types": ["miniprogram-api-typings"],
     "target": "es2022",
     "incremental": true,
     "tsBuildInfoFile": "./dist/.tsbuildinfo",

@@ -1,6 +1,7 @@
 import { defineConfig, type Format } from "tsdown";
 
-export default defineConfig(() => {
+export default defineConfig((options) => {
+  const { watch } = options;
   return {
     entry: {
       cli: "src/cli.ts",
@@ -9,12 +10,12 @@ export default defineConfig(() => {
       lodashFix: "src/lodashFix.ts",
     },
     format: ["esm", "cjs"] as Format[],
-    clean: false,
-    report: false,
+    clean: !watch,
+    report: !watch,
     dts: {
       tsgo: true,
     },
-    minify: false,
+    minify: !watch,
     hash: false,
     unbundle: false,
     deps: {

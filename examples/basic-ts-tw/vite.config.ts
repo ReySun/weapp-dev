@@ -38,7 +38,7 @@ export default defineConfig({
     alias: [
       {
         find: "@",
-        replacement: normalizePath(fileURLToPath(new URL("./srcx", import.meta.url))),
+        replacement: normalizePath(fileURLToPath(new URL("./src", import.meta.url))),
       },
     ],
   },

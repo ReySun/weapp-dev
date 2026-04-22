@@ -78,7 +78,8 @@ async function handleFileEvent(path: string, event: string) {
       // ts文件
       else if (path.endsWith(".ts")) {
         // tsLogger.info(`${event}: ${path}`);
-        await compileTs(path);
+        // TODO 必要时候，重启ts server
+        // await compileTs(path);
       }
       // json文件
       else if (path.endsWith(".json")) {
@@ -137,7 +138,8 @@ export async function watchDev() {
   const { config } = WeappDevContext;
 
   let isReady = false;
-  const watcher = chokidar.watch(path.resolve(`${config.srcRoot}/**/*`), {
+  const srcRoot = path.resolve(`${config.srcRoot}`);
+  const watcher = chokidar.watch([`${srcRoot}/**/*`], {
     usePolling: false,
     awaitWriteFinish: {
       stabilityThreshold: 100,
