@@ -1,0 +1,37 @@
+{
+  "name": "@weapp-dev/miniprogram-json-schema",
+  "version": "1.0.0",
+  "description": "微信小程序 JSON Schema 配置, JSON Schema 转 TS",
+  "keywords": [
+    "json-schema",
+    "miniprogram",
+    "miniprogram-json-schema",
+    "miniprogram-json-schema to ts",
+    "weapp",
+    "weapp-dev"
+  ],
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.mts"
+    },
+    "./json-schema/*": "./dist/json-schema/*",
+    "./settings.json": "./dist/settings.json"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "weappJsonToTs": "tsx scripts/weappJsonToTs.ts"
+  },
+  "devDependencies": {
+    "json-schema-to-typescript-lite": "^15.0.0",
+    "tsx": "^4.21.0"
+  },
+  "packageManager": "pnpm@10.24.0"
+}
