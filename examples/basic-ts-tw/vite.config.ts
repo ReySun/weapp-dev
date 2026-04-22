@@ -7,7 +7,7 @@ import { defineConfig } from "weapp-dev/config";
 export default defineConfig({
   plugins: [],
   weapp: {
-    copy: [{ from: "src/**/*.txt", to: "dist" }],
+    copy: [{ from: "src/**/*.{png,jpg,jpeg}", to: "dist" }],
     weappTwConfig: {
       logLevel: "silent",
       rem2rpx: true,
