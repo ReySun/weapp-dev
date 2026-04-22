@@ -139,7 +139,11 @@ export const DefaultWeappDevConfig: WeappDevConfig = {
   cwd: process.cwd(),
   cssProcessor: "less",
   emptyOutDir: true,
-  weappTwConfig: {},
+  weappTwConfig: {
+    customAttributes: {
+      "*": [/[a-z]+Class|[^-\s]+-class|className/],
+    },
+  },
   npm: {
     enable: true,
     cache: true,
