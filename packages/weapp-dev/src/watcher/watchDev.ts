@@ -1,4 +1,3 @@
-import { unlink } from "node:fs/promises";
 import path, { resolve, basename } from "node:path";
 
 import chokidar from "chokidar";
@@ -10,9 +9,8 @@ import { compileTs } from "@/compiler/typescript/compileTs";
 import { transformWxmlFile } from "@/compiler/wxml/transformWxml";
 import { compileWxss } from "@/compiler/wxss/compileStyle";
 import { WeappDevContext } from "@/utils/context/initContext";
-import { deleteFile } from "@/utils/fs/deleteFile";
 import { fsCopy, fsRemove, fsStat } from "@/utils/fs/fs";
-import { wxmlLogger, wxssLogger, tsLogger, copyLogger, deleteLogger } from "@/utils/logger";
+import { tsLogger, copyLogger, deleteLogger } from "@/utils/logger";
 import { getWeappFileFinalExtensions } from "@/weapp/platform";
 import { getAllWxmlExts } from "@/weapp/wxml";
 import { WeappCssProcessorList } from "@/weapp/wxss";
@@ -77,9 +75,14 @@ async function handleFileEvent(path: string, event: string) {
       }
       // ts文件
       else if (path.endsWith(".ts")) {
-        // tsLogger.info(`${event}: ${path}`);
+        const unbundle = WeappDevContext.config.tsdown?.unbundle ?? false;
+        if (unbundle) {
+          tsLogger.info(`${event}: ${path}`);
+          await compileTs(path);
+        }
         // TODO 必要时候，重启ts server
-        // await compileTs(path);
+        // await compileAllTs(false);
+        // console.log(`编译 TS ${await runTimeEnd(() => compileAllTs(false))}ms`);
       }
       // json文件
       else if (path.endsWith(".json")) {
@@ -147,6 +150,7 @@ export async function watchDev() {
   });
 
   watcher.on("change", (path) => {
+    console.log("change path", path);
     getDebounceHandler(path, "change")();
   });
 

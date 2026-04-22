@@ -35,11 +35,8 @@ export default defineConfig({
 
   // 解析配置
   resolve: {
-    alias: [
-      {
-        find: "@",
-        replacement: normalizePath(fileURLToPath(new URL("./src", import.meta.url))),
-      },
-    ],
+    alias: {
+      "@": normalizePath(fileURLToPath(new URL("./src", import.meta.url))),
+    },
   },
 });

@@ -8,6 +8,7 @@ const defaultAvatarUrl =
 Component({
   data: {
     motto: "Hello World",
+    message: "Hello World",
     // a,
     userInfo: {
       avatarUrl: defaultAvatarUrl,

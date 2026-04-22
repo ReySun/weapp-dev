@@ -56,6 +56,7 @@ export async function copyDistNodeModules() {
 
     fs.cpSync(realPath, target, {
       recursive: true,
+      errorOnExist: false,
     });
   });
 }

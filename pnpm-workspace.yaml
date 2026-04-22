@@ -8,8 +8,8 @@ catalog:
   less: ^4.6.4
   lodash-es: 4.18.1
   miniprogram-ci: ^2.1.31
-  rolldown: 1.0.0-rc.12
-  tsdown: ^0.21.7
+  rolldown: 1.0.0-rc.16
+  tsdown: ^0.21.9
   vite: ^8.0.3
   weapp-tailwindcss: ^4.11.2
   miniprogram-api-typings: "^2.12.0"

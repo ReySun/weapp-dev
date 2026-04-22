@@ -83,6 +83,10 @@ export interface WeappDevConfig {
   weappTwConfig?: Parameters<typeof createContext>[0];
 
   npm?: WeappDevNpmConfig;
+
+  tsdown?: {
+    unbundle?: boolean;
+  };
 }
 
 interface WeappDevNpmDependencies {

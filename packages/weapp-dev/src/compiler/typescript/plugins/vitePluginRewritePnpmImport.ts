@@ -1,12 +1,16 @@
 import type { Plugin } from "vite";
 
-import { nodeModulesDir } from "./constants";
+import { nodeModulesDir } from "../constants";
 
-export function vitePluginRewritePnpmImport(): Plugin {
+export function vitePluginRewritePnpmImport({ unbundle = false } = {}): Plugin {
   return {
     name: "rewrite-pnpm-import",
     enforce: "post",
     renderChunk(code, chunk) {
+      if (!unbundle) {
+        return;
+      }
+
       // ✅ 判断是否包含 src 源码
       const hasNodeModules = Object.keys(chunk.modules).some((id) => id.includes(`/node_modules/`));
 
