@@ -5,11 +5,11 @@ import { tsLogger } from "@/utils/logger";
 
 import { copyDistNodeModules, deleteDistNodeModules } from "./hooks";
 import {
-  VitePluginAutoWeappSplitChunk,
+  vitePluginAutoWeappSplitChunk,
   getBuildStartTime,
   resetBuildCollectedCache,
-} from "./plugins/VitePluginAutoWeappSplitChunk";
-import { vitePluginRewritePnpmImport } from "./plugins/vitePluginRewritePnpmImport";
+} from "./vitePluginAutoWeappSplitChunk";
+import { vitePluginRewritePnpmImport } from "./vitePluginRewritePnpmImport";
 
 let isFirstWatchSuccess = true;
 export async function getTsdownConfig(params?: {
@@ -88,7 +88,7 @@ export async function getTsdownConfig(params?: {
     },
     plugins: [
       vitePluginRewritePnpmImport({ unbundle }),
-      VitePluginAutoWeappSplitChunk({ unbundle }),
+      vitePluginAutoWeappSplitChunk({ unbundle }),
     ],
   };
 }

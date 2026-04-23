@@ -1,9 +1,9 @@
 import { build } from "tsdown";
 
 import { tsLogger } from "@/utils/logger";
+import { getEntryTsFiles } from "@/weapp/ts";
 
-import { getTsdownConfig } from "./tsdownConfig";
-import { getEntryTsFiles } from "./utils";
+import { getTsdownConfig } from "./tsdown/tsdownConfig";
 
 /**
  * 编译单个TS 文件

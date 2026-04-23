@@ -4,7 +4,7 @@ import path from "node:path";
 import { WeappDevContext } from "@/config/mergedConfig";
 import { deleteDir } from "@/utils/fs/deleteDir";
 
-import { nodeModulesDir } from "./constants";
+import { nodeModulesDir } from "../constants";
 
 /**
  * 获取所有 pnpm 包

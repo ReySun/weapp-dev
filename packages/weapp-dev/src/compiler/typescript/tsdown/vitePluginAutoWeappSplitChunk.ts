@@ -24,7 +24,7 @@ export function resetBuildCollectedCache() {
   entryLikeSet.clear();
 }
 
-export function VitePluginAutoWeappSplitChunk({ unbundle = false } = {}): Plugin {
+export function vitePluginAutoWeappSplitChunk({ unbundle = false } = {}): Plugin {
   return {
     name: "auto-weapp-split",
 
