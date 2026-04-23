@@ -1,10 +1,8 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 
-import pLimit from "p-limit";
-import { build, mergeConfig } from "vite";
+import { build } from "vite";
 
-import { getDefaultViteConfig } from "@/config/viteConfig";
 import { WeappDevContext } from "@/utils/context/initContext";
 import { wxssLogger } from "@/utils/logger";
 import { getWxssViteConfig } from "@/watcher/viteDevServer";

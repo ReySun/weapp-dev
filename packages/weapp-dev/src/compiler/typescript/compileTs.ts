@@ -25,8 +25,16 @@ export async function compileTs(input: string) {
 export async function compileAllTs(isProd: boolean = false) {
   const entryTsFiles = getEntryTsFiles();
 
-  return await build({
-    entry: entryTsFiles,
-    ...(await getTsdownConfig({ isProd })),
+  let resolveReady!: () => void;
+
+  const ready = new Promise<void>((resolve) => {
+    resolveReady = resolve;
   });
+
+  await build({
+    entry: entryTsFiles,
+    ...(await getTsdownConfig({ isProd, onFirstWatchSuccess: resolveReady })),
+  });
+
+  return await ready;
 }

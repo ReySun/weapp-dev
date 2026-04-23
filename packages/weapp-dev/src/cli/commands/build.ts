@@ -1,13 +1,10 @@
 import type { CAC } from "cac";
 
-import { buildWeappAllNpm } from "@/compiler/npm/buildNpm";
-import { compileAllTs } from "@/compiler/typescript/compileTs";
-import { transformAllWxmlFiles } from "@/compiler/wxml/transformWxml";
-import { compileAllWxss } from "@/compiler/wxss/compileStyle";
 import { initWeappDevContext } from "@/utils/context/initContext";
-import { runTimeEnd } from "@/utils/runTimeEnd";
+import { deleteDir } from "@/utils/fs/deleteDir";
+import { resolve } from "@/utils/fs/resolve";
 
-import { buildAllTasks } from "./tasks";
+import { buildAllTasks, BuildTaskTypeEnum } from "./tasks";
 
 interface BuildOptions {
   empty?: boolean;
@@ -15,28 +12,27 @@ interface BuildOptions {
 
 export function registerBuildCommand(cli: CAC) {
   cli
-    .command("build [type]", "build project")
+    .command(
+      "build [...types]",
+      `build weapp project (types: ${Object.values(BuildTaskTypeEnum).join(" | ")})`,
+    )
+    .usage("wd build [...types]")
+    .example("wd build ts")
+    .example("wd build ts wxss")
+    .example("wd build (build all)")
     .option("-e, --empty", "empty output directory before build")
-    .action(async (type: string | undefined, options: BuildOptions) => {
+    .action(async (types: BuildTaskTypeEnum[] | undefined, options: BuildOptions) => {
       try {
         await initWeappDevContext();
 
-        switch (type) {
-          case "npm":
-            console.log(
-              `构建 npm ${await runTimeEnd(() => buildWeappAllNpm({ emptyDir: options.empty, showLog: true }))}ms`,
-            );
-            break;
-          case "ts":
-            compileAllTs();
-            break;
-          case undefined:
-            await buildAllTasks(true);
-            // TODO
-            break;
-          default:
-            console.error(`Unknown build type: ${type}`);
-            process.exit(1);
+        if (options.empty) {
+          deleteDir(resolve(process.cwd(), "dist"));
+        }
+
+        const innerTaskCount = await buildAllTasks({ isProd: true, buildTaskType: types });
+        if (!innerTaskCount) {
+          console.log("暂无构建任务");
+          return;
         }
       } catch (error) {
         console.error("Error starting dev server:");

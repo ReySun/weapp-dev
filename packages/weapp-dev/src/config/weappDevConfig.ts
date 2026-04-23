@@ -147,6 +147,7 @@ export const DefaultWeappDevConfig: WeappDevConfig = {
     customAttributes: {
       "*": [/[a-z]+Class|[^-\s]+-class|className/],
     },
+    logLevel: "silent",
   },
   npm: {
     enable: true,

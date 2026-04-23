@@ -150,7 +150,6 @@ export async function watchDev() {
   });
 
   watcher.on("change", (path) => {
-    console.log("change path", path);
     getDebounceHandler(path, "change")();
   });
 

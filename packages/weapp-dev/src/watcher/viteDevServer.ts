@@ -21,7 +21,6 @@ export async function getWxssViteConfig(isProd = false) {
       FastGlob.globSync([
         // src下的wxss相关文件
         ...(await getAllWxssSrcPaths()),
-        "!node_modules",
       ]),
     ),
     plugins: [
@@ -44,6 +43,8 @@ function writeFileToDisk(): Plugin {
 
   return {
     name: "write-to-dist",
+
+    apply: "serve",
 
     async transform(code: string, id: string) {
       if (id.includes("node_modules")) return;

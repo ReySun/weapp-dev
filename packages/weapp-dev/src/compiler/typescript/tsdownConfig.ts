@@ -11,12 +11,14 @@ import {
 } from "./plugins/VitePluginAutoWeappSplitChunk";
 import { vitePluginRewritePnpmImport } from "./plugins/vitePluginRewritePnpmImport";
 
+let isFirstWatchSuccess = true;
 export async function getTsdownConfig(params?: {
   isProd?: boolean;
   isIncremental?: boolean;
+  onFirstWatchSuccess?: (...args: any[]) => any;
 }): Promise<InlineConfig> {
   const { config } = WeappDevContext;
-  const { isProd = false, isIncremental = false } = params || {};
+  const { isProd = false, isIncremental = false, onFirstWatchSuccess } = params || {};
 
   const unbundle = config.tsdown?.unbundle ?? false;
 
@@ -74,9 +76,14 @@ export async function getTsdownConfig(params?: {
     },
     onSuccess() {
       const buildStartTime = getBuildStartTime();
-      if (buildStartTime) {
+      if (buildStartTime && !isFirstWatchSuccess) {
         tsLogger.success(`TS编译完成 (${Date.now() - buildStartTime}ms)`);
         resetBuildCollectedCache();
+      }
+
+      if (isFirstWatchSuccess) {
+        isFirstWatchSuccess = false;
+        onFirstWatchSuccess?.();
       }
     },
     plugins: [
