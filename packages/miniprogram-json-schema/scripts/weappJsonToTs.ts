@@ -4,6 +4,7 @@ import { platform } from "os";
 import { compile } from "json-schema-to-typescript-lite";
 import { format } from "oxfmt";
 
+import OxFmtConfig from "../../../oxfmt.config";
 import { ensureFile, toPascalCase } from "./utils";
 
 interface JsonValidationItem {
@@ -64,7 +65,7 @@ function getMacLocalWxJson() {
       }
 
       return jsonValidation;
-    } catch (error) {}
+    } catch {}
   }
 }
 
@@ -118,7 +119,7 @@ async function jsonSchemaToTs() {
         // 编译 JSON Schema 到 TypeScript
         const ts = await compile(jsonSchema, NS);
         const file = `./src/types/${platform}-json-schema/${jsonNameWithExt}.ts`;
-        const { code } = await format(file, ts);
+        const { code } = await format(file, ts, OxFmtConfig);
         ensureFile(file, code);
         files.push(file);
       } catch (error) {
@@ -130,10 +131,13 @@ async function jsonSchemaToTs() {
   if (files.length > 0) {
     console.log(`成功编译 ${files.length} 个文件`);
     const indexFile = "./src/index.ts";
-    ensureFile(
+
+    const { code } = await format(
       indexFile,
       `// @ts-nocheck\n${files.map((f) => `export * from "${f.replace("./src/", "./")}"`).join("\n")}`,
+      OxFmtConfig,
     );
+    ensureFile(indexFile, code);
   }
 }
 
