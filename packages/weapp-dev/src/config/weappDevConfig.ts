@@ -1,9 +1,9 @@
-import { LogLevel } from "vite";
-import { createContext } from "weapp-tailwindcss/core";
+import type { LogLevel } from "vite";
+import type { createContext } from "weapp-tailwindcss/core";
 
-import { CopyOptions, CopyOptionsFn } from "@/compiler/copy/copy";
-import { WeappPlatform } from "@/weapp/platform";
-import { WeappCssProcessorKey } from "@/weapp/wxss";
+import type { CopyOptions, CopyOptionsFn } from "@/compiler/copy/copy";
+import type { WeappPlatform } from "@/weapp/platform";
+import type { WeappCssProcessorKey } from "@/weapp/wxss";
 
 /**
  * WeappDev 开发配置

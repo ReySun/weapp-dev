@@ -1,4 +1,5 @@
-import { createServer, ViteDevServer } from "vite";
+import type { ViteDevServer } from "vite";
+import { createServer } from "vite";
 
 import { getWxssViteConfig } from "./viteWxssConfig";
 

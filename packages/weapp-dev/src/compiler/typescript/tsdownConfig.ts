@@ -1,4 +1,4 @@
-import { InlineConfig } from "tsdown";
+import type { InlineConfig } from "tsdown";
 
 import { WeappDevContext } from "@/config/mergedConfig";
 import { tsLogger } from "@/utils/logger";

@@ -3,7 +3,7 @@
 // 参考 https://github.com/weapp-vite/weapp-vite/blob/main/packages/weapp-vite/src/config.ts
 import type { ConfigEnv, UserConfig as ViteUserConfig } from "vite";
 
-import { TsdownViteUserConfig } from "./config/tsdownVite";
+import type { TsdownViteUserConfig } from "./config/tsdownVite";
 import type { WeappDevConfig } from "./config/weappDevConfig";
 
 /**

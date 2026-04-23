@@ -1,8 +1,10 @@
 import { merge } from "lodash-es";
-import { loadConfigFromFile, UserConfig as ViteUserConfig, ViteDevServer } from "vite";
+import type { UserConfig as ViteUserConfig, ViteDevServer } from "vite";
+import { loadConfigFromFile } from "vite";
 import { createContext } from "weapp-tailwindcss/core";
 
-import { DefaultWeappDevConfig, WeappDevConfig } from "@/config/weappDevConfig";
+import type { WeappDevConfig } from "@/config/weappDevConfig";
+import { DefaultWeappDevConfig } from "@/config/weappDevConfig";
 
 interface IWeappDevCtx {
   viteConfig?: ViteUserConfig;

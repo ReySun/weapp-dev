@@ -16,5 +16,6 @@ export default defineConfig({
   rules: {
     "no-useless-catch": "off",
     "no-useless-empty-export": "off",
+    "@typescript-eslint/consistent-type-imports": "error",
   },
 });

@@ -1,9 +1,10 @@
 import FastGlob from "fast-glob";
-import { InlineConfig, mergeConfig } from "vite";
+import type { InlineConfig} from "vite";
+import { mergeConfig } from "vite";
 import { UnifiedViteWeappTailwindcssPlugin } from "weapp-tailwindcss/vite";
 
 import { WeappDevContext } from "@/config/mergedConfig";
-import { RolldownOutput } from "@/types/rolldown";
+import type { RolldownOutput } from "@/types/rolldown";
 import { getAllWxssSrcPaths } from "@/weapp/wxss";
 
 import { vitePluginWxssDevWriteFile } from "./vitePluginWxssDevWriteFile";

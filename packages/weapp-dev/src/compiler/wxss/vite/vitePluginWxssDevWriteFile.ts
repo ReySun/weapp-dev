@@ -1,7 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 
-import { Plugin } from "vite";
+import type { Plugin } from "vite";
 
 import { WeappDevContext } from "@/config/mergedConfig";
 import { replaceFileExt } from "@/utils/string/replaceFileExt";

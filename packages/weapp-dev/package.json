@@ -49,27 +49,24 @@
     "build": "tsdown"
   },
   "dependencies": {
-    "vite": "catalog:"
-  },
-  "devDependencies": {
-    "@types/fs-extra": "^11.0.4",
-    "@types/lodash-es": "catalog:",
-    "@typescript/native-preview": "7.0.0-dev.20260417.1",
     "@weapp-core/escape": "^7.0.0",
-    "@weapp-dev/miniprogram-json-schema": "workspace:*",
     "fast-glob": "catalog:",
-    "fs-extra": "^11.3.4",
-    "less": "catalog:",
     "listr2": "^10.2.1",
     "lodash-es": "catalog:",
-    "miniprogram-api-typings": "catalog:",
     "miniprogram-ci": "catalog:",
     "node-html-parser": "^7.1.0",
     "ora": "^9.3.0",
     "postcss-selector-parser": "^7.1.1",
-    "rolldown": "catalog:",
     "terminate": "^2.8.0",
-    "tsdown": "catalog:"
+    "tinyglobby": "^0.2.16",
+    "tsdown": "catalog:",
+    "vite": "catalog:"
+  },
+  "devDependencies": {
+    "@types/lodash-es": "catalog:",
+    "@typescript/native-preview": "7.0.0-dev.20260417.1",
+    "@weapp-dev/miniprogram-json-schema": "workspace:*",
+    "miniprogram-api-typings": "catalog:"
   },
   "packageManager": "pnpm@10.24.0"
 }

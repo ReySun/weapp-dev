@@ -1,6 +1,6 @@
 import { readFileSync, existsSync } from "fs";
 
-import { WeappAppJson } from "@weapp-dev/miniprogram-json-schema";
+import type { WeappAppJson } from "@weapp-dev/miniprogram-json-schema";
 
 import { WeappDevContext } from "@/config/mergedConfig";
 

@@ -10,7 +10,7 @@ export default defineConfig((options) => {
       config: "src/config.ts",
       lodashFix: "src/lodashFix.ts",
     },
-    format: ["esm", "cjs"] as Format[],
+    format: watch ? "esm" : (["esm", "cjs"] as Format[]),
     clean: !watch,
     report: !watch,
     dts: {

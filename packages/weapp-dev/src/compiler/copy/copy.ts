@@ -4,8 +4,8 @@ import path from "node:path";
 
 import { glob, isDynamicPattern } from "tinyglobby";
 
-import { WeappDevConfig } from "@/config/weappDevConfig";
-import { Awaitable } from "@/types/utils";
+import type { WeappDevConfig } from "@/config/weappDevConfig";
+import type { Awaitable } from "@/types/utils";
 import { toArray } from "@/utils/array/toArray";
 import { fsCopy } from "@/utils/fs/fs";
 import { copyLogger } from "@/utils/logger";
