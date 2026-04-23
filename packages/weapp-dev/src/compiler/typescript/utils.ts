@@ -3,7 +3,7 @@ import path from "node:path";
 
 import FastGlob from "fast-glob";
 
-import { WeappDevContext } from "@/utils/context/initContext";
+import { WeappDevContext } from "@/config/mergedConfig";
 import { getAppJson } from "@/weapp/appJson";
 
 export function getEntryTsFiles() {

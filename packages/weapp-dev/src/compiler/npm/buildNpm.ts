@@ -4,8 +4,8 @@ export type BuildNpmResult = Awaited<ReturnType<typeof ci.packNpmManually>>;
 
 import { statSync } from "node:fs";
 
+import { WeappDevContext } from "@/config/mergedConfig";
 import { WEABB_DEV_VERSION } from "@/constants/version";
-import { WeappDevContext } from "@/utils/context/initContext";
 import { fsCopy, fsRemove, fsStat } from "@/utils/fs/fs";
 import { resolve } from "@/utils/fs/resolve";
 import { npmLogger } from "@/utils/logger";

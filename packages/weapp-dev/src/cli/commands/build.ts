@@ -1,10 +1,10 @@
 import type { CAC } from "cac";
 
-import { initWeappDevContext } from "@/utils/context/initContext";
+import { initWeappDevContext } from "@/config/mergedConfig";
 import { deleteDir } from "@/utils/fs/deleteDir";
 import { resolve } from "@/utils/fs/resolve";
 
-import { buildAllTasks, BuildTaskTypeEnum } from "./tasks";
+import { buildAllTasks, BuildTaskTypeEnum } from "../tasks";
 
 interface BuildOptions {
   empty?: boolean;

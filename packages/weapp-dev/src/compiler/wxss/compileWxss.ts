@@ -1,11 +1,7 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 
-import { build } from "vite";
-
-import { WeappDevContext } from "@/utils/context/initContext";
 import { wxssLogger } from "@/utils/logger";
-import { getWxssViteConfig } from "@/watcher/viteDevServer";
 import { getAppWxssDistPath, getAppWxssSrcPath } from "@/weapp/wxss";
 import { getAllWxssSrcPaths } from "@/weapp/wxss";
 import { taskManager } from "@/worker/taskManager";
@@ -13,18 +9,19 @@ import { WorkerTaskEnum } from "@/worker/types";
 
 import { extractClassesFromWxss } from "./extractClassesFromWxss";
 import { setClassCache } from "./globalClassCache";
+import { viteWxssBuild } from "./vite/viteWxssBuild";
+import { ensureGetViteDevWxssServer } from "./vite/viteWxssDevServer";
 
 /**
  * 编译 WXSS 文件
  * @param input WXSS 文件路径
  */
 export async function compileWxss(input: string, showLog = true) {
+  const viteDevServer = await ensureGetViteDevWxssServer();
   let start = null;
   if (showLog) {
     start = Date.now();
   }
-
-  const { viteDevServer } = WeappDevContext;
 
   if (!viteDevServer) {
     throw new Error("viteDevServer is not initialized");
@@ -54,8 +51,7 @@ export async function compileAllWxss(isProd: boolean = false) {
     // const limit = pLimit(2000); // 👈 推荐 4~8
     await Promise.all(styles.map(async (input) => await compileWxss(input, false)));
   } else {
-    const buildConfig = await getWxssViteConfig(isProd);
-    await build(buildConfig);
+    await viteWxssBuild();
   }
 
   try {

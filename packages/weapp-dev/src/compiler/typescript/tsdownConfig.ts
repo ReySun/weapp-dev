@@ -1,6 +1,6 @@
 import { InlineConfig } from "tsdown";
 
-import { WeappDevContext } from "@/utils/context/initContext";
+import { WeappDevContext } from "@/config/mergedConfig";
 import { tsLogger } from "@/utils/logger";
 
 import { copyDistNodeModules, deleteDistNodeModules } from "./hooks";

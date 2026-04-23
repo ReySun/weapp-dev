@@ -4,9 +4,9 @@ import { dirname, basename } from "node:path";
 import FastGlob from "fast-glob";
 import { createContext } from "weapp-tailwindcss/core";
 
-import { compileAppWxss } from "@/compiler/wxss/compileStyle";
+import { compileAppWxss } from "@/compiler/wxss/compileWxss";
 import { isIncludeAllClassList } from "@/compiler/wxss/globalClassCache";
-import { WeappDevContext } from "@/utils/context/initContext";
+import { WeappDevContext } from "@/config/mergedConfig";
 import { wxmlLogger } from "@/utils/logger";
 import { getAllWxmlGlobPattern } from "@/weapp/wxml";
 

@@ -38,8 +38,7 @@
   },
   "scripts": {
     "dev": "tsdown --watch",
-    "build": "tsdown",
-    "weappJsonToTs": "tsx scripts/weappJsonToTs.ts"
+    "build": "tsdown"
   },
   "dependencies": {
     "vite": "catalog:"

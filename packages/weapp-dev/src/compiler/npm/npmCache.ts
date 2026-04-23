@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 
+import { WeappDevContext } from "@/config/mergedConfig";
 import { getNodeModulesCacheDir } from "@/constants/pkg";
-import { WeappDevContext } from "@/utils/context/initContext";
 import { ensureFile } from "@/utils/fs/ensureFile";
 import { fsCopy, fsRemove, fsStat } from "@/utils/fs/fs";
 import { resolve } from "@/utils/fs/resolve";

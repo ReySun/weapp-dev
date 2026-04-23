@@ -3,7 +3,7 @@ import path from "node:path";
 
 import type { Plugin } from "vite";
 
-import { WeappDevContext } from "@/utils/context/initContext";
+import { WeappDevContext } from "@/config/mergedConfig";
 
 let buildStartTime: number | null = null;
 const graph = new Map<string, { importers: string[]; importedIds: string[] }>();

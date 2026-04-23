@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { WeappDevContext } from "@/utils/context/initContext";
+import { WeappDevContext } from "@/config/mergedConfig";
 import { deleteDir } from "@/utils/fs/deleteDir";
 
 import { nodeModulesDir } from "./constants";

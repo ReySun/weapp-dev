@@ -1,6 +1,6 @@
 import FastGlob from "fast-glob";
 
-import { WeappDevContext } from "@/utils/context/initContext";
+import { WeappDevContext } from "@/config/mergedConfig";
 
 import { getWeappFileFinalExtensions } from "./platform";
 

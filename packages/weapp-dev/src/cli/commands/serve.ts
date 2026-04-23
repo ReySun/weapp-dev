@@ -2,11 +2,11 @@ import { resolve } from "path";
 
 import type { CAC } from "cac";
 
-import { initWeappDevContext } from "@/utils/context/initContext";
+import { initWeappDevContext } from "@/config/mergedConfig";
 import { deleteDir } from "@/utils/fs/deleteDir";
 import { watchDev } from "@/watcher/watchDev";
 
-import { buildAllTasks } from "./tasks";
+import { buildAllTasks } from "../tasks";
 
 export function registerServeCommand(cli: CAC) {
   cli
@@ -15,7 +15,7 @@ export function registerServeCommand(cli: CAC) {
     .alias("dev") // 与脚本名对齐的别名
     .action(async (_root: string, _options) => {
       try {
-        const { config } = await initWeappDevContext(true);
+        const { config } = await initWeappDevContext();
 
         if (config.emptyOutDir) {
           deleteDir(resolve(process.cwd(), "dist"));

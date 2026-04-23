@@ -4,7 +4,7 @@ import { copyAssets } from "@/compiler/copy/copyAssets";
 import { buildWeappAllNpm } from "@/compiler/npm/buildNpm";
 import { compileAllTs } from "@/compiler/typescript/compileTs";
 import { transformAllWxmlFiles } from "@/compiler/wxml/transformWxml";
-import { compileAllWxss } from "@/compiler/wxss/compileStyle";
+import { compileAllWxss } from "@/compiler/wxss/compileWxss";
 
 export enum BuildTaskTypeEnum {
   npm = "npm",

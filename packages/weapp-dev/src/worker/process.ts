@@ -1,4 +1,4 @@
-import { compileAllWxss } from "@/compiler/wxss/compileStyle";
+import { compileAllWxss } from "@/compiler/wxss/compileWxss";
 
 import { type WorkerTaskType, type WorkerTaskPayload, WorkerTaskEnum } from "./types";
 

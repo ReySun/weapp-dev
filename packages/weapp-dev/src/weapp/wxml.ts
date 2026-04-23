@@ -1,4 +1,4 @@
-import { WeappDevContext } from "@/utils/context/initContext";
+import { WeappDevContext } from "@/config/mergedConfig";
 
 import { WeappFinalFileExts } from "./platform";
 

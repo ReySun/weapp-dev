@@ -22,6 +22,9 @@ export async function compileTs(input: string) {
   tsLogger.success(`编译 TS 完成 (${duration}ms)`);
 }
 
+/**
+ * 编译所有 TS 文件
+ */
 export async function compileAllTs(isProd: boolean = false) {
   const entryTsFiles = getEntryTsFiles();
 

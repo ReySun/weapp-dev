@@ -2,7 +2,7 @@ import { readFileSync, existsSync } from "fs";
 
 import { WeappAppJson } from "@weapp-dev/miniprogram-json-schema";
 
-import { WeappDevContext } from "@/utils/context/initContext";
+import { WeappDevContext } from "@/config/mergedConfig";
 
 export function getAppJson(): WeappAppJson | null {
   const { srcRoot } = WeappDevContext.config;
