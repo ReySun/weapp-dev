@@ -5,10 +5,10 @@ import path from "node:path";
 import { glob, isDynamicPattern } from "tinyglobby";
 
 import { WeappDevConfig } from "@/config/weappDevConfig";
+import { Awaitable } from "@/types/utils";
 import { toArray } from "@/utils/array/toArray";
 import { fsCopy } from "@/utils/fs/fs";
 import { copyLogger } from "@/utils/logger";
-import { Awaitable } from "@/utils/types";
 
 export interface CopyEntry {
   /**
@@ -106,7 +106,7 @@ export async function resolveCopyEntries(options: WeappDevConfig): Promise<Resol
 
 // https://github.com/vladshcherbin/rollup-plugin-copy/blob/master/src/index.js
 // MIT License
-function resolveCopyEntry(
+export function resolveCopyEntry(
   entry: CopyEntry & { from: string },
   cwd: string,
   outDir: string,

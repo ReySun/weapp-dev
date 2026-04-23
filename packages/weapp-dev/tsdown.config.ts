@@ -4,6 +4,7 @@ export default defineConfig((options) => {
   const { watch } = options;
   return {
     entry: {
+      index: "src/index.ts",
       cli: "src/cli.ts",
       worker: "src/worker.ts",
       config: "src/config.ts",

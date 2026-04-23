@@ -3,7 +3,7 @@ import { InlineConfig, mergeConfig } from "vite";
 import { UnifiedViteWeappTailwindcssPlugin } from "weapp-tailwindcss/vite";
 
 import { WeappDevContext } from "@/config/mergedConfig";
-import { RolldownOutput } from "@/config/rolldown";
+import { RolldownOutput } from "@/types/rolldown";
 import { getAllWxssSrcPaths } from "@/weapp/wxss";
 
 import { vitePluginWxssDevWriteFile } from "./vitePluginWxssDevWriteFile";
