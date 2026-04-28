@@ -21,11 +21,6 @@ export function vitePluginRewritePnpmImport({ unbundle = false } = {}): Plugin {
 
       let newCode = code;
 
-      // 删除空export {};
-      if (chunk.isEntry) {
-        newCode = code.replace(/\n?(\/\/#endregion\s*\n\s*)?export\s*{\s*};?/, "");
-      }
-
       return {
         // 👇 替换pnpm虚拟路径
         code: newCode.replace(/node_modules\/\.pnpm\/[^/]+\/node_modules\//g, `${nodeModulesDir}/`),

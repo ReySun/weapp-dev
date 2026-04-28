@@ -9,6 +9,7 @@ import {
   getBuildStartTime,
   resetBuildCollectedCache,
 } from "./vitePluginAutoWeappSplitChunk";
+import { vitePluginDeleteEmptyExport } from "./vitePluginDeleteEmptyExport";
 import { vitePluginRewritePnpmImport } from "./vitePluginRewritePnpmImport";
 
 let isFirstWatchSuccess = true;
@@ -70,6 +71,7 @@ export async function getTsdownConfig(params?: {
       }
     },
     plugins: [
+      vitePluginDeleteEmptyExport(),
       vitePluginRewritePnpmImport({ unbundle }),
       vitePluginAutoWeappSplitChunk({ unbundle }),
     ],
