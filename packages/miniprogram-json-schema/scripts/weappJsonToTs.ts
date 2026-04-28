@@ -126,7 +126,8 @@ async function jsonSchemaToTs() {
         const NS = toPascalCase(`${platform}.${jsonNameWithExt}`);
 
         // 编译 JSON Schema 到 TypeScript
-        const ts = await compile(jsonSchema, NS);
+        const ts = await compile(jsonSchema, NS, { additionalProperties: false });
+
         const file = `./src/types/${platform}/${jsonNameWithExt}.ts`;
         const { code } = await format(file, ts, OxFmtConfig);
         ensureFile(file, code);

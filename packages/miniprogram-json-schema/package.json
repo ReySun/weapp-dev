@@ -1,6 +1,6 @@
 {
   "name": "@weapp-dev/miniprogram-json-schema",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "微信小程序 JSON Schema 配置, JSON Schema 转 TS",
   "keywords": [
     "json-schema",

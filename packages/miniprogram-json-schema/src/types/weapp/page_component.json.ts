@@ -28,23 +28,19 @@ export interface WeappPageComponentJson {
       iosVersionEnd?: string;
       androidVersionBegin?: string;
       androidVersionEnd?: string;
-      [k: string]: unknown;
     } & ISkylineFeatures;
-    [k: string]: unknown;
   };
   component?: boolean;
   componentGenerics?: {
     [k: string]:
       | {
           default: string;
-          [k: string]: unknown;
         }
       | true
       | null;
   };
   singlePage?: {
     navigationBarFit?: "float" | "squeezed";
-    [k: string]: unknown;
   };
   componentFramework?: "exparser" | "glass-easel";
   styleIsolation?:
@@ -73,7 +69,6 @@ export interface WeappPageComponentJson {
   initialRenderingCache?: "capture" | "dynamic" | "static";
   handleWebviewPreload?: "auto" | "manual" | "static";
   homeButton?: boolean;
-  [k: string]: unknown;
 }
 export interface IOriginalPageJSON {
   disableScroll?: boolean;
@@ -91,23 +86,19 @@ export interface IOriginalPageJSON {
       iosVersionEnd?: string;
       androidVersionBegin?: string;
       androidVersionEnd?: string;
-      [k: string]: unknown;
     } & ISkylineFeatures;
-    [k: string]: unknown;
   };
   component?: boolean;
   componentGenerics?: {
     [k: string]:
       | {
           default: string;
-          [k: string]: unknown;
         }
       | true
       | null;
   };
   singlePage?: {
     navigationBarFit?: "float" | "squeezed";
-    [k: string]: unknown;
   };
   componentFramework?: "exparser" | "glass-easel";
   styleIsolation?:
@@ -136,10 +127,8 @@ export interface IOriginalPageJSON {
   initialRenderingCache?: "capture" | "dynamic" | "static";
   handleWebviewPreload?: "auto" | "manual" | "static";
   homeButton?: boolean;
-  [k: string]: unknown;
 }
 export interface ISkylineFeatures {
   defaultContentBox?: boolean;
   defaultDisplayBlock?: boolean;
-  [k: string]: unknown;
 }

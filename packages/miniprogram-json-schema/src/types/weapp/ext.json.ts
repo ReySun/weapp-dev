@@ -18,15 +18,12 @@ export interface WeappExtJson {
   permission?: {
     "scope.userLocation"?: {
       desc: string;
-      [k: string]: unknown;
     };
-    [k: string]: unknown;
   };
   workers?:
     | {
         path: string;
         isSubpackage: boolean;
-        [k: string]: unknown;
       }
     | string;
   subPackages?: ISubPackageItem[];
@@ -35,7 +32,6 @@ export interface WeappExtJson {
     [k: string]: {
       network?: "all" | "wifi";
       packages: string[];
-      [k: string]: unknown;
     };
   };
   usingComponents?: {
@@ -54,14 +50,12 @@ export interface WeappExtJson {
     connectSocket?: number;
     uploadFile?: number;
     downloadFile?: number;
-    [k: string]: unknown;
   };
   debug?: boolean;
   resizable?: boolean;
   functionalPages?:
     | {
         independent: boolean;
-        [k: string]: unknown;
       }
     | boolean;
   cloud?: boolean;
@@ -76,9 +70,7 @@ export interface WeappExtJson {
     locationMessage?: {
       path?: string;
       query?: string;
-      [k: string]: unknown;
     };
-    [k: string]: unknown;
   };
   darkmode?: boolean;
   themeLocation?: string;
@@ -99,7 +91,6 @@ export interface WeappExtJson {
     | "startLocationUpdate"
     | "startLocationUpdateBackground"
   )[];
-  [k: string]: unknown;
 }
 export interface IPageJSON {
   pageJSONLight?: IOriginalPageJSON;
@@ -131,23 +122,19 @@ export interface IPageJSON {
       iosVersionEnd?: string;
       androidVersionBegin?: string;
       androidVersionEnd?: string;
-      [k: string]: unknown;
     } & ISkylineFeatures;
-    [k: string]: unknown;
   };
   component?: boolean;
   componentGenerics?: {
     [k: string]:
       | {
           default: string;
-          [k: string]: unknown;
         }
       | true
       | null;
   };
   singlePage?: {
     navigationBarFit?: "float" | "squeezed";
-    [k: string]: unknown;
   };
   componentFramework?: "exparser" | "glass-easel";
   styleIsolation?:
@@ -176,7 +163,6 @@ export interface IPageJSON {
   initialRenderingCache?: "capture" | "dynamic" | "static";
   handleWebviewPreload?: "auto" | "manual" | "static";
   homeButton?: boolean;
-  [k: string]: unknown;
 }
 export interface IOriginalPageJSON {
   disableScroll?: boolean;
@@ -194,23 +180,19 @@ export interface IOriginalPageJSON {
       iosVersionEnd?: string;
       androidVersionBegin?: string;
       androidVersionEnd?: string;
-      [k: string]: unknown;
     } & ISkylineFeatures;
-    [k: string]: unknown;
   };
   component?: boolean;
   componentGenerics?: {
     [k: string]:
       | {
           default: string;
-          [k: string]: unknown;
         }
       | true
       | null;
   };
   singlePage?: {
     navigationBarFit?: "float" | "squeezed";
-    [k: string]: unknown;
   };
   componentFramework?: "exparser" | "glass-easel";
   styleIsolation?:
@@ -239,12 +221,10 @@ export interface IOriginalPageJSON {
   initialRenderingCache?: "capture" | "dynamic" | "static";
   handleWebviewPreload?: "auto" | "manual" | "static";
   homeButton?: boolean;
-  [k: string]: unknown;
 }
 export interface ISkylineFeatures {
   defaultContentBox?: boolean;
   defaultDisplayBlock?: boolean;
-  [k: string]: unknown;
 }
 export interface IWindow {
   backgroundColorTop?: string;
@@ -265,7 +245,6 @@ export interface IWindow {
   initialRenderingCache?: "capture" | "dynamic" | "static";
   handleWebviewPreload?: "auto" | "manual" | "static";
   homeButton?: boolean;
-  [k: string]: unknown;
 }
 export interface IPluginConfig {
   provider: string;
@@ -277,7 +256,6 @@ export interface IPluginConfig {
       [k: string]: string;
     };
   };
-  [k: string]: unknown;
 }
 export interface ISubPackageItem {
   independent?: boolean;
@@ -291,7 +269,6 @@ export interface ISubPackageItem {
   useExtendedLib?: {
     [k: string]: string | boolean;
   };
-  [k: string]: unknown;
 }
 export interface ITabBar {
   custom?: boolean;
@@ -301,12 +278,10 @@ export interface ITabBar {
     iconPath?: string;
     selectedIconPath?: string;
     renderer?: "cover-view" | "skyline" | "webview";
-    [k: string]: unknown;
   }[];
   borderStyle?: ("black" | "white") | string;
   position?: "bottom" | "top";
   color?: string;
   selectedColor?: string;
   backgroundColor?: string;
-  [k: string]: unknown;
 }

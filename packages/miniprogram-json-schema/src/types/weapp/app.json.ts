@@ -5,15 +5,12 @@ export interface WeappAppJson {
   static?: IAppJSONStaticConfig[];
   "mini-ios"?: IOriginAppJSON & {
     pages?: string[];
-    [k: string]: unknown;
   };
   "mini-android"?: IOriginAppJSON & {
     pages?: string[];
-    [k: string]: unknown;
   };
   "mini-weixin"?: IOriginAppJSON & {
     pages?: string[];
-    [k: string]: unknown;
   };
   __warning__?: string;
   window?: IWindow;
@@ -24,19 +21,15 @@ export interface WeappAppJson {
   permission?: {
     "scope.userLocation"?: {
       desc: string;
-      [k: string]: unknown;
     };
     "scope.userFuzzyLocation"?: {
       desc: string;
-      [k: string]: unknown;
     };
-    [k: string]: unknown;
   };
   workers?:
     | {
         path: string;
         isSubpackage: boolean;
-        [k: string]: unknown;
       }
     | string;
   subPackages?: ISubPackageItem[];
@@ -46,13 +39,11 @@ export interface WeappAppJson {
     entryPagePath: string;
     desc: string;
     scopes?: string[];
-    [k: string]: unknown;
   }[];
   preloadRule?: {
     [k: string]: {
       network?: "all" | "wifi";
       packages: string[];
-      [k: string]: unknown;
     };
   };
   usingComponents?: {
@@ -72,7 +63,6 @@ export interface WeappAppJson {
     connectSocket?: number;
     uploadFile?: number;
     downloadFile?: number;
-    [k: string]: unknown;
   };
   debug?: boolean;
   resizable?: boolean;
@@ -81,7 +71,6 @@ export interface WeappAppJson {
   functionalPages?:
     | {
         independent: boolean;
-        [k: string]: unknown;
       }
     | boolean;
   cloud?: boolean;
@@ -90,7 +79,6 @@ export interface WeappAppJson {
     gatewayDomain?: string;
     publicKey?: string;
     gatewayId?: string;
-    [k: string]: unknown;
   };
   openDataContext?: string;
   openLocationPagePath?: string;
@@ -104,16 +92,13 @@ export interface WeappAppJson {
     locationMessage?: {
       path?: string;
       query?: string;
-      [k: string]: unknown;
     };
-    [k: string]: unknown;
   };
   darkmode?: boolean;
   themeLocation?: string;
   theme?: string;
   singlePage?: {
     navigationBarFit?: "float" | "squeezed";
-    [k: string]: unknown;
   };
   /**
    * 小程序按需注入
@@ -135,11 +120,9 @@ export interface WeappAppJson {
   };
   debugOptions?: {
     enableFPSPanel?: boolean;
-    [k: string]: unknown;
   };
   halfPage?: {
     firstPageNavigationStyle?: "custom" | "default";
-    [k: string]: unknown;
   };
   requiredPrivateInfos?: (
     | "chooseAddress"
@@ -161,9 +144,7 @@ export interface WeappAppJson {
       iosVersionEnd?: string;
       androidVersionBegin?: string;
       androidVersionEnd?: string;
-      [k: string]: unknown;
     } & ISkylineFeatures;
-    [k: string]: unknown;
   };
   componentFramework?: "exparser" | "glass-easel";
   accountCardPackage?: {
@@ -171,23 +152,18 @@ export interface WeappAppJson {
     cardList: {
       type: number;
       componentPath: string;
-      [k: string]: unknown;
     }[];
-    [k: string]: unknown;
   };
   xrEntryPagePath?: string;
   miniApp?: {
     useAuthorizePage?: boolean;
-    [k: string]: unknown;
   };
   __usePrivacyCheck__?: boolean;
   keepContextPageInCycleJump?: boolean;
-  [k: string]: unknown;
 }
 export interface IAppJSONStaticConfig {
   pattern: string;
   platforms: IPlatform[];
-  [k: string]: unknown;
 }
 export interface IOriginAppJSON {
   __warning__?: string;
@@ -199,19 +175,15 @@ export interface IOriginAppJSON {
   permission?: {
     "scope.userLocation"?: {
       desc: string;
-      [k: string]: unknown;
     };
     "scope.userFuzzyLocation"?: {
       desc: string;
-      [k: string]: unknown;
     };
-    [k: string]: unknown;
   };
   workers?:
     | {
         path: string;
         isSubpackage: boolean;
-        [k: string]: unknown;
       }
     | string;
   subPackages?: ISubPackageItem[];
@@ -221,13 +193,11 @@ export interface IOriginAppJSON {
     entryPagePath: string;
     desc: string;
     scopes?: string[];
-    [k: string]: unknown;
   }[];
   preloadRule?: {
     [k: string]: {
       network?: "all" | "wifi";
       packages: string[];
-      [k: string]: unknown;
     };
   };
   usingComponents?: {
@@ -247,7 +217,6 @@ export interface IOriginAppJSON {
     connectSocket?: number;
     uploadFile?: number;
     downloadFile?: number;
-    [k: string]: unknown;
   };
   debug?: boolean;
   resizable?: boolean;
@@ -256,7 +225,6 @@ export interface IOriginAppJSON {
   functionalPages?:
     | {
         independent: boolean;
-        [k: string]: unknown;
       }
     | boolean;
   cloud?: boolean;
@@ -265,7 +233,6 @@ export interface IOriginAppJSON {
     gatewayDomain?: string;
     publicKey?: string;
     gatewayId?: string;
-    [k: string]: unknown;
   };
   openDataContext?: string;
   openLocationPagePath?: string;
@@ -279,16 +246,13 @@ export interface IOriginAppJSON {
     locationMessage?: {
       path?: string;
       query?: string;
-      [k: string]: unknown;
     };
-    [k: string]: unknown;
   };
   darkmode?: boolean;
   themeLocation?: string;
   theme?: string;
   singlePage?: {
     navigationBarFit?: "float" | "squeezed";
-    [k: string]: unknown;
   };
   /**
    * 小程序按需注入
@@ -310,11 +274,9 @@ export interface IOriginAppJSON {
   };
   debugOptions?: {
     enableFPSPanel?: boolean;
-    [k: string]: unknown;
   };
   halfPage?: {
     firstPageNavigationStyle?: "custom" | "default";
-    [k: string]: unknown;
   };
   requiredPrivateInfos?: (
     | "chooseAddress"
@@ -336,9 +298,7 @@ export interface IOriginAppJSON {
       iosVersionEnd?: string;
       androidVersionBegin?: string;
       androidVersionEnd?: string;
-      [k: string]: unknown;
     } & ISkylineFeatures;
-    [k: string]: unknown;
   };
   componentFramework?: "exparser" | "glass-easel";
   accountCardPackage?: {
@@ -346,18 +306,14 @@ export interface IOriginAppJSON {
     cardList: {
       type: number;
       componentPath: string;
-      [k: string]: unknown;
     }[];
-    [k: string]: unknown;
   };
   xrEntryPagePath?: string;
   miniApp?: {
     useAuthorizePage?: boolean;
-    [k: string]: unknown;
   };
   __usePrivacyCheck__?: boolean;
   keepContextPageInCycleJump?: boolean;
-  [k: string]: unknown;
 }
 export interface IWindow {
   backgroundColorTop?: string;
@@ -378,7 +334,6 @@ export interface IWindow {
   initialRenderingCache?: "capture" | "dynamic" | "static";
   handleWebviewPreload?: "auto" | "manual" | "static";
   homeButton?: boolean;
-  [k: string]: unknown;
 }
 export interface IPluginConfig {
   provider: string;
@@ -390,7 +345,6 @@ export interface IPluginConfig {
       [k: string]: string;
     };
   };
-  [k: string]: unknown;
 }
 export interface ISubPackageItem {
   independent?: boolean;
@@ -404,7 +358,6 @@ export interface ISubPackageItem {
   useExtendedLib?: {
     [k: string]: string | boolean;
   };
-  [k: string]: unknown;
 }
 export interface ITabBar {
   custom?: boolean;
@@ -414,21 +367,17 @@ export interface ITabBar {
     iconPath?: string;
     selectedIconPath?: string;
     renderer?: "cover-view" | "skyline" | "webview";
-    [k: string]: unknown;
   }[];
   borderStyle?: ("black" | "white") | string;
   position?: "bottom" | "top";
   color?: string;
   selectedColor?: string;
   backgroundColor?: string;
-  [k: string]: unknown;
 }
 export interface IAppBar {
   custom?: boolean;
-  [k: string]: unknown;
 }
 export interface ISkylineFeatures {
   defaultContentBox?: boolean;
   defaultDisplayBlock?: boolean;
-  [k: string]: unknown;
 }

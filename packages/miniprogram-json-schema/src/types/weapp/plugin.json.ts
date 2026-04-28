@@ -14,5 +14,4 @@ export interface WeappPluginJson {
   workers?: string;
   renderer?: "skyline" | "webview";
   componentFramework?: "exparser" | "glass-easel";
-  [k: string]: unknown;
 }

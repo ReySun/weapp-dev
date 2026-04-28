@@ -134,4 +134,4 @@ import type { WeappAppJson, WeappPageComponentJson } from "@weapp-dev/miniprogra
 
 ## 参考文档：
 
-- https://jiaoxin2005.github.io/blogs/2022/2-17.html#%E5%B0%8F%E7%A8%8B%E5%BA%8F-app-json-%E5%A2%9E%E5%8A%A0%E8%AF%AD%E6%B3%95%E6%8F%90%E7%A4%BA
+- https://jiaoxin2005.github.io/blogs/2022/2-17.html

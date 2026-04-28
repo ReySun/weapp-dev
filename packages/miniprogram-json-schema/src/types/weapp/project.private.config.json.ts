@@ -4,7 +4,6 @@ export interface WeappProjectPrivateConfigJson {
   editorSetting?: {
     tabIndent?: "auto" | "insertSpaces" | "tab";
     tabSize?: "\t" | number;
-    [k: string]: unknown;
   };
   cloudfunctionRoot?: string;
   cloudfunctionTemplateRoot?: string;
@@ -23,18 +22,14 @@ export interface WeappProjectPrivateConfigJson {
     ignore?: {
       type: string;
       value: string;
-      [k: string]: unknown;
     }[];
     include?: {
       type: string;
       value: string;
-      [k: string]: unknown;
     }[];
-    [k: string]: unknown;
   };
   watchOptions?: {
     ignore?: string[];
-    [k: string]: unknown;
   };
   setting?: {
     autoAudits?: boolean;
@@ -55,11 +50,9 @@ export interface WeappProjectPrivateConfigJson {
     useLanDebug?: boolean;
     enableEngineNative?: boolean;
     showES6CompileOption?: boolean;
-    [k: string]: unknown;
   };
   staticServerOptions?: {
     servePath?: string;
-    [k: string]: unknown;
   };
   condition?: {
     game?: {
@@ -73,9 +66,7 @@ export interface WeappProjectPrivateConfigJson {
         referrerInfo?: unknown;
         chatroomUsernameInfo?: unknown;
         groupInfo?: unknown;
-        [k: string]: unknown;
       }[];
-      [k: string]: unknown;
     };
     gamePlugin?: {
       current?: number;
@@ -86,9 +77,7 @@ export interface WeappProjectPrivateConfigJson {
         shareInfo?: unknown;
         referrerInfo?: unknown;
         groupInfo?: unknown;
-        [k: string]: unknown;
       }[];
-      [k: string]: unknown;
     };
     plugin?: {
       current?: number;
@@ -101,9 +90,7 @@ export interface WeappProjectPrivateConfigJson {
         shareInfo?: unknown;
         referrerInfo?: unknown;
         groupInfo?: unknown;
-        [k: string]: unknown;
       }[];
-      [k: string]: unknown;
     };
     miniprogram?: {
       current?: number;
@@ -116,17 +103,12 @@ export interface WeappProjectPrivateConfigJson {
         partialCompile?: {
           enabled?: boolean;
           pages?: unknown[];
-          [k: string]: unknown;
         };
         shareInfo?: unknown;
         referrerInfo?: unknown;
         chatroomUsernameInfo?: unknown;
         groupInfo?: unknown;
-        [k: string]: unknown;
       }[];
-      [k: string]: unknown;
     };
-    [k: string]: unknown;
   };
-  [k: string]: unknown;
 }

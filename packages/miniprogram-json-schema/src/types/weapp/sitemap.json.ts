@@ -6,7 +6,5 @@ export interface WeappSitemapJson {
     params?: unknown[];
     matching?: "exact" | "exclusive" | "inclusive" | "partial";
     priority?: number;
-    [k: string]: unknown;
   }[];
-  [k: string]: unknown;
 }

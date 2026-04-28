@@ -5,5 +5,4 @@ export interface WeappThemeJson {
   dark?: {
     [k: string]: string;
   };
-  [k: string]: unknown;
 }

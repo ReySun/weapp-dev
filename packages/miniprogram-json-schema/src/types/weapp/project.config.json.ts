@@ -3,7 +3,6 @@ export interface WeappProjectConfigJson {
   editorSetting?: {
     tabIndent?: "auto" | "insertSpaces" | "tab";
     tabSize?: "\t" | number;
-    [k: string]: unknown;
   };
   cloudfunctionRoot?: string;
   cloudfunctionTemplateRoot?: string;
@@ -25,18 +24,14 @@ export interface WeappProjectConfigJson {
     ignore?: {
       type: string;
       value: string;
-      [k: string]: unknown;
     }[];
     include?: {
       type: string;
       value: string;
-      [k: string]: unknown;
     }[];
-    [k: string]: unknown;
   };
   watchOptions?: {
     ignore?: string[];
-    [k: string]: unknown;
   };
   setting?: {
     es6?: boolean;
@@ -58,7 +53,6 @@ export interface WeappProjectConfigJson {
       outputPath?: string;
       ignore?: string[];
       disablePlugins?: unknown[];
-      [k: string]: unknown;
     };
     useCompilerPlugins?: ("less" | "sass" | "typescript")[] | false;
     disableUseStrict?: boolean;
@@ -68,7 +62,6 @@ export interface WeappProjectConfigJson {
     packNpmRelationList?: {
       packageJsonPath: string;
       miniprogramNpmDistDir: string;
-      [k: string]: unknown;
     }[];
     coverView?: boolean;
     ignoreDevUnusedFiles?: boolean;
@@ -86,30 +79,24 @@ export interface WeappProjectConfigJson {
         collapseWhitespace?: boolean;
         conservativeCollapse?: boolean;
         preserveLineBreaks?: boolean;
-        [k: string]: unknown;
       };
       [k: string]: {
         collapseWhitespace?: boolean;
         conservativeCollapse?: boolean;
         preserveLineBreaks?: boolean;
-        [k: string]: unknown;
       };
     };
-    [k: string]: unknown;
   };
   staticServerOptions?: {
     servePath?: string;
-    [k: string]: unknown;
   };
   scripts?: {
     beforeCompile?: string;
     beforePreview?: string;
     beforeUpload?: string;
-    [k: string]: unknown;
   };
   debugOptions?: {
     hideInDevtools?: string[];
-    [k: string]: unknown;
   };
   condition?: {
     game?: {
@@ -123,9 +110,7 @@ export interface WeappProjectConfigJson {
         referrerInfo?: unknown;
         chatroomUsernameInfo?: unknown;
         groupInfo?: unknown;
-        [k: string]: unknown;
       }[];
-      [k: string]: unknown;
     };
     gamePlugin?: {
       current?: number;
@@ -136,9 +121,7 @@ export interface WeappProjectConfigJson {
         shareInfo?: unknown;
         referrerInfo?: unknown;
         groupInfo?: unknown;
-        [k: string]: unknown;
       }[];
-      [k: string]: unknown;
     };
     plugin?: {
       current?: number;
@@ -151,9 +134,7 @@ export interface WeappProjectConfigJson {
         shareInfo?: unknown;
         referrerInfo?: unknown;
         groupInfo?: unknown;
-        [k: string]: unknown;
       }[];
-      [k: string]: unknown;
     };
     miniprogram?: {
       current?: number;
@@ -166,50 +147,40 @@ export interface WeappProjectConfigJson {
         partialCompile?: {
           enabled?: boolean;
           pages?: unknown[];
-          [k: string]: unknown;
         };
         shareInfo?: unknown;
         referrerInfo?: unknown;
         chatroomUsernameInfo?: unknown;
         groupInfo?: unknown;
-        [k: string]: unknown;
       }[];
-      [k: string]: unknown;
     };
-    [k: string]: unknown;
   };
   skeletonConfig?: {
     global: ISkeletonConfig;
     [k: string]: ISkeletonConfig;
   };
-  [k: string]: unknown;
 }
 export interface ISkeletonConfig {
   loading?: "" | "chiaroscuro" | "shine" | "spin";
   outline?: {
     remain: boolean;
     replace: string;
-    [k: string]: unknown;
   };
   text?: {
     color: string;
-    [k: string]: unknown;
   };
   image?: {
     color: string;
     shape: "circle" | "rect";
     shapeOpposite: string[];
-    [k: string]: unknown;
   };
   button?: {
     color: string;
     excludes: string[];
-    [k: string]: unknown;
   };
   pseudo?: {
     color: string;
     shape: "circle" | "rect";
-    [k: string]: unknown;
   };
   excludes?: string[];
   remove?: string[];
@@ -220,5 +191,4 @@ export interface ISkeletonConfig {
   templateName?: string;
   cssUnit?: "rem" | "rpx" | "vh" | "vmax" | "vmin" | "vw";
   decimal?: number;
-  [k: string]: unknown;
 }
