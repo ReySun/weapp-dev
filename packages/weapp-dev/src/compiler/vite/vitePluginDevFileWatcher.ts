@@ -1,11 +1,11 @@
-import path, { resolve, basename } from "node:path";
+import path, { resolve } from "node:path";
 
 import { debounce } from "lodash-es";
 import { fsRemove } from "tsdown/internal";
 import type { Plugin } from "vite";
 
 import { WeappDevContext } from "@/config/mergedConfig";
-import { fsCopy, fsStat } from "@/utils/fs/fs";
+import { fsStat } from "@/utils/fs/fs";
 import { copyLogger, tsLogger, deleteLogger } from "@/utils/logger";
 import { getWeappFileFinalExtensions } from "@/weapp/platform";
 import { getAllWxmlExts } from "@/weapp/wxml";
@@ -117,13 +117,9 @@ async function handleFileEvent(path: string, event: string) {
       }
       // json文件
       else if (path.endsWith(".json")) {
-        copyLogger.info(`${event}: ${path}`);
-        await copyFile(absolutePath);
-      }
-      // wxs文件
-      else if (path.endsWith(".wxs")) {
-        copyLogger.info(`${event}: ${path}`);
-        await copyFile(absolutePath);
+        // copyLogger.info(`${event}: ${path}`);
+        // await copyFile(absolutePath);
+        await transformWxmlFile(absolutePath, true, true);
       }
       break;
 
@@ -144,16 +140,6 @@ async function handleFileEvent(path: string, event: string) {
 
       break;
   }
-}
-
-// 复制JSON文件到dist目录
-async function copyFile(srcPath: string) {
-  const { config } = WeappDevContext;
-  const { srcRoot, outDir } = config;
-  const distPath = srcPath.replace(new RegExp(`/${srcRoot}/`), `/${outDir}/`);
-
-  await fsCopy(srcPath, distPath);
-  copyLogger.success(`${basename(srcPath)} 复制完成`);
 }
 
 // 清理dist目录中的对应文件

@@ -84,7 +84,15 @@ export interface WeappDevConfig {
 
   npm?: WeappDevNpmConfig;
 
+  /**
+   * @experimental
+   */
   tsdown?: {
+    /**
+     * 打包ts文件是否unbundle，直接沿用tsdown的unbundle配置
+     *
+     * 实测，项目比较大会导致微信开发者工具异常bug（猜猜是unbundle时js文件过多引起）
+     */
     unbundle?: boolean;
   };
 }

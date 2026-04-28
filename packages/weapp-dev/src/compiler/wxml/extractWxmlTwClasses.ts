@@ -1,7 +1,19 @@
 import { parse } from "node-html-parser";
 
+import { weappNativeComponents } from "@/weapp/wxml";
+
 const isClassLike = (key: string) =>
   key.toLowerCase().endsWith("class") || key.toLowerCase().startsWith("class");
+
+const isComponentTag = (tag: string) => {
+  if (!tag) return false;
+
+  const name = tag.toLowerCase();
+
+  if (weappNativeComponents.includes(name)) return false;
+
+  return true;
+};
 
 export function extractWxmlTwClasses(wxml: string) {
   const root = parse(wxml, {
@@ -10,6 +22,8 @@ export function extractWxmlTwClasses(wxml: string) {
   });
 
   const classes = new Set<string>();
+
+  const components = new Set<string>();
 
   const addClasses = (value: string) => {
     if (!value) return;
@@ -41,6 +55,12 @@ export function extractWxmlTwClasses(wxml: string) {
 
   const walk = (node: any) => {
     if (node.nodeType === 1) {
+      const tag = node.rawTagName;
+
+      if (isComponentTag(tag)) {
+        components.add(tag);
+      }
+
       const attrs = node.attributes;
 
       for (const key in attrs) {
@@ -60,5 +80,5 @@ export function extractWxmlTwClasses(wxml: string) {
 
   walk(root);
 
-  return classes;
+  return { classes, components };
 }

@@ -6,7 +6,8 @@ import { extractWxmlTwClasses } from "./extractWxmlTwClasses";
 
 interface IWxmlCache {
   fileMd5: string;
-  classList: Set<string>;
+  classes: Set<string>;
+  components: Set<string>;
 }
 type FilePath = string;
 
@@ -18,11 +19,12 @@ export const wxmlCache = new Map<FilePath, IWxmlCache>();
  * @param content
  */
 export function setWxmlCache(file: FilePath, content: string) {
-  const classList = extractWxmlTwClasses(content);
+  const { classes, components } = extractWxmlTwClasses(content);
 
   wxmlCache.set(file, {
     fileMd5: md5(content),
-    classList,
+    classes,
+    components,
   });
 }
 
@@ -53,7 +55,16 @@ export function isWxmlFileChanged(file: FilePath, content: string) {
  */
 export function getWxmlFileCachedClassList(file: FilePath) {
   const cache: IWxmlCache | undefined = wxmlCache.get(file);
-  return cache?.classList;
+  return cache?.classes;
+}
+
+/**
+ * 获取 WXML 文件的编存components
+ * @param file
+ */
+export function getWxmlFileCachedComponets(file: FilePath) {
+  const cache: IWxmlCache | undefined = wxmlCache.get(file);
+  return cache?.components;
 }
 
 /**
@@ -62,15 +73,20 @@ export function getWxmlFileCachedClassList(file: FilePath) {
  * @param content
  * @returns
  */
-export function wxmlFileClassChangedInfo(file: FilePath, content: string) {
+export function wxmlFileChangedInfo(file: FilePath, content: string) {
   const beforeClassList = getWxmlFileCachedClassList(file);
-  const afterClassList = extractWxmlTwClasses(content);
-  // console.log("beforeClassList", beforeClassList);
-  // console.log("afterClassList", afterClassList);
-  // console.log("addedClass", diffSetString(afterClassList, beforeClassList));
+  const beforeComponents = getWxmlFileCachedComponets(file);
+
+  const { classes: afterClassList, components: afterComponents } = extractWxmlTwClasses(content);
+
   return {
-    isChanged: !isEqualSet(beforeClassList, afterClassList),
-    classList: afterClassList,
+    isClassChanged: !isEqualSet(beforeClassList, afterClassList),
+    classes: afterClassList,
     addedClass: diffSetString(afterClassList, beforeClassList),
+
+    isComponentChanged: !isEqualSet(beforeComponents, afterComponents),
+    components: afterComponents,
+    vantComponents: [...afterComponents].filter((item) => item.startsWith("van-")),
+    addedComponent: diffSetString(afterComponents, beforeComponents),
   };
 }

@@ -21,7 +21,7 @@ export function getInnerCopyEntry() {
 
   return [
     {
-      from: `${srcRoot}/**/*.{json,js}`,
+      from: [`${srcRoot}/**/*.{wxs,js}`, `${srcRoot}/*.json`],
       to: `${outDir}`,
       flatten: false,
     },
