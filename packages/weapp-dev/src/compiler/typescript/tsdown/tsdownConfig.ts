@@ -25,7 +25,7 @@ export async function getTsdownConfig(params?: {
   return {
     logLevel: !isProd ? "silent" : "warn",
     watch: !isProd,
-    report: false,
+    report: isProd,
     dts: false,
     clean: false,
     root: config.srcRoot,
@@ -47,23 +47,6 @@ export async function getTsdownConfig(params?: {
         dts: ".d.ts",
       };
     },
-    // outputOptions: isProd
-    //   ? {
-    //       chunkFileNames: () => {
-    //         return "deps/chunk-[hash].js";
-    //       },
-    //       entryFileNames: (chunkInfo) => {
-    //         // TODO: 优化 chunkFileNames 逻辑
-    //         const reg = new RegExp(
-    //           `${config.srcRoot}/(utils|hooks|constants|router|wrapper|plugins|storage|store|behaviors)/`,
-    //         );
-    //         if (reg.test(chunkInfo.facadeModuleId)) {
-    //           return "deps/chunk-[hash].js";
-    //         }
-    //         return "[name].js";
-    //       },
-    //     }
-    //   : {},
     hooks: {
       "build:done": async () => {
         try {

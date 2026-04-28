@@ -1,29 +1,18 @@
-import { resolve } from "path";
-
 import type { CAC } from "cac";
 
-import { initWeappDevContext } from "@/config/mergedConfig";
-import { deleteDir } from "@/utils/fs/deleteDir";
-
-import { buildAllTasks } from "../tasks";
+import type { BuildOptions } from "../constants";
+import { initCommand } from "../initCommand";
 
 export function registerServeCommand(cli: CAC) {
   cli
-    .command("[root]", "start dev server") // 默认命令
-    .alias("serve") // 与 Vite API 的命令名保持一致
-    .alias("dev") // 与脚本名对齐的别名
-    .action(async (_root: string, _options) => {
-      try {
-        const { config } = await initWeappDevContext();
-
-        if (config.emptyOutDir) {
-          deleteDir(resolve(process.cwd(), "dist"));
-        }
-
-        await buildAllTasks({ isProd: false });
-      } catch (error) {
-        console.error("Error starting dev server:");
-        console.error(error);
-      }
+    .command("[root]", "start dev server")
+    .alias("serve")
+    .alias("dev")
+    .option("-e, --empty", "empty output directory before build")
+    .action(async (_root: string, options: BuildOptions) => {
+      await initCommand({
+        isProd: false,
+        empty: options.empty,
+      });
     });
 }

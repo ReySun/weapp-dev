@@ -1,14 +1,7 @@
 import type { CAC } from "cac";
 
-import { initWeappDevContext } from "@/config/mergedConfig";
-import { deleteDir } from "@/utils/fs/deleteDir";
-import { resolve } from "@/utils/fs/resolve";
-
-import { buildAllTasks, BuildTaskTypeEnum } from "../tasks";
-
-interface BuildOptions {
-  empty?: boolean;
-}
+import { BuildTaskTypeEnum, type BuildOptions } from "../constants";
+import { initCommand } from "../initCommand";
 
 export function registerBuildCommand(cli: CAC) {
   cli
@@ -22,21 +15,10 @@ export function registerBuildCommand(cli: CAC) {
     .example("wd build (build all)")
     .option("-e, --empty", "empty output directory before build")
     .action(async (types: BuildTaskTypeEnum[] | undefined, options: BuildOptions) => {
-      try {
-        await initWeappDevContext();
-
-        if (options.empty) {
-          deleteDir(resolve(process.cwd(), "dist"));
-        }
-
-        const innerTaskCount = await buildAllTasks({ isProd: true, buildTaskType: types });
-        if (!innerTaskCount) {
-          console.log("暂无构建任务");
-          return;
-        }
-      } catch (error) {
-        console.error("Error starting dev server:");
-        console.error(error);
-      }
+      await initCommand({
+        isProd: true,
+        buildTaskType: types,
+        empty: options.empty,
+      });
     });
 }

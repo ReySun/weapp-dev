@@ -5,20 +5,26 @@ import { buildWeappAllNpm } from "@/compiler/npm/buildNpm";
 import { compileAllTs } from "@/compiler/typescript/compileTs";
 import { transformAllWxmlFiles } from "@/compiler/wxml/transformWxml";
 import { compileAllWxss } from "@/compiler/wxss/compileWxss";
+import { initWeappDevContext, WeappDevContext } from "@/config/mergedConfig";
+import { deleteDir } from "@/utils/fs/deleteDir";
+import { resolve } from "@/utils/fs/resolve";
 
-export enum BuildTaskTypeEnum {
-  npm = "npm",
-  wxss = "wxss",
-  wxml = "wxml",
-  copy = "copy",
-  ts = "ts",
-}
+import { BuildTaskTypeEnum, type BuildOptions } from "./constants";
 
 const listr2TimerFormat = {
   condition: true,
   field: (duration: number) => `${duration}ms`,
   format: () => color.dim,
 };
+
+export async function initWeappDev(options: BuildOptions) {
+  await initWeappDevContext();
+
+  if (options.empty || WeappDevContext.config.emptyOutDir) {
+    // spinner.succeed("已清空输出目录");
+    deleteDir(resolve(process.cwd(), "dist"));
+  }
+}
 
 export async function buildAllTasks({
   isProd,

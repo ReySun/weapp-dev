@@ -7,12 +7,8 @@
   "author": "",
   "type": "module",
   "scripts": {
-    "dev:vite": "vite",
-    "build:ts": "tsdown",
-    "build:vite": "vite build",
-    "build:vite:watch": "vite build --watch",
-    "postinstall": "weapp-tw patch --clear-cache",
-    "wxss": "tsx ./wxss.ts"
+    "dev": "weapp-dev dev",
+    "build": "weapp-dev build"
   },
   "dependencies": {
     "@vant/weapp": "^1.11.7",

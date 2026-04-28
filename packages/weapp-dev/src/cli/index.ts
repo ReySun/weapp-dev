@@ -10,8 +10,8 @@ export async function runCli(): Promise<void> {
     registerServeCommand(cli);
     registerBuildCommand(cli);
 
-    cli.help();
     cli.parse();
+    cli.help();
   } catch (error) {
     console.error(String(error));
     process.exit(1);
