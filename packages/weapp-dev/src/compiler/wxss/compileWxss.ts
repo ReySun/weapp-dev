@@ -7,17 +7,17 @@ import { getAllWxssSrcPaths } from "@/weapp/wxss";
 import { taskManager } from "@/worker/taskManager";
 import { WorkerTaskEnum } from "@/worker/types";
 
+import { viteWxssBuild } from "../vite/viteBuild";
+import { ensureGetViteDevServer } from "../vite/viteDevServer";
 import { extractClassesFromWxss } from "./extractClassesFromWxss";
 import { setClassCache } from "./globalClassCache";
-import { viteWxssBuild } from "./vite/viteWxssBuild";
-import { ensureGetViteDevWxssServer } from "./vite/viteWxssDevServer";
 
 /**
  * 编译 WXSS 文件
  * @param input WXSS 文件路径
  */
 export async function compileWxss(input: string, showLog = true) {
-  const viteDevServer = await ensureGetViteDevWxssServer();
+  const viteDevServer = await ensureGetViteDevServer();
   let start = null;
   if (showLog) {
     start = Date.now();

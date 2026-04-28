@@ -1,5 +1,5 @@
 import FastGlob from "fast-glob";
-import type { InlineConfig} from "vite";
+import type { InlineConfig } from "vite";
 import { mergeConfig } from "vite";
 import { UnifiedViteWeappTailwindcssPlugin } from "weapp-tailwindcss/vite";
 
@@ -7,7 +7,8 @@ import { WeappDevContext } from "@/config/mergedConfig";
 import type { RolldownOutput } from "@/types/rolldown";
 import { getAllWxssSrcPaths } from "@/weapp/wxss";
 
-import { vitePluginWxssDevWriteFile } from "./vitePluginWxssDevWriteFile";
+import { vitePluginDevFileWatcher } from "./vitePluginDevFileWatcher";
+import { vitePluginDevWriteWxssToDist } from "./vitePluginDevWriteWxssToDist";
 
 /**
  * 获取 wxss Vite 配置
@@ -26,7 +27,9 @@ export async function getWxssViteConfig(isProd = false) {
     ),
     plugins: [
       UnifiedViteWeappTailwindcssPlugin({ ...weappTwConfig, logLevel: "silent" }),
-      ...(isProd ? [] : [vitePluginWxssDevWriteFile()]),
+
+      vitePluginDevWriteWxssToDist(),
+      vitePluginDevFileWatcher(),
     ],
   });
 

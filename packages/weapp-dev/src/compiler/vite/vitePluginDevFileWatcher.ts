@@ -1,19 +1,50 @@
 import path, { resolve, basename } from "node:path";
 
-import chokidar from "chokidar";
 import { debounce } from "lodash-es";
+import { fsRemove } from "tsdown/internal";
+import type { Plugin } from "vite";
 
-import { copy } from "@/compiler/copy/copy";
-import { getMatchedCopyEntry } from "@/compiler/copy/copyAssets";
-import { compileTs } from "@/compiler/typescript/compileTs";
-import { transformWxmlFile } from "@/compiler/wxml/transformWxml";
-import { compileWxss } from "@/compiler/wxss/compileWxss";
 import { WeappDevContext } from "@/config/mergedConfig";
-import { fsCopy, fsRemove, fsStat } from "@/utils/fs/fs";
-import { tsLogger, copyLogger, deleteLogger } from "@/utils/logger";
+import { fsCopy, fsStat } from "@/utils/fs/fs";
+import { copyLogger, tsLogger, deleteLogger } from "@/utils/logger";
 import { getWeappFileFinalExtensions } from "@/weapp/platform";
 import { getAllWxmlExts } from "@/weapp/wxml";
 import { WeappCssProcessorList } from "@/weapp/wxss";
+
+import { copy } from "../copy/copy";
+import { getMatchedCopyEntry } from "../copy/copyAssets";
+import { compileTs, compileAllTs } from "../typescript/compileTs";
+import { transformWxmlFile } from "../wxml/transformWxml";
+import { compileWxss } from "../wxss/compileWxss";
+
+export function vitePluginDevFileWatcher(): Plugin {
+  return {
+    name: "weapp-dev-vite:dev-file-watcher",
+
+    apply: "serve",
+
+    enforce: "post",
+
+    async configureServer(server) {
+      // 不监听dist下的文件变化
+      server.watcher.unwatch(`${path.resolve(process.cwd(), WeappDevContext.config.outDir)}/**`);
+
+      server.watcher.once("ready", () => {
+        console.log("监听就绪...");
+
+        server.watcher.on("add", (path) => {
+          getDebounceHandler(path, "add")();
+        });
+        server.watcher.on("change", (path) => {
+          getDebounceHandler(path, "change")();
+        });
+        server.watcher.on("unlink", (path) => {
+          getDebounceHandler(path, "unlink")();
+        });
+      });
+    },
+  };
+}
 
 // 防抖函数映射，以文件路径+事件作为键
 const debounceHandlers = new Map<string, ReturnType<typeof debounce>>();
@@ -76,13 +107,13 @@ async function handleFileEvent(path: string, event: string) {
       // ts文件
       else if (path.endsWith(".ts")) {
         const unbundle = WeappDevContext.config.tsdown?.unbundle ?? false;
+        // TODO 优化tsdown，只编译变更的文件
         if (unbundle) {
           tsLogger.info(`${event}: ${path}`);
           await compileTs(path);
+        } else {
+          await compileAllTs(false);
         }
-        // TODO 必要时候，重启ts server
-        // await compileAllTs(false);
-        // console.log(`编译 TS ${await runTimeEnd(() => compileAllTs(false))}ms`);
       }
       // json文件
       else if (path.endsWith(".json")) {
@@ -104,7 +135,13 @@ async function handleFileEvent(path: string, event: string) {
         await cleanDistFileOrDirFromSrc(path);
       }
 
-      deleteLogger.info(`${event}: ${path}`);
+      if (path.endsWith(".ts")) {
+        // console.log("重新编译");
+        await compileAllTs(false);
+      } else {
+        deleteLogger.info(`${event}: ${path}`);
+      }
+
       break;
   }
 }
@@ -135,45 +172,4 @@ async function cleanDistFileOrDirFromSrc(srcPath: string) {
 
   await fsRemove(distPath);
   // console.log(`清理${stat.isFile() ? "文件" : "目录"} ${distPath}`);
-}
-
-export async function watchDev() {
-  const { config } = WeappDevContext;
-
-  let isReady = false;
-  const srcRoot = path.resolve(`${config.srcRoot}`);
-  const watcher = chokidar.watch([`${srcRoot}/**/*`], {
-    usePolling: false,
-    awaitWriteFinish: {
-      stabilityThreshold: 100,
-    },
-  });
-
-  watcher.on("change", (path) => {
-    getDebounceHandler(path, "change")();
-  });
-
-  watcher.on("add", (path) => {
-    // 只在ready事件触发后处理add事件，避免初始化时的大量事件
-    if (isReady) {
-      getDebounceHandler(path, "add")();
-    }
-  });
-
-  watcher.on("unlink", (path) => {
-    getDebounceHandler(path, "unlink")();
-  });
-
-  // watcher.on("unlinkDir", (path) => {
-  //   getDebounceHandler(path, "unlinkDir")();
-  // });
-
-  watcher.on("error", (error) => {
-    console.error("监听错误:", error);
-  });
-
-  watcher.on("ready", () => {
-    isReady = true;
-    console.log("监听就绪...");
-  });
 }

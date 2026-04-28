@@ -4,7 +4,6 @@ import type { CAC } from "cac";
 
 import { initWeappDevContext } from "@/config/mergedConfig";
 import { deleteDir } from "@/utils/fs/deleteDir";
-import { watchDev } from "@/watcher/watchDev";
 
 import { buildAllTasks } from "../tasks";
 
@@ -22,7 +21,6 @@ export function registerServeCommand(cli: CAC) {
         }
 
         await buildAllTasks({ isProd: false });
-        watchDev();
       } catch (error) {
         console.error("Error starting dev server:");
         console.error(error);

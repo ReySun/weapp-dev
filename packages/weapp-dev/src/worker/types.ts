@@ -1,6 +1,6 @@
 export enum WorkerTaskEnum {
-  buildAllWxss = "vite-build-all-wxss",
-  buildJs = "vite-build-js",
+  buildAllWxss = "buildAllWxss",
+  buildAllTs = "buildAllTs",
   exit = "exit",
 }
 
@@ -8,7 +8,7 @@ export interface WorkerTaskMap {
   [WorkerTaskEnum.buildAllWxss]: {
     payload: undefined;
   };
-  [WorkerTaskEnum.buildJs]: {
+  [WorkerTaskEnum.buildAllTs]: {
     payload: undefined;
   };
   [WorkerTaskEnum.exit]: {

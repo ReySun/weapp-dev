@@ -9,12 +9,12 @@ import { replaceSrcToDist } from "@/utils/string/replaceSrcToDist";
 import { getWeappFileFinalExtensions } from "@/weapp/platform";
 import { WeappCssProcessorList } from "@/weapp/wxss";
 
-export function vitePluginWxssDevWriteFile(): Plugin {
+export function vitePluginDevWriteWxssToDist(): Plugin {
   const { config, weappTwCtx } = WeappDevContext;
   const { srcRoot, outDir } = config;
 
   return {
-    name: "write-to-dist",
+    name: "weapp-dev-vite:dev-write-wxss-to-dist",
 
     apply: "serve",
 

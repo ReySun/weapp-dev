@@ -1,6 +1,6 @@
 import { build } from "vite";
 
-import { getWxssViteConfig } from "./viteWxssConfig";
+import { getWxssViteConfig } from "./viteConfig";
 
 /**
  * 构建生产环境 wxss

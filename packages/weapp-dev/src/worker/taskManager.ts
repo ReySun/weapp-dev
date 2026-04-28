@@ -11,7 +11,7 @@ import { type WorkerTaskType, type WorkerTaskPayload, WorkerTaskEnum } from "./t
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const workerPath = path.resolve(__dirname, "./worker.js");
+const workerPath = path.resolve(__dirname, "./worker.mjs");
 
 class TaskManager {
   private taskMap = new Map<string, ChildProcess>();

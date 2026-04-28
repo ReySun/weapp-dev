@@ -23,7 +23,7 @@ export async function getTsdownConfig(params?: {
   const unbundle = config.tsdown?.unbundle ?? false;
 
   return {
-    logLevel: "warn",
+    logLevel: !isProd ? "silent" : "warn",
     watch: !isProd,
     report: false,
     dts: false,

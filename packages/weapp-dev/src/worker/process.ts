@@ -1,4 +1,6 @@
+import { compileAllTs } from "@/compiler/typescript/compileTs";
 import { compileAllWxss } from "@/compiler/wxss/compileWxss";
+import { initWeappDevContext } from "@/config/mergedConfig";
 
 import { type WorkerTaskType, type WorkerTaskPayload, WorkerTaskEnum } from "./types";
 
@@ -8,7 +10,10 @@ const taskMap: {
   async [WorkerTaskEnum.buildAllWxss]() {
     await compileAllWxss();
   },
-  async [WorkerTaskEnum.buildJs]() {},
+  async [WorkerTaskEnum.buildAllTs]() {
+    await initWeappDevContext();
+    await compileAllTs();
+  },
   async [WorkerTaskEnum.exit]() {
     process.send?.({ type: "exit" });
     process.exit(2);
