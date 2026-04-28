@@ -16,18 +16,18 @@ interface WeappJsonSchemaConfig {
   [key: string]: string;
 }
 let weappJsonSchemaConfig: WeappJsonSchemaConfig = {
-  "app.json": "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/app.schema.json",
-  "ext.json": "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/ext.schema.json",
-  "game.json": "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/game.schema.json",
-  "plugin.json": "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/plugin.schema.json",
-  "project.config.json":
-    "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/project.config.schema.json",
-  "project.private.config.json":
-    "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/project.private.config.schema.json",
-  "sitemap.json": "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/sitemap.schema.json",
-  "container.config.json":
-    "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/container.config.schema.json",
-  "theme.json": "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/theme.schema.json",
+  // "app.json": "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/app.schema.json",
+  // "ext.json": "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/ext.schema.json",
+  // "game.json": "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/game.schema.json",
+  // "plugin.json": "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/plugin.schema.json",
+  // "project.config.json":
+  //   "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/project.config.schema.json",
+  // "project.private.config.json":
+  //   "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/project.private.config.schema.json",
+  // "sitemap.json": "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/sitemap.schema.json",
+  // "container.config.json":
+  //   "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/container.config.schema.json",
+  // "theme.json": "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/theme.schema.json",
 };
 
 /**
@@ -86,7 +86,7 @@ function writeVscodeSettings() {
     },
   };
 
-  const file = "./settings.json";
+  const file = ".vscode/settings.json";
 
   format(file, JSON.stringify(settings), OxFmtConfig).then(({ code }) => {
     ensureFile(file, code);
@@ -118,7 +118,7 @@ async function jsonSchemaToTs() {
 
         // 写入本地 JSON Schema 文件
         ensureFile(
-          `./src/json-schema/${jsonNameWithExt.replace(".json", ".schema.json")}`,
+          `./src/schema/${platform}/${jsonNameWithExt.replace(".json", ".schema.json")}`,
           JSON.stringify(jsonSchema),
         );
 
@@ -127,7 +127,7 @@ async function jsonSchemaToTs() {
 
         // 编译 JSON Schema 到 TypeScript
         const ts = await compile(jsonSchema, NS);
-        const file = `./src/types/${platform}-json-schema/${jsonNameWithExt}.ts`;
+        const file = `./src/types/${platform}/${jsonNameWithExt}.ts`;
         const { code } = await format(file, ts, OxFmtConfig);
         ensureFile(file, code);
         files.push(file);

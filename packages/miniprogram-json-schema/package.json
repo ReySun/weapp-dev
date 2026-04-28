@@ -1,6 +1,6 @@
 {
   "name": "@weapp-dev/miniprogram-json-schema",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "微信小程序 JSON Schema 配置, JSON Schema 转 TS",
   "keywords": [
     "json-schema",
@@ -10,11 +10,12 @@
     "weapp",
     "weapp-dev"
   ],
-  "license": "ISC",
+  "license": "MIT",
   "author": "",
   "files": [
+    "src",
     "dist",
-    "settings.json"
+    ".vscode"
   ],
   "type": "module",
   "main": "./dist/index.cjs",
@@ -31,8 +32,8 @@
         "default": "./dist/index.cjs"
       }
     },
-    "./json-schema/*": "./dist/json-schema/*",
-    "./settings.json": "./settings.json"
+    "./schema/weapp/*": "./dist/schema/weapp/*",
+    "./settings.json": "./.vscode/settings.json"
   },
   "scripts": {
     "dev": "tsdown --watch",
