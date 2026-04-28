@@ -2,39 +2,39 @@
   "settings": {
     "json.schemas": [
       {
-        "fileMatch": "app.json",
+        "fileMatch": ["app.json"],
         "url": "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/app.schema.json"
       },
       {
-        "fileMatch": "ext.json",
+        "fileMatch": ["ext.json"],
         "url": "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/ext.schema.json"
       },
       {
-        "fileMatch": "game.json",
+        "fileMatch": ["game.json"],
         "url": "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/game.schema.json"
       },
       {
-        "fileMatch": "plugin.json",
+        "fileMatch": ["plugin.json"],
         "url": "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/plugin.schema.json"
       },
       {
-        "fileMatch": "project.config.json",
+        "fileMatch": ["project.config.json"],
         "url": "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/project.config.schema.json"
       },
       {
-        "fileMatch": "project.private.config.json",
+        "fileMatch": ["project.private.config.json"],
         "url": "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/project.private.config.schema.json"
       },
       {
-        "fileMatch": "sitemap.json",
+        "fileMatch": ["sitemap.json"],
         "url": "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/sitemap.schema.json"
       },
       {
-        "fileMatch": "container.config.json",
+        "fileMatch": ["container.config.json"],
         "url": "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/container.config.schema.json"
       },
       {
-        "fileMatch": "theme.json",
+        "fileMatch": ["theme.json"],
         "url": "https://dldir1.qq.com/WechatWebDev/editor-extension/wx-json/theme.schema.json"
       },
       {

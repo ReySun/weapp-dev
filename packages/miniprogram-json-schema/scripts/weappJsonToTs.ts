@@ -77,11 +77,20 @@ function writeVscodeSettings() {
 
   const settings = {
     settings: {
-      "json.schemas": jsonValidation,
+      "json.schemas": jsonValidation?.map((item) => {
+        return {
+          fileMatch: Array.isArray(item.fileMatch) ? item.fileMatch : [item.fileMatch],
+          url: item.url,
+        };
+      }),
     },
   };
 
-  ensureFile("./settings.json", JSON.stringify(settings, null, 2));
+  const file = "./settings.json";
+
+  format(file, JSON.stringify(settings), OxFmtConfig).then(({ code }) => {
+    ensureFile(file, code);
+  });
 }
 // 提前执行，有副作用，确保 jsonSchemaToTs 之前
 writeVscodeSettings();
