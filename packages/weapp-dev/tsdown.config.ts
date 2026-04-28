@@ -22,5 +22,6 @@ export default defineConfig((options) => {
     deps: {
       skipNodeModulesBundle: true,
     },
+    publint: true,
   };
 });

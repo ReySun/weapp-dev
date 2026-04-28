@@ -18,30 +18,54 @@
     "wd": "bin/weapp-dev.js",
     "weapp-dev": "bin/weapp-dev.js"
   },
+  "files": [
+    "dist",
+    "bin"
+  ],
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.mts",
   "exports": {
-    "./index": {
-      "types": "./dist/index.d.mts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.mjs"
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./config": {
-      "types": "./dist/config.d.mts",
-      "import": "./dist/config.mjs",
-      "require": "./dist/config.mjs"
+      "import": {
+        "types": "./dist/config.d.mts",
+        "default": "./dist/config.mjs"
+      },
+      "require": {
+        "types": "./dist/config.d.cts",
+        "default": "./dist/config.cjs"
+      }
     },
     "./cli": {
-      "types": "./dist/cli.d.mts",
-      "import": "./dist/cli.mjs",
-      "require": "./dist/cli.mjs"
+      "import": {
+        "types": "./dist/cli.d.mts",
+        "default": "./dist/cli.mjs"
+      },
+      "require": {
+        "types": "./dist/cli.d.cts",
+        "default": "./dist/cli.cjs"
+      }
     },
     "./lodashFix": {
-      "types": "./dist/lodashFix.d.mts",
-      "import": "./dist/lodashFix.mjs",
-      "require": "./dist/lodashFix.mjs"
+      "import": {
+        "types": "./dist/lodashFix.d.mts",
+        "default": "./dist/lodashFix.mjs"
+      },
+      "require": {
+        "types": "./dist/lodashFix.d.cts",
+        "default": "./dist/lodashFix.cjs"
+      }
     }
   },
   "scripts": {
@@ -66,7 +90,8 @@
     "@types/lodash-es": "catalog:",
     "@typescript/native-preview": "7.0.0-dev.20260417.1",
     "@weapp-dev/miniprogram-json-schema": "workspace:*",
-    "miniprogram-api-typings": "catalog:"
+    "miniprogram-api-typings": "catalog:",
+    "publint": "catalog:"
   },
   "packageManager": "pnpm@10.24.0"
 }

@@ -12,25 +12,36 @@
   ],
   "license": "ISC",
   "author": "",
+  "files": [
+    "dist",
+    "settings.json"
+  ],
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.mts",
   "exports": {
-    ".": {
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.mts"
+   ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./json-schema/*": "./dist/json-schema/*",
-    "./settings.json": "./dist/settings.json"
+    "./settings.json": "./settings.json"
   },
   "scripts": {
+    "dev": "tsdown --watch",
     "build": "tsdown",
     "weappJsonToTs": "tsx scripts/weappJsonToTs.ts"
   },
   "devDependencies": {
     "json-schema-to-typescript-lite": "^15.0.0",
+    "publint": "catalog:",
     "tsx": "^4.21.0"
   },
   "packageManager": "pnpm@10.24.0"
