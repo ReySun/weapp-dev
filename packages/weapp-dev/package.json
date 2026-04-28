@@ -9,8 +9,7 @@
     "vite",
     "weapp",
     "weapp-dev",
-    "原生小程序",
-    "微信/支付宝/头条小程序"
+    "原生微信小程序"
   ],
   "license": "MIT",
   "author": "ReySun",
