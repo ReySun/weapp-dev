@@ -8,6 +8,7 @@ import { createContext } from "weapp-tailwindcss/core";
 import { compileAppWxss } from "@/compiler/wxss/compileWxss";
 import { isIncludeAllClassList } from "@/compiler/wxss/globalClassCache";
 import { WeappDevContext } from "@/config/mergedConfig";
+import { ensureFile } from "@/utils/fs/ensureFile";
 import { fsStat } from "@/utils/fs/fs";
 import { wxmlLogger } from "@/utils/logger";
 import { replaceFileExt } from "@/utils/string/replaceFileExt";
@@ -182,7 +183,7 @@ async function copyOrReplaceJson({
     });
 
     if (hasVantNotDefined) {
-      writeFileSync(
+      ensureFile(
         srcJsonPath.replace(new RegExp(`/${srcRoot}/`), `/${outDir}/`),
         JSON.stringify(json, null, 2),
       );
