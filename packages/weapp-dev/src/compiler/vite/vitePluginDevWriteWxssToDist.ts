@@ -32,7 +32,7 @@ export function vitePluginDevWriteWxssToDist(): Plugin {
         });
 
         // 需要转换tw class
-        if (id.endsWith(`app.${wxssExt}`)) {
+        if (id.endsWith(`app.${wxssExt}`) && weappTwCtx) {
           code = (await weappTwCtx.transformWxss(code)).css;
         }
       }

@@ -5,6 +5,7 @@ import type { WeappPageComponentJson } from "@weapp-dev/miniprogram-json-schema"
 import FastGlob from "fast-glob";
 import { createContext } from "weapp-tailwindcss/core";
 
+import { getAssetPrefix, replaceAssetPaths } from "@/compiler/replace";
 import { compileAppWxss } from "@/compiler/wxss/compileWxss";
 import { isIncludeAllClassList } from "@/compiler/wxss/globalClassCache";
 import { WeappDevContext } from "@/config/mergedConfig";
@@ -20,9 +21,9 @@ import { isWxmlFileChanged, wxmlFileChangedInfo, setWxmlCache } from "./cache";
 
 /**
  * 转换所有 WXML 文件
- * @param ctx
+ * @param isProd 是否为生产构建
  */
-export async function transformAllWxmlFiles() {
+export async function transformAllWxmlFiles(isProd: boolean = false) {
   const wxml = FastGlob.globSync(await getAllWxmlGlobPattern(), {
     absolute: true,
   });
@@ -31,25 +32,28 @@ export async function transformAllWxmlFiles() {
     return;
   }
 
-  await transformWxmlFile(wxml);
+  await transformWxmlFile({ wxmlList: wxml, isProd });
 }
 
 // 这个ctx只负责转换wxml的class
-let wxmlCtx: ReturnType<typeof createContext> = null;
+let wxmlCtx: ReturnType<typeof createContext> | null = null;
 
-/**
- * 转换 WXML 文件
- * @param _wxmlList WXML 文件路径或路径列表
- * @returns
- */
-export async function transformWxmlFile(
-  _wxmlList: string | string[],
-  isIncremental: boolean = false,
+export interface TransformWxmlFileOptions {
+  wxmlList: string | string[];
+  isIncremental?: boolean;
   /**
    * json变更，则从wxml获取未注册的组件自动为其注册
    */
-  isJsonChanged: boolean = false,
-) {
+  isJsonChanged?: boolean;
+  isProd?: boolean;
+}
+
+/**
+ * 转换 WXML 文件
+ */
+export async function transformWxmlFile(options: TransformWxmlFileOptions) {
+  const { wxmlList: _wxmlList, isIncremental = false, isJsonChanged = false, isProd = false } = options;
+
   const wxmlExt = (await getWeappFileFinalExtensions()).wxml;
   const singleFile = typeof _wxmlList === "string";
   const wxmlList = singleFile
@@ -111,7 +115,17 @@ export async function transformWxmlFile(
       }
 
       // 转义 WXML tw class
-      const transformed = await wxmlCtx.transformWxml(content);
+      let transformed = await wxmlCtx.transformWxml(content);
+
+      // 替换资源路径
+      const { cdn } = WeappDevContext.config;
+      if (cdn) {
+        const prefix = getAssetPrefix(isProd);
+        if (prefix) {
+          transformed = replaceAssetPaths({ content: transformed, fileType: "wxml", dirs: cdn.dirs, prefix });
+        }
+      }
+
       // 生成对应的 dist 文件路径
       const distPath = wxmlFile.replace(new RegExp(`/${srcRoot}/`), `/${outDir}/`);
 

@@ -1,0 +1,13 @@
+{
+  "name": "asset-replace-demo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "weapp-dev dev",
+    "build": "weapp-dev build"
+  },
+  "dependencies": {
+    "weapp-dev": "workspace:*"
+  }
+}

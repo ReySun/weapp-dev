@@ -56,7 +56,7 @@ export async function buildAllTasks({
       type: BuildTaskTypeEnum.wxml,
       title: "转译 WXML",
       task: async () => {
-        await transformAllWxmlFiles();
+        await transformAllWxmlFiles(isProd);
       },
     },
     {

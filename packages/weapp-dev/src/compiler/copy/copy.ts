@@ -42,9 +42,8 @@ export type CopyOptionsFn = (options: WeappDevConfig) => Awaitable<CopyOptions>;
 type ResolvedCopyEntry = CopyEntry & { from: string; to: string };
 
 export async function copy(options: WeappDevConfig): Promise<void> {
-  if (!options.cwd) {
-    options.cwd = process.cwd();
-  }
+  const cwd = options.cwd || process.cwd();
+  options.cwd = cwd;
   if (!options.copy) return;
 
   const resolved = await resolveCopyEntries(options);
@@ -52,10 +51,7 @@ export async function copy(options: WeappDevConfig): Promise<void> {
     resolved.map(({ from, to, verbose }) => {
       if (verbose) {
         copyLogger.info(
-          `Copying files from ${path.relative(options.cwd, from)} to ${path.relative(
-            options.cwd,
-            to,
-          )}`,
+          `Copying files from ${path.relative(cwd, from)} to ${path.relative(cwd, to)}`,
         );
       }
       return fsCopy(from, to);
@@ -64,9 +60,9 @@ export async function copy(options: WeappDevConfig): Promise<void> {
 }
 
 export async function resolveCopyEntries(options: WeappDevConfig): Promise<ResolvedCopyEntry[]> {
-  if (!options.cwd) {
-    options.cwd = process.cwd();
-  }
+  const cwd = options.cwd || process.cwd();
+  const outDir = options.outDir || "dist";
+  options.cwd = cwd;
 
   const copy = toArray(
     typeof options.copy === "function" ? await options.copy(options) : options.copy,
@@ -84,15 +80,13 @@ export async function resolveCopyEntries(options: WeappDevConfig): Promise<Resol
         const isGlob = from.some((f) => isDynamicPattern(f));
         if (isGlob) {
           from = await glob(from, {
-            cwd: options.cwd,
+            cwd,
             onlyFiles: true,
             expandDirectories: false,
           });
         }
 
-        return from.map((file) =>
-          resolveCopyEntry({ ...entry, from: file }, options.cwd, options.outDir),
-        );
+        return from.map((file) => resolveCopyEntry({ ...entry, from: file }, cwd, outDir));
       }),
     )
   ).flat();

@@ -3,6 +3,7 @@ import type { InlineConfig } from "vite";
 import { mergeConfig } from "vite";
 import { UnifiedViteWeappTailwindcssPlugin } from "weapp-tailwindcss/vite";
 
+import { vitePluginReplaceAssetPaths } from "@/compiler/replace";
 import { WeappDevContext } from "@/config/mergedConfig";
 import type { RolldownOutput } from "@/types/rolldown";
 import { getAllWxssSrcPaths } from "@/weapp/wxss";
@@ -17,23 +18,35 @@ export async function getWxssViteConfig(isProd = false) {
   const { config, viteConfig } = WeappDevContext;
   const { weappTwConfig } = config;
 
-  const buildConfig = mergeConfig(viteConfig, {
-    ...getDefaultViteConfig(
-      FastGlob.globSync([
-        // src下的wxss相关文件
-        ...(await getAllWxssSrcPaths()),
-      ]),
-      isProd,
-    ),
-    plugins: [
-      UnifiedViteWeappTailwindcssPlugin({ ...weappTwConfig, logLevel: "silent" }),
+  // 默认启用 host，允许局域网访问（手机真机预览需要）
+  // 用户可在 vite.config.ts 中显式配置 host: false 来关闭
+  const mergedViteConfig = mergeConfig(
+    {
+      ...viteConfig,
+      server: {
+        ...viteConfig.server,
+        host: viteConfig.server?.host ?? true,
+      },
+    },
+    {
+      ...getDefaultViteConfig(
+        FastGlob.globSync([
+          // src下的wxss相关文件
+          ...(await getAllWxssSrcPaths()),
+        ]),
+        isProd,
+      ),
+      plugins: [
+        UnifiedViteWeappTailwindcssPlugin({ ...weappTwConfig, logLevel: "silent" }),
 
-      vitePluginDevWriteWxssToDist(),
-      vitePluginDevFileWatcher(),
-    ],
-  });
+        vitePluginReplaceAssetPaths(isProd),
+        vitePluginDevWriteWxssToDist(),
+        vitePluginDevFileWatcher(),
+      ],
+    },
+  );
 
-  return buildConfig;
+  return mergedViteConfig;
 }
 
 export function getDefaultViteConfig(input: string[], isProd = false): InlineConfig {

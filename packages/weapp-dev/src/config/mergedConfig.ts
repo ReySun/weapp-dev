@@ -3,20 +3,21 @@ import type { UserConfig as ViteUserConfig, ViteDevServer } from "vite";
 import { loadConfigFromFile } from "vite";
 import { createContext } from "weapp-tailwindcss/core";
 
-import type { WeappDevConfig } from "@/config/weappDevConfig";
+import type { ResolvedWeappDevConfig } from "@/config/weappDevConfig";
 import { DefaultWeappDevConfig } from "@/config/weappDevConfig";
 
 interface IWeappDevCtx {
-  viteConfig?: ViteUserConfig;
+  viteConfig: ViteUserConfig;
   viteDevServer?: ViteDevServer;
-  config: WeappDevConfig;
+  config: ResolvedWeappDevConfig;
   weappTwCtx?: ReturnType<typeof createContext>;
 }
 
 export const WeappDevContext: IWeappDevCtx = {
-  viteConfig: null,
-  viteDevServer: null,
+  viteConfig: {},
+  viteDevServer: undefined,
   config: DefaultWeappDevConfig,
+  weappTwCtx: undefined,
 } as Readonly<IWeappDevCtx>;
 
 export const initWeappDevContext = async () => {
@@ -30,6 +31,13 @@ export const initWeappDevContext = async () => {
 
   // 合并 WeappDev 配置
   WeappDevContext.config = merge({}, DefaultWeappDevConfig, viteConfigFile?.config.weapp || {});
+
+  // 归一化 cdn.dirs，确保均以 "/" 开头
+  if (WeappDevContext.config.cdn?.dirs) {
+    WeappDevContext.config.cdn.dirs = WeappDevContext.config.cdn.dirs.map((d) =>
+      d.startsWith("/") ? d : `/${d}`,
+    );
+  }
 
   // 初始化 weapp tailwindcss 上下文
   WeappDevContext.weappTwCtx = createContext(WeappDevContext.config.weappTwConfig);

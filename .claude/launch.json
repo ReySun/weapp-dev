@@ -1,0 +1,37 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "weapp-dev",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["run", "dev"],
+      "port": null,
+      "cwd": "packages/weapp-dev",
+      "description": "tsdown watch mode for weapp-dev package (no web server)"
+    },
+    {
+      "name": "miniprogram-json-schema-lib",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["run", "dev"],
+      "port": null,
+      "cwd": "packages/miniprogram-json-schema",
+      "description": "tsdown watch mode for miniprogram-json-schema package (no web server)"
+    },
+    {
+      "name": "basic-ts-tw-example",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 3000,
+      "cwd": "examples/basic-ts-tw",
+      "description": "weapp-dev dev server for basic-ts-tw example (Vite on :3000)"
+    },
+    {
+      "name": "asset-replace-example",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 3000,
+      "cwd": "examples/asset-replace",
+      "description": "weapp-dev dev server for asset-replace example (Vite on :3000)"
+    }
+  ]
+}

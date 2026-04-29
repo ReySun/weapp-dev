@@ -95,12 +95,12 @@ async function handleFileEvent(path: string, event: string) {
       }
 
       // wxml系列
-      if (getAllWxmlExts().includes(fileExt)) {
+      if (fileExt && getAllWxmlExts().includes(fileExt)) {
         // wxmlLogger.info(`${event}: ${path}`);
-        await transformWxmlFile(absolutePath, true);
+        await transformWxmlFile({ wxmlList: absolutePath, isIncremental: true });
       }
       // wxss系列
-      else if (WeappCssProcessorList.includes(fileExt as any)) {
+      else if (fileExt && WeappCssProcessorList.includes(fileExt as any)) {
         // wxssLogger.info(`${event}: ${path}`);
         await compileWxss(absolutePath);
       }
@@ -119,7 +119,7 @@ async function handleFileEvent(path: string, event: string) {
       else if (path.endsWith(".json")) {
         // copyLogger.info(`${event}: ${path}`);
         // await copyFile(absolutePath);
-        await transformWxmlFile(absolutePath, true, true);
+        await transformWxmlFile({ wxmlList: absolutePath, isIncremental: true, isJsonChanged: true });
       }
       break;
 

@@ -73,9 +73,11 @@ export function getWxmlFileCachedComponets(file: FilePath) {
  * @param content
  * @returns
  */
+const emptySet = new Set<string>();
+
 export function wxmlFileChangedInfo(file: FilePath, content: string) {
-  const beforeClassList = getWxmlFileCachedClassList(file);
-  const beforeComponents = getWxmlFileCachedComponets(file);
+  const beforeClassList = getWxmlFileCachedClassList(file) || emptySet;
+  const beforeComponents = getWxmlFileCachedComponets(file) || emptySet;
 
   const { classes: afterClassList, components: afterComponents } = extractWxmlTwClasses(content);
 

@@ -1,0 +1,37 @@
+<view class="min-h-screen p-4">
+  <view class="text-center mb-6">
+    <text class="text-2xl font-bold text-white">{{message}}</text>
+  </view>
+  <!-- WXML src 属性替换示例 -->
+  <view class="mb-6">
+    <view class="text-white text-sm mb-2">src 属性替换</view>
+    <image class="banner rounded-lg" src="/assets/images/banner.png" mode="aspectFill"></image>
+  </view>
+  <view class="mb-6 flex items-center gap-4">
+    <image class="avatar" src="/assets/images/avatar.png" mode="aspectFill"></image>
+    <view>
+      <text class="text-white text-base">User Name</text>
+      <view class="text-white text-xs opacity-70">Test user</view>
+    </view>
+  </view>
+  <view class="mb-6">
+    <view class="text-white text-sm mb-2">style url() 替换</view>
+    <view class="w-full h-[200rpx] rounded-lg" style="background-image: url(/assets/images/banner.png); background-size: cover;"></view>
+  </view>
+  <view class="mb-6">
+    <view class="text-white text-sm mb-2">JS 中路径变量</view>
+    <view class="flex gap-4">
+      <view class="flex flex-col items-center">
+        <image class="icon" src="{{iconUrl}}"></image>
+        <text class="text-white text-xs mt-1">Home</text>
+      </view>
+    </view>
+  </view>
+  <view class="p-4 bg-white/10 rounded-lg">
+    <text class="text-white text-sm">
+      预期效果：
+- Dev 模式：路径替换为 http://localhost:3000/assets/...
+- Prod 模式：路径替换为 https://cdn.example.com/assets/...
+    </text>
+  </view>
+</view>

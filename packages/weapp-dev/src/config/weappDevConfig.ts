@@ -6,6 +6,46 @@ import type { WeappPlatform } from "@/weapp/platform";
 import type { WeappCssProcessorKey } from "@/weapp/wxss";
 
 /**
+ * 静态资源 CDN 配置
+ *
+ * 将小程序包内静态资源外置到 CDN，减少主包体积。
+ *
+ * 注意：启用后，weapp.copy 中应尽量避免手动配置复制该目录下的文件，
+ * 框架会自动处理资源复制逻辑（仅在未启用 CDN 替换时复制到 dist）。
+ *
+ * 若启用了 dev.enabled，开发时使用 Vite 本地服务提供资源。
+ * 手机真机预览时，需开启电脑代理并让手机连接代理才能访问 localhost；
+ * 否则应禁用 dev.enabled 并配置 url，让开发环境也走线上 CDN。
+ */
+export interface CdnConfig {
+  /**
+   * 需要外置的静态资源目录，不需要写 `/` 前缀
+   * @example ['assets', 'static']
+   */
+  dirs: string[];
+  /**
+   * 生产环境 CDN 地址前缀
+   * @example 'https://cdn.example.com'
+   */
+  url: string;
+  /**
+   * 开发环境配置
+   */
+  dev?: {
+    /**
+     * 是否启用开发环境路径替换
+     * @default false
+     */
+    enabled?: boolean;
+    /**
+     * 自定义开发前缀，默认使用 viteDevServer 地址
+     * @example 'http://localhost:3000'
+     */
+    prefix?: string;
+  };
+}
+
+/**
  * WeappDev 开发配置
  */
 export interface WeappDevConfig {
@@ -85,6 +125,11 @@ export interface WeappDevConfig {
   npm?: WeappDevNpmConfig;
 
   /**
+   * 静态资源 CDN 配置
+   */
+  cdn?: CdnConfig;
+
+  /**
    * @experimental
    */
   tsdown?: {
@@ -142,7 +187,23 @@ interface WeappDevNpmConfig {
   subPackages?: Record<string, WeappDevNpmDependencies>;
 }
 
-export const DefaultWeappDevConfig: WeappDevConfig = {
+/**
+ * 解析后的 WeappDev 配置（所有带默认值的字段变为必填）
+ */
+export interface ResolvedWeappDevConfig extends WeappDevConfig {
+  srcRoot: string;
+  outDir: string;
+  emptyOutDir: boolean;
+  logLevel: LogLevel;
+  cwd: string;
+  platform: WeappPlatform;
+  format: "esm" | "cjs";
+  cssProcessor: WeappCssProcessorKey;
+  weappTwConfig: NonNullable<WeappDevConfig["weappTwConfig"]>;
+  npm: NonNullable<WeappDevConfig["npm"]>;
+}
+
+export const DefaultWeappDevConfig: ResolvedWeappDevConfig = {
   srcRoot: "src",
   outDir: "dist",
   logLevel: "info",

@@ -1,5 +1,6 @@
 import type { InlineConfig } from "tsdown";
 
+import { vitePluginReplaceAssetPaths } from "@/compiler/replace";
 import { WeappDevContext } from "@/config/mergedConfig";
 import { tsLogger } from "@/utils/logger";
 
@@ -37,7 +38,7 @@ export async function getTsdownConfig(params?: {
     hash: false,
     // 增量更新ts不关心复制文件
     copy: !isIncremental ? (config.copy as any) : undefined,
-    alias: WeappDevContext.viteConfig.resolve.alias as any,
+    alias: WeappDevContext.viteConfig.resolve?.alias as any,
     env: WeappDevContext.viteConfig.env,
     envFile: WeappDevContext.viteConfig.envFile,
     envPrefix: WeappDevContext.viteConfig.envPrefix || ["TSDOWN_", "VITE_"],
@@ -74,6 +75,7 @@ export async function getTsdownConfig(params?: {
       vitePluginDeleteEmptyExport(),
       vitePluginRewritePnpmImport({ unbundle }),
       vitePluginAutoWeappSplitChunk({ unbundle }),
+      vitePluginReplaceAssetPaths(isProd),
     ],
   };
 }
