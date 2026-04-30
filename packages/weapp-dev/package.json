@@ -13,6 +13,11 @@
   ],
   "license": "MIT",
   "author": "ReySun",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RangerPixel/weapp-dev.git",
+    "directory": "packages/weapp-dev"
+  },
   "bin": {
     "wd": "bin/weapp-dev.js",
     "weapp-dev": "bin/weapp-dev.js"

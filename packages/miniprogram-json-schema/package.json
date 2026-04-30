@@ -12,6 +12,11 @@
   ],
   "license": "MIT",
   "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RangerPixel/weapp-dev.git",
+    "directory": "packages/miniprogram-json-schema"
+  },
   "files": [
     "src",
     "dist",
