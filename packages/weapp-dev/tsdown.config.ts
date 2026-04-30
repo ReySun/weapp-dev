@@ -17,7 +17,7 @@ export default defineConfig((options) => {
       tsgo: true,
     },
     minify: !watch,
-    hash: false,
+    hash: !watch,
     unbundle: false,
     deps: {
       skipNodeModulesBundle: true,
