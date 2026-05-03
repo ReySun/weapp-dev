@@ -9,7 +9,8 @@
 - **Tailwind CSS 支持**：内置 `weapp-tailwindcss`，支持 WXML 模板中的 Tailwind 类名自动转义和 WXSS 生成
 - **WXML/WXSS 编译**：完整的小程序模板和样式处理，支持 Less/Scss 等预处理器
 - **npm 依赖支持**：基于 `miniprogram-ci` 自动构建 npm 包
-- **分包支持**：TS 编译时自动识别小程序分包结构，智能代码拆分
+- **分包支持**：TS 编译时自动识别小程序分包结构，伪智能代码拆分
+- **静态资源 CDN**：支持将包内静态资源外置到 CDN，有效减少主包体积
 - **热更新**：开发时提供快速的增量编译和热更新体验
 
 ## 安装
@@ -19,6 +20,8 @@ npm install -D weapp-dev
 # 或
 pnpm add -D weapp-dev
 ```
+
+> `wd` 是 `weapp-dev` 的命令缩写，以下文档中两者可以互换使用。
 
 ## 快速开始
 
@@ -107,13 +110,15 @@ export default defineConfig({
     // 输出格式: 'esm' | 'cjs'
     format: "esm",
 
-    // CSS 预处理器: 'less' | 'scss' | 'sass' | 'styl' | 'stylus' | 'postcss'
-    cssProcessor: "less",
-
-    // 复制文件配置
+    // 复制文件配置。配置与 tsdown 的 copy 配置一致，与 tsdown 不同的是，开发环境会监听文件新增之后如果满足条件则增量复制
+    // 注意：js/wxs/json 内部已处理，配置 copy 时应忽略该类文件
+    // https://tsdown.dev/options/config-file
     copy: ["src/assets", "src/env.d.ts", { from: "src/assets", to: "dist/assets" }],
 
     // weapp-tailwindcss 配置
+    // 如果没有 tw 相关配置或者依赖，则不会启用
+    // https://www.npmjs.com/package/weapp-tailwindcss
+    // https://tw.icebreaker.top/docs/api/options/important
     weappTwConfig: {
       customAttributes: {
         "*": [/[a-z]+Class|[^-\s]+-class|className/],
@@ -125,9 +130,27 @@ export default defineConfig({
       enable: true, // 是否启用 npm 构建
       cache: true, // 是否缓存 npm 构建结果
       subPackages: {
-        // 子包依赖分配
+        // 子包依赖分配：将依赖仅分配到指定子包，主包中将不会存在该依赖
         sub1: { dependencies: ["mp-html"] },
         sub2: { dependencies: ["dayjs"] },
+      },
+    },
+
+    // 静态资源 CDN 配置
+    // 将小程序包内静态资源外置到 CDN，减少包体积
+    cdn: {
+      // 需要外置的静态资源目录，不需要写 `/` 前缀
+      dirs: ["assets", "static"],
+      // 生产环境 CDN 地址前缀
+      url: "https://cdn.example.com",
+      // 开发环境配置
+      dev: {
+        // 是否启用开发环境路径替换，默认 false
+        // 启用后开发时使用 Vite 本地服务提供资源（优先 ip4，其次 localhost）
+        // 手机真机预览时需开启电脑代理；否则应禁用并配置 url 让开发环境也走线上/测试 CDN
+        enabled: false,
+        // 自定义开发前缀，默认使用 viteDevServer 地址
+        prefix: "http://192.168.1.100:3000",
       },
     },
   },
@@ -136,21 +159,28 @@ export default defineConfig({
 
 ### Vite 配置扩展
 
-`weapp-dev` 兼容部分 Vite 配置，可以在同一配置文件中编写标准 Vite 配置（如 `resolve.alias`、`define` 等），这些配置会自动传递给底层构建工具。
+`weapp-dev` 目前仅兼容以下 Vite 配置字段，可直接在配置文件的根层级编写：
+
+| 字段            | 说明                                                           |
+| --------------- | -------------------------------------------------------------- |
+| `env`           | 编译时环境变量，可通过 `import.meta.env` 或 `process.env` 访问 |
+| `envFile`       | 指定 `.env` 文件路径，如 `.env.production`                     |
+| `envPrefix`     | 暴露到客户端源码的环境变量前缀，默认 `['VITE_', 'TSDOWN_']`    |
+| `define`        | 全局变量替换，tsdown.define                                    |
+| `server`        | 开发服务器配置, 如port等                                       |
+| `resolve.alias` | alias默认会使用tsconfig的paths                                 |
+
+**其他 Vite 标准配置字段均不支持**，请勿在配置文件中随意使用，否则可能引发不可预期的行为。
 
 ```ts
 import { defineConfig } from "weapp-dev/config";
-import path from "node:path";
 
 export default defineConfig({
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
-  },
   define: {
     __VERSION__: JSON.stringify("1.0.0"),
   },
+  envPrefix: ["APP_", "VITE_"],
+  envFile: ".env.local",
   weapp: {
     srcRoot: "src",
   },
@@ -196,7 +226,8 @@ project/
 ## 注意事项
 
 - **分包编译尚不稳定**：TypeScript 分包编译功能仍在完善中
-- **unbundle 模式**：启用 `tsdown.unbundle` 后项目较大时可能导致微信开发者工具异常（JS 文件过多引起）
+- **CDN 开发环境**：启用 `cdn.dev.enabled` 后，开发时静态资源走本地 Vite 服务，手机真机预览需开启代理；否则建议禁用 `cdn.dev.enabled` 并配置 `cdn.url`，让开发环境也走线上/测试 CDN 地址
+- **CDN 与 copy 配置**：启用 CDN 后，框架会自动处理资源复制逻辑，`weapp.copy` 中应尽量避免手动配置复制 CDN 目录下的文件
 - **本工具处于 Beta 阶段**，API 和功能可能会发生变化，请谨慎在生产环境中使用
 
 ## 示例项目
