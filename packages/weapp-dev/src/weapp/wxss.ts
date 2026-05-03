@@ -1,6 +1,7 @@
 import FastGlob from "fast-glob";
 
 import { WeappDevContext } from "@/config/mergedConfig";
+import { fsStat } from "@/utils/fs/fs";
 
 import { getWeappFileFinalExtensions } from "./platform";
 
@@ -27,13 +28,22 @@ export const getAppWxssDistPath = async () => {
   return `${outDir}/app.${(await getWeappFileFinalExtensions()).wxss}`;
 };
 
+let appSrcWxssPath = "";
+
 /**
  * 获取 WXSS 文件源路径
  * @returns
  */
 export const getAppWxssSrcPath = async () => {
-  const { cssProcessor, srcRoot } = WeappDevContext.config;
-  return `${srcRoot}/app.${cssProcessor}`;
+  if (appSrcWxssPath) {
+    return appSrcWxssPath;
+  }
+
+  const { srcRoot } = WeappDevContext.config;
+  const paths = WeappCssProcessorList.map((ext) => `${srcRoot}/app.${ext}`);
+  const stats = await Promise.all(paths.map(fsStat));
+  appSrcWxssPath = paths.find((_, i) => stats[i]) || "";
+  return appSrcWxssPath;
 };
 
 /**

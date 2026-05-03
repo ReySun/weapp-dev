@@ -37,7 +37,9 @@ export async function getWxssViteConfig(isProd = false) {
         isProd,
       ),
       plugins: [
-        UnifiedViteWeappTailwindcssPlugin({ ...weappTwConfig, logLevel: "silent" }),
+        weappTwConfig.enable
+          ? UnifiedViteWeappTailwindcssPlugin({ ...weappTwConfig, logLevel: "silent" })
+          : undefined,
 
         vitePluginReplaceAssetPaths(isProd),
         vitePluginDevWriteWxssToDist(),

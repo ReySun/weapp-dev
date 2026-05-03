@@ -3,21 +3,20 @@ import type { createContext } from "weapp-tailwindcss/core";
 
 import type { CopyOptions, CopyOptionsFn } from "@/compiler/copy/copy";
 import type { WeappPlatform } from "@/weapp/platform";
-import type { WeappCssProcessorKey } from "@/weapp/wxss";
 
 /**
  * 静态资源 CDN 配置
  *
- * 将小程序包内静态资源外置到 CDN，减少主包体积。
+ * 将小程序包内静态资源外置到 CDN，减少包体积。
  *
- * 注意：启用后，weapp.copy 中应尽量避免手动配置复制该目录下的文件，
+ * 注意：启用该配置后，weapp.copy 中应尽量避免手动配置复制该目录下的文件，
  * 框架会自动处理资源复制逻辑（仅在未启用 CDN 替换时复制到 dist）。
  *
- * 若启用了 dev.enabled，开发时使用 Vite 本地服务提供资源。
- * 手机真机预览时，需开启电脑代理并让手机连接代理才能访问 localhost；
- * 否则应禁用 dev.enabled 并配置 url，让开发环境也走线上 CDN。
+ * 若启用了 dev.enabled，开发时使用 Vite 本地服务提供资源，优先使用ip4，其次是localhost。
+ * 手机真机预览时，需开启电脑代理并让手机连接代理才能访问cdn的静态资源地址
+ * 否则应禁用 dev.enabled 并配置 url，让开发环境也走线上/测试环境 CDN 地址。
  */
-export interface CdnConfig {
+export interface WeappDevCdnConfig {
   /**
    * 需要外置的静态资源目录，不需要写 `/` 前缀
    * @example ['assets', 'static']
@@ -44,6 +43,11 @@ export interface CdnConfig {
     prefix?: string;
   };
 }
+
+type WeappTwConfig = Parameters<typeof createContext>[0];
+export type WeappDevTwConfig = WeappTwConfig & {
+  enable?: boolean;
+};
 
 /**
  * WeappDev 开发配置
@@ -82,31 +86,31 @@ export interface WeappDevConfig {
   cwd?: string;
 
   /**
-   * WXML 转换中间件
-   */
-  transformWxmlMiddleware?: (code: string) => string;
-
-  /**
    * 平台
    * @default 'weapp'
+   *
+   * "alipay" | "tt" 暂未测试过，暂时别用。
    */
   platform?: WeappPlatform;
 
   /**
    * 输出格式
+   *
+   * 推荐使用esm，打包之后选择微信开发者工具的“es6转es5”
+   *
    * @default 'esm'
+   *
    */
   format?: "esm" | "cjs";
 
   /**
-   * WeappDev CSS 处理器 less scss sass styl stylus postcss
-   *
-   * @default 'less'
-   */
-  cssProcessor?: WeappCssProcessorKey;
-
-  /**
    * Copy files to another directory.
+   *
+   * 复制文件配置，配置与tsdown的copy配置一致，与tsdown不同的是，开发环境会监听文件新增之后如果满足条件则增量复制
+   *
+   * 注意：js/wxs/json内部已处理，配置copy复制文件时应当忽略该类文件
+   *
+   * https://tsdown.dev/options/config-file
    * @example
    * ```ts
    * [
@@ -120,14 +124,21 @@ export interface WeappDevConfig {
    */
   copy?: CopyOptions | CopyOptionsFn;
 
-  weappTwConfig?: Parameters<typeof createContext>[0];
+  /**
+   * weapp-tailwindcss配置。如果你使用tw的话，可以自定义它
+   *
+   * https://www.npmjs.com/package/weapp-tailwindcss
+   *
+   * https://tw.icebreaker.top/docs/api/options/important
+   */
+  weappTwConfig?: WeappDevTwConfig;
 
   npm?: WeappDevNpmConfig;
 
   /**
    * 静态资源 CDN 配置
    */
-  cdn?: CdnConfig;
+  cdn?: WeappDevCdnConfig;
 
   /**
    * @experimental
@@ -198,7 +209,6 @@ export interface ResolvedWeappDevConfig extends WeappDevConfig {
   cwd: string;
   platform: WeappPlatform;
   format: "esm" | "cjs";
-  cssProcessor: WeappCssProcessorKey;
   weappTwConfig: NonNullable<WeappDevConfig["weappTwConfig"]>;
   npm: NonNullable<WeappDevConfig["npm"]>;
 }
@@ -210,7 +220,6 @@ export const DefaultWeappDevConfig: ResolvedWeappDevConfig = {
   platform: "weapp",
   format: "esm",
   cwd: process.cwd(),
-  cssProcessor: "less",
   emptyOutDir: true,
   weappTwConfig: {
     customAttributes: {

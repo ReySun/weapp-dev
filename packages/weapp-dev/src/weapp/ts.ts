@@ -10,12 +10,12 @@ export function getEntryTsFiles() {
   const { srcRoot } = WeappDevContext.config;
   const appJson = getAppJson();
 
-  const subPackages = appJson.subPackages || appJson.subpackages || [];
+  const subPackages = appJson?.subPackages || appJson?.subpackages || [];
 
   const isSubPackageEntry = (file: string) => {
     return subPackages
       .filter((sub) => sub.root && sub.entry)
-      .map((sub) => `${srcRoot}/${sub.root}/${sub.entry.replace(/\.js$/, ".ts")}`)
+      .map((sub) => `${srcRoot}/${sub.root}/${sub.entry!.replace(/\.js$/, ".ts")}`)
       .includes(file);
   };
 

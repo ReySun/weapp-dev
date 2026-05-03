@@ -28,7 +28,7 @@ export async function compileWxss(input: string, showLog = true) {
   }
   await viteDevServer.transformRequest(input);
 
-  if (showLog) {
+  if (showLog && start) {
     const duration = Date.now() - start;
     wxssLogger.success(`${path.basename(input)}编译完成 (${duration}ms)`);
   }
@@ -38,7 +38,11 @@ export async function compileWxss(input: string, showLog = true) {
  * 快捷编译 app.wxss，wxml文件更新时可能需要更新它。
  */
 export async function compileAppWxss() {
-  await compileWxss(await getAppWxssSrcPath());
+  const appSrcWxssPath = await getAppWxssSrcPath();
+  if (!appSrcWxssPath) {
+    return;
+  }
+  await compileWxss(appSrcWxssPath);
 }
 
 /**

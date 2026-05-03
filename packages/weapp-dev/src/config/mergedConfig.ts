@@ -5,6 +5,7 @@ import { createContext } from "weapp-tailwindcss/core";
 
 import type { ResolvedWeappDevConfig } from "@/config/weappDevConfig";
 import { DefaultWeappDevConfig } from "@/config/weappDevConfig";
+import { isTailwindcssEnabled } from "@/weapp/tw";
 
 interface IWeappDevCtx {
   viteConfig: ViteUserConfig;
@@ -40,7 +41,12 @@ export const initWeappDevContext = async () => {
   }
 
   // 初始化 weapp tailwindcss 上下文
-  WeappDevContext.weappTwCtx = createContext(WeappDevContext.config.weappTwConfig);
+  if (isTailwindcssEnabled()) {
+    WeappDevContext.weappTwCtx = createContext(WeappDevContext.config.weappTwConfig);
+    WeappDevContext.config.weappTwConfig.enable = true;
+  } else {
+    WeappDevContext.config.weappTwConfig.enable = false;
+  }
 
   return WeappDevContext;
 };

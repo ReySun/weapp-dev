@@ -52,7 +52,12 @@ export interface TransformWxmlFileOptions {
  * 转换 WXML 文件
  */
 export async function transformWxmlFile(options: TransformWxmlFileOptions) {
-  const { wxmlList: _wxmlList, isIncremental = false, isJsonChanged = false, isProd = false } = options;
+  const {
+    wxmlList: _wxmlList,
+    isIncremental = false,
+    isJsonChanged = false,
+    isProd = false,
+  } = options;
 
   const wxmlExt = (await getWeappFileFinalExtensions()).wxml;
   const singleFile = typeof _wxmlList === "string";
@@ -65,7 +70,8 @@ export async function transformWxmlFile(options: TransformWxmlFileOptions) {
   if (!wxmlList || !wxmlList.length) {
     return;
   }
-  if (!wxmlCtx) {
+
+  if (weappTwConfig.enable && !wxmlCtx) {
     wxmlCtx = createContext({
       ...weappTwConfig,
       // 不需要cssEntries。加上cssEntries会导致wxml转换巨慢，影响开发体验。
@@ -115,14 +121,22 @@ export async function transformWxmlFile(options: TransformWxmlFileOptions) {
       }
 
       // 转义 WXML tw class
-      let transformed = await wxmlCtx.transformWxml(content);
+      let transformed = content;
+      if (weappTwConfig.enable && wxmlCtx) {
+        transformed = await wxmlCtx!.transformWxml(content);
+      }
 
       // 替换资源路径
       const { cdn } = WeappDevContext.config;
       if (cdn) {
         const prefix = getAssetPrefix(isProd);
         if (prefix) {
-          transformed = replaceAssetPaths({ content: transformed, fileType: "wxml", dirs: cdn.dirs, prefix });
+          transformed = replaceAssetPaths({
+            content: transformed,
+            fileType: "wxml",
+            dirs: cdn.dirs,
+            prefix,
+          });
         }
       }
 
@@ -189,10 +203,10 @@ async function copyOrReplaceJson({
     // TODO 加入自定义components
     let hasVantNotDefined = false;
     vantComponents.forEach((component) => {
-      if (!json.usingComponents[component]) {
+      if (!json.usingComponents![component]) {
         hasVantNotDefined = true;
         // TODO 加入其他三方组件库
-        json.usingComponents[component] = `@vant/weapp/${component.replace("van-", "")}/index`;
+        json.usingComponents![component] = `@vant/weapp/${component.replace("van-", "")}/index`;
       }
     });
 
