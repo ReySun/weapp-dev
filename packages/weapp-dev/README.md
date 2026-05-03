@@ -36,7 +36,6 @@ export default defineConfig({
   weapp: {
     srcRoot: "src", // app.json 所在目录，默认 'src'
     outDir: "dist", // 输出目录，默认 'dist'
-    cssProcessor: "less", // CSS 预处理器，默认 'less'
   },
 });
 ```
@@ -155,6 +154,22 @@ export default defineConfig({
     },
   },
 });
+```
+
+### CSS 预处理器
+
+`weapp-dev` 的 WXSS 编译基于 Vite 的样式管道，因此 **Vite 支持的所有 CSS 预处理器均可直接使用**。Vite 会根据文件扩展名自动识别对应的预处理器，只需安装依赖即可，无需在配置中额外声明。
+
+| 文件扩展名 | 需安装的依赖 |
+| ---------- | ------------ |
+| `.less`    | `less`       |
+| `.scss` / `.sass` | `sass` |
+| `.styl` / `.stylus` | `stylus` |
+| `.css`     | 已内置，无需额外安装 |
+
+```bash
+# 以 Less 为例：安装后直接在项目中使用 .less 文件即可
+pnpm add -D less
 ```
 
 ### Vite 配置扩展

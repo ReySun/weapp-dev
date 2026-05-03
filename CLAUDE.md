@@ -74,16 +74,15 @@ Config is loaded from the user's `vite.config.ts` via Vite's `loadConfigFromFile
 
 ```ts
 // vite.config.ts
-import { defineConfig } from 'weapp-dev/config'
+import { defineConfig } from "weapp-dev/config";
 
 export default defineConfig({
   weapp: {
-    srcRoot: 'src',      // app.json directory
-    outDir: 'dist',
-    cssProcessor: 'less',
+    srcRoot: "src", // app.json directory
+    outDir: "dist",
     // ...
-  }
-})
+  },
+});
 ```
 
 The merged config lives in `WeappDevContext` (`config/mergedConfig.ts`), which also holds the Vite config and `weapp-tailwindcss` context.
@@ -99,6 +98,7 @@ TS compilation uses `tsdown` (a rolldown-based TypeScript bundler) with three cu
 ### WXSS Compiler (Vite-based)
 
 WXSS compilation uses a Vite build server (`compiler/vite/viteDevServer.ts`) with:
+
 - `UnifiedViteWeappTailwindcssPlugin` from `weapp-tailwindcss/vite`
 - `preserveModules: true` to maintain file structure
 - `assetFileNames` renames `.css` to `.wxss`

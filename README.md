@@ -14,6 +14,10 @@
 
 所以我们做了 `weapp-dev`——**把构建拆成独立阶段（NPM → WXSS → WXML → Copy → TS），按需执行，互不阻塞**。改样式只编译样式，改模板只处理模板，TS 只有在代码层变更时才介入。既保留 Vite 的现代化编译体验，又拿回 Gulp 时代"秒级反馈"的快感。
 
+## 关于本项目
+
+本项目部分代码及 README 文档由 AI 辅助共同开发完成。如果在使用中发现问题或有改进建议，欢迎提交 [Issue](https://github.com/sonofmagic/weapp-dev/issues) 反馈，也欢迎 Fork 仓库一起参与维护。
+
 ## Packages
 
 | Package                                                                    | 说明                                                    | 版本                                                                                                                                        |
