@@ -21,8 +21,6 @@ npm install -D weapp-dev
 pnpm add -D weapp-dev
 ```
 
-> `wd` 是 `weapp-dev` 的命令缩写，以下文档中两者可以互换使用。
-
 ## 快速开始
 
 ### 1. 创建配置文件
@@ -44,8 +42,6 @@ export default defineConfig({
 
 ```bash
 npx weapp-dev dev
-# 或
-npx wd dev
 ```
 
 启动开发服务器，监听文件变更并自动重新编译。
@@ -54,8 +50,6 @@ npx wd dev
 
 ```bash
 npx weapp-dev build
-# 或
-npx wd build
 ```
 
 执行全量构建，输出到 `dist` 目录。
@@ -71,15 +65,15 @@ npx wd build
 
 ```bash
 # 构建全部
-wd build
+weapp-dev build
 
 # 仅构建指定类型（ts | wxss | wxml | copy | npm）
-wd build ts
-wd build ts wxss
+weapp-dev build ts
+weapp-dev build ts wxss
 
 # 清空输出目录后构建
-wd build --empty
-wd dev --empty
+weapp-dev build --empty
+weapp-dev dev --empty
 ```
 
 ## 配置选项
@@ -160,12 +154,12 @@ export default defineConfig({
 
 `weapp-dev` 的 WXSS 编译基于 Vite 的样式管道，因此 **Vite 支持的所有 CSS 预处理器均可直接使用**。Vite 会根据文件扩展名自动识别对应的预处理器，只需安装依赖即可，无需在配置中额外声明。
 
-| 文件扩展名 | 需安装的依赖 |
-| ---------- | ------------ |
-| `.less`    | `less`       |
-| `.scss` / `.sass` | `sass` |
-| `.styl` / `.stylus` | `stylus` |
-| `.css`     | 已内置，无需额外安装 |
+| 文件扩展名          | 需安装的依赖         |
+| ------------------- | -------------------- |
+| `.less`             | `less`               |
+| `.scss` / `.sass`   | `sass`               |
+| `.styl` / `.stylus` | `stylus`             |
+| `.css`              | 已内置，无需额外安装 |
 
 ```bash
 # 以 Less 为例：安装后直接在项目中使用 .less 文件即可
