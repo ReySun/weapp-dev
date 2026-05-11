@@ -1,6 +1,4 @@
-import ci from "miniprogram-ci";
-
-export type BuildNpmResult = Awaited<ReturnType<typeof ci.packNpmManually>>;
+export type BuildNpmResult = any;
 
 import { statSync } from "node:fs";
 
@@ -23,6 +21,7 @@ export async function buildWeappAllNpm(params?: {
   emptyDir?: boolean;
   showLog?: boolean;
 }): Promise<void> {
+  const ci = (await import("miniprogram-ci")).default;
   const { emptyDir, showLog = false } = params || {};
   const { outDir, npm } = WeappDevContext.config;
 

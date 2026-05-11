@@ -1,11 +1,10 @@
 import path, { resolve } from "node:path";
 
 import { debounce } from "lodash-es";
-import { fsRemove } from "tsdown/internal";
 import type { Plugin } from "vite";
 
 import { WeappDevContext } from "@/config/mergedConfig";
-import { fsStat } from "@/utils/fs/fs";
+import { fsRemove, fsStat } from "@/utils/fs/fs";
 import { copyLogger, tsLogger, deleteLogger } from "@/utils/logger";
 import { getWeappFileFinalExtensions } from "@/weapp/platform";
 import { getAllWxmlExts } from "@/weapp/wxml";

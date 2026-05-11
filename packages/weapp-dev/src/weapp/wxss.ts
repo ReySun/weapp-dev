@@ -1,4 +1,4 @@
-import FastGlob from "fast-glob";
+import { globSync } from "tinyglobby";
 
 import { WeappDevContext } from "@/config/mergedConfig";
 import { fsStat } from "@/utils/fs/fs";
@@ -52,6 +52,6 @@ export const getAppWxssSrcPath = async () => {
  */
 export const getAllWxssSrcPaths = async () => {
   const { srcRoot } = WeappDevContext.config;
-  const styles = FastGlob.globSync([`${srcRoot}/**/*.{${WeappCssProcessorList.join(",")}}`]);
+  const styles = globSync([`${srcRoot}/**/*.{${WeappCssProcessorList.join(",")}}`]);
   return styles;
 };

@@ -1,6 +1,6 @@
 import { existsSync } from "node:fs";
 
-import FastGlob from "fast-glob";
+import { globSync } from "tinyglobby";
 
 import { WeappDevContext } from "@/config/mergedConfig";
 
@@ -11,7 +11,7 @@ import { getWeappFileFinalExtensions } from "./platform";
  */
 export async function getCompOrPageJson() {
   const { srcRoot } = WeappDevContext.config;
-  const allJsonFiles = FastGlob.globSync([`${srcRoot}/**/*.json`]);
+  const allJsonFiles = globSync([`${srcRoot}/**/*.json`]);
 
   const wxmlExt = (await getWeappFileFinalExtensions()).wxml;
 

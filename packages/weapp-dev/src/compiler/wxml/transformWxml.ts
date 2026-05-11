@@ -2,8 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, basename } from "node:path";
 
 import type { WeappPageComponentJson } from "@weapp-dev/miniprogram-json-schema";
-import FastGlob from "fast-glob";
-import { createContext } from "weapp-tailwindcss/core";
+import { globSync } from "tinyglobby";
 
 import { getAssetPrefix, replaceAssetPaths } from "@/compiler/replace";
 import { compileAppWxss } from "@/compiler/wxss/compileWxss";
@@ -24,7 +23,7 @@ import { isWxmlFileChanged, wxmlFileChangedInfo, setWxmlCache } from "./cache";
  * @param isProd 是否为生产构建
  */
 export async function transformAllWxmlFiles(isProd: boolean = false) {
-  const wxml = FastGlob.globSync(await getAllWxmlGlobPattern(), {
+  const wxml = globSync(await getAllWxmlGlobPattern(), {
     absolute: true,
   });
 
@@ -36,7 +35,7 @@ export async function transformAllWxmlFiles(isProd: boolean = false) {
 }
 
 // 这个ctx只负责转换wxml的class
-let wxmlCtx: ReturnType<typeof createContext> | null = null;
+let wxmlCtx: any | null = null;
 
 export interface TransformWxmlFileOptions {
   wxmlList: string | string[];
@@ -72,6 +71,7 @@ export async function transformWxmlFile(options: TransformWxmlFileOptions) {
   }
 
   if (weappTwConfig.enable && !wxmlCtx) {
+    const { createContext } = await import("weapp-tailwindcss/core");
     wxmlCtx = createContext({
       ...weappTwConfig,
       // 不需要cssEntries。加上cssEntries会导致wxml转换巨慢，影响开发体验。

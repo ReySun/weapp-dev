@@ -78,7 +78,8 @@
   },
   "dependencies": {
     "@weapp-core/escape": "^7.0.0",
-    "fast-glob": "catalog:",
+    "cac": "^6.7.14",
+    "consola": "^3.4.2",
     "listr2": "^10.2.1",
     "lodash-es": "catalog:",
     "miniprogram-ci": "catalog:",

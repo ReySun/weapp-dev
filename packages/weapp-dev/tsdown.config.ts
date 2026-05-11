@@ -19,9 +19,6 @@ export default defineConfig((options) => {
     minify: !watch,
     hash: !watch,
     unbundle: false,
-    deps: {
-      skipNodeModulesBundle: true,
-    },
     publint: true,
   };
 });

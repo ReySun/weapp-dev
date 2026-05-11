@@ -1,7 +1,5 @@
 import { merge } from "lodash-es";
 import type { UserConfig as ViteUserConfig, ViteDevServer } from "vite";
-import { loadConfigFromFile } from "vite";
-import { createContext } from "weapp-tailwindcss/core";
 
 import type { ResolvedWeappDevConfig } from "@/config/weappDevConfig";
 import { DefaultWeappDevConfig } from "@/config/weappDevConfig";
@@ -11,7 +9,7 @@ interface IWeappDevCtx {
   viteConfig: ViteUserConfig;
   viteDevServer?: ViteDevServer;
   config: ResolvedWeappDevConfig;
-  weappTwCtx?: ReturnType<typeof createContext>;
+  weappTwCtx?: any;
 }
 
 export const WeappDevContext: IWeappDevCtx = {
@@ -22,6 +20,7 @@ export const WeappDevContext: IWeappDevCtx = {
 } as Readonly<IWeappDevCtx>;
 
 export const initWeappDevContext = async () => {
+  const { loadConfigFromFile } = await import("vite");
   // 加载 vite 配置
   const viteConfigFile = await loadConfigFromFile({
     command: "build",
@@ -42,6 +41,7 @@ export const initWeappDevContext = async () => {
 
   // 初始化 weapp tailwindcss 上下文
   if (isTailwindcssEnabled()) {
+    const { createContext } = await import("weapp-tailwindcss/core");
     WeappDevContext.weappTwCtx = createContext(WeappDevContext.config.weappTwConfig);
     WeappDevContext.config.weappTwConfig.enable = true;
   } else {

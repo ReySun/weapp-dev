@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import path from "node:path";
 
-import FastGlob from "fast-glob";
+import { globSync } from "tinyglobby";
 
 import { WeappDevContext } from "@/config/mergedConfig";
 import { getAppJson } from "@/weapp/appJson";
@@ -20,7 +20,7 @@ export function getEntryTsFiles() {
   };
 
   // console.time("glob tsAllFiles");
-  const tsAllFiles = FastGlob.globSync([`${srcRoot}/**/*.ts`, `!${srcRoot}/**/*.d.ts`]);
+  const tsAllFiles = globSync([`${srcRoot}/**/*.ts`, `!${srcRoot}/**/*.d.ts`]);
   // console.timeEnd("glob tsAllFiles");
 
   const entryTsFIles = tsAllFiles.filter((file) => {

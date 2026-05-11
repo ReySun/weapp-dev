@@ -1,5 +1,4 @@
 import type { ViteDevServer } from "vite";
-import { createServer } from "vite";
 
 import { getDevServerUrl } from "@/compiler/replace";
 import { WeappDevContext } from "@/config/mergedConfig";
@@ -13,6 +12,7 @@ let viteDevServerPromise: Promise<ViteDevServer> | null = null;
  * 创建 vite 开发服务器并启动监听
  */
 export async function createViteDevServer() {
+  const { createServer } = await import("vite");
   const buildConfig = await getWxssViteConfig();
   const server = await createServer(buildConfig);
   await server.listen();

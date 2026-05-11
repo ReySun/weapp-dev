@@ -1,5 +1,3 @@
-import { build } from "tsdown";
-
 import { tsLogger } from "@/utils/logger";
 import { getEntryTsFiles } from "@/weapp/ts";
 import { taskManager } from "@/worker/taskManager";
@@ -14,6 +12,7 @@ import { resetBuildCollectedCache } from "./tsdown/vitePluginAutoWeappSplitChunk
  * @param input
  */
 export async function compileTs(input: string) {
+  const { build } = await import("tsdown");
   const start = Date.now();
 
   await build({
@@ -35,6 +34,7 @@ export async function compileAllTs(isProd: boolean = false) {
     await stop();
   }
 
+  const { build } = await import("tsdown");
   const entryTsFiles = getEntryTsFiles();
 
   let resolveReady!: () => void;

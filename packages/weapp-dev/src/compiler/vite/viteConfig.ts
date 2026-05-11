@@ -1,7 +1,5 @@
-import FastGlob from "fast-glob";
 import type { InlineConfig } from "vite";
-import { mergeConfig } from "vite";
-import { UnifiedViteWeappTailwindcssPlugin } from "weapp-tailwindcss/vite";
+import { globSync } from "tinyglobby";
 
 import { vitePluginReplaceAssetPaths } from "@/compiler/replace";
 import { WeappDevContext } from "@/config/mergedConfig";
@@ -15,6 +13,8 @@ import { vitePluginDevWriteWxssToDist } from "./vitePluginDevWriteWxssToDist";
  * 获取 wxss Vite 配置
  */
 export async function getWxssViteConfig(isProd = false) {
+  const { mergeConfig } = await import("vite");
+  const { UnifiedViteWeappTailwindcssPlugin } = await import("weapp-tailwindcss/vite");
   const { config, viteConfig } = WeappDevContext;
   const { weappTwConfig } = config;
 
@@ -30,7 +30,7 @@ export async function getWxssViteConfig(isProd = false) {
     },
     {
       ...getDefaultViteConfig(
-        FastGlob.globSync([
+        globSync([
           // src下的wxss相关文件
           ...(await getAllWxssSrcPaths()),
         ]),
