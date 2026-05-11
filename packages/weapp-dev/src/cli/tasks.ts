@@ -1,4 +1,4 @@
-import { Listr, color } from "listr2";
+import { Listr, color, type PresetTimer } from "listr2";
 
 import { copyAssets } from "@/compiler/copy/copyAssets";
 import { buildWeappAllNpm } from "@/compiler/npm/buildNpm";
@@ -11,10 +11,10 @@ import { resolve } from "@/utils/fs/resolve";
 
 import { BuildTaskTypeEnum, type BuildOptions } from "./constants";
 
-const listr2TimerFormat = {
+const listr2TimerFormat: PresetTimer = {
   condition: true,
   field: (duration: number) => `${duration}ms`,
-  format: () => color.dim,
+  format: () => color.dim as any,
 };
 
 export async function initWeappDev(options: BuildOptions) {

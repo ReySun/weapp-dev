@@ -1,6 +1,6 @@
 {
   "name": "weapp-dev",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "小程序原生开发增强工具",
   "keywords": [
     "miniprogram",
@@ -15,7 +15,7 @@
   "author": "ReySun",
   "repository": {
     "type": "git",
-    "url": "https://github.com/RangerPixel/weapp-dev.git",
+    "url": "git+https://github.com/RangerPixel/weapp-dev.git",
     "directory": "packages/weapp-dev"
   },
   "bin": {
@@ -98,6 +98,9 @@
     "@weapp-dev/miniprogram-json-schema": "workspace:*",
     "miniprogram-api-typings": "catalog:",
     "publint": "catalog:"
+  },
+  "engines": {
+    "node": ">=24"
   },
   "packageManager": "pnpm@10.24.0"
 }
