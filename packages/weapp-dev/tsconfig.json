@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     // "baseUrl": ".",
-    "types": ["miniprogram-api-typings"],
+    "types": ["node", "miniprogram-api-typings"],
     "target": "es2022",
     "incremental": true,
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
@@ -13,5 +13,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["./src/**/*"]
+  "include": ["./src/**/*", "tsdown.config.ts"]
 }
