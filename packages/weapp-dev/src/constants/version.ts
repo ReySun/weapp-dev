@@ -1,1 +1,1 @@
-export const WEABB_DEV_VERSION = "0.0.1";
+export const WEABB_DEV_VERSION = process.env.WEAPP_DEV_VERSION as string;
