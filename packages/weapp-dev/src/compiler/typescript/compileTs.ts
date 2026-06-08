@@ -24,7 +24,7 @@ export async function compileTs(input: string) {
   tsLogger.success(`编译 TS 完成 (${duration}ms)`);
 }
 
-let stop: () => Promise<void> | null = null;
+let stop: (() => Promise<void>) | null = null;
 
 /**
  * 编译所有 TS 文件
@@ -50,7 +50,6 @@ export async function compileAllTs(isProd: boolean = false) {
 
   if (!isProd && bundles.length > 0) {
     stop = async () => {
-      // @ts-expect-error
       const asyncDispose: typeof Symbol.asyncDispose =
         Symbol.asyncDispose || Symbol.for("Symbol.asyncDispose");
       resetBuildCollectedCache();
