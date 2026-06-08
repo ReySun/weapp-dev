@@ -5,8 +5,7 @@ import { initCommand } from "../initCommand";
 
 export function registerServeCommand(cli: CAC) {
   cli
-    .command("[root]", "start dev server")
-    .alias("serve")
+    .command("serve [root]", "start dev server")
     .alias("dev")
     .option("-e, --empty", "empty output directory before build")
     .action(async (_root: string, options: BuildOptions) => {

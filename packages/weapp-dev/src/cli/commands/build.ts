@@ -9,10 +9,10 @@ export function registerBuildCommand(cli: CAC) {
       "build [...types]",
       `build weapp project (types: ${Object.values(BuildTaskTypeEnum).join(" | ")})`,
     )
-    .usage("wd build [...types]")
-    .example("wd build ts")
-    .example("wd build ts wxss")
-    .example("wd build (build all)")
+    .usage("weapp-dev build [...types]")
+    .example("weapp-dev build")
+    .example("weapp-dev build ts")
+    .example("weapp-dev build ts wxss")
     .option("-e, --empty", "empty output directory before build")
     .action(async (types: BuildTaskTypeEnum[] | undefined, options: BuildOptions) => {
       await initCommand({
