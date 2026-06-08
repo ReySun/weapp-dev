@@ -12,6 +12,8 @@ export function getWeappPagePath() {
   const { srcRoot } = WeappDevContext.config;
   const appJson = getAppJson();
 
+  if (!appJson) return [];
+
   const subPackages = appJson.subPackages || appJson.subpackages || [];
 
   const mainPages = (appJson.pages || []).map((page) => path.join(srcRoot, page));
