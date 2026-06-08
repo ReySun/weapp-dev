@@ -1,5 +1,5 @@
-import { readFileSync } from "fs";
-import { platform } from "os";
+import { readFileSync } from "node:fs";
+import { platform } from "node:os";
 
 import { compile } from "json-schema-to-typescript-lite";
 import { format } from "oxfmt";

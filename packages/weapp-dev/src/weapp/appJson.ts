@@ -1,4 +1,4 @@
-import { readFileSync, existsSync } from "fs";
+import { readFileSync, existsSync } from "node:fs";
 
 import type { WeappAppJson } from "@weapp-dev/miniprogram-json-schema";
 
