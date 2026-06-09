@@ -15,18 +15,52 @@ export function projectConfigJsonExists(): boolean {
 }
 
 /**
+ * 或缺 project.config.json 的内容，如果文件不存在则返回 null
+ * @returns
+ */
+export function getProjectConfigJson(): WeappProjectConfigJson | null {
+  const projectConfigPath = resolve("project.config.json");
+  if (!existsSync(projectConfigPath)) {
+    return null;
+  }
+
+  const content = readFileSync(projectConfigPath, "utf-8");
+  try {
+    return JSON.parse(content) as WeappProjectConfigJson;
+  } catch {
+    throw new Error("解析 project.config.json 失败，请确保该文件是有效的 JSON 格式。");
+  }
+}
+
+/**
+ * 从 project.config.json 中获取 miniprogramRoot 或 srcMiniprogramRoot 的值
+ * @returns
+ */
+export function getProjectConfigJsonRoot() {
+  const projectConfig = getProjectConfigJson();
+
+  if (!projectConfig) {
+    return;
+  }
+
+  // 替换掉路径末尾的斜杠，确保返回的路径不以斜杠结尾
+  return (
+    projectConfig.miniprogramRoot ||
+    projectConfig.srcMiniprogramRoot ||
+    "miniprogram"
+  ).replace(/\/?$/, "");
+}
+
+/**
  * 检查 project.config.json 中的 miniprogramRoot/srcMiniprogramRoot 配置是否与 weapp-dev 的 outDir 配置匹配，如果不匹配则输出警告提示
  * @returns
  */
 export function checkMiniprogramRoot() {
-  if (!projectConfigJsonExists()) {
+  const projectConfig = getProjectConfigJson();
+
+  if (!projectConfig) {
     return;
   }
-
-  const projectConfigPath = resolve("project.config.json");
-  const projectConfig: WeappProjectConfigJson = JSON.parse(
-    readFileSync(resolve(projectConfigPath), "utf-8"),
-  );
 
   const outDir = WeappDevContext.config.outDir;
   const rootKeys = ["miniprogramRoot", "srcMiniprogramRoot"] as const;

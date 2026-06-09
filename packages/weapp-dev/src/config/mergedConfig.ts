@@ -3,6 +3,9 @@ import type { UserConfig as ViteUserConfig, ViteDevServer } from "vite";
 
 import type { ResolvedWeappDevConfig } from "@/config/weappDevConfig";
 import { DefaultWeappDevConfig } from "@/config/weappDevConfig";
+import { isDirectory } from "@/utils/fs/isDirectory";
+import { resolve } from "@/utils/fs/resolve";
+import { getProjectConfigJsonRoot } from "@/weapp/projectConfigJson";
 import { isTailwindcssEnabled } from "@/weapp/tw";
 
 interface IWeappDevCtx {
@@ -31,6 +34,16 @@ export const initWeappDevContext = async () => {
 
   // 合并 WeappDev 配置
   WeappDevContext.config = merge({}, DefaultWeappDevConfig, viteConfigFile?.config.weapp || {});
+
+  // 处理src: 如果用户配置的srcRoot是默认值"src"，但项目根目录下没有"src"文件夹而有"miniprogram"文件夹，则自动切换srcRoot为"miniprogram"
+  if (WeappDevContext.config.srcRoot === "src" && !isDirectory(resolve("src"))) {
+    const projectConfigSrc = getProjectConfigJsonRoot();
+    if (projectConfigSrc && isDirectory(resolve(projectConfigSrc))) {
+      WeappDevContext.config.srcRoot = projectConfigSrc;
+    } else {
+      WeappDevContext.config.srcRoot = "miniprogram";
+    }
+  }
 
   // 归一化 cdn.dirs，确保均以 "/" 开头
   if (WeappDevContext.config.cdn?.dirs) {
