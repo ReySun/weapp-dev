@@ -10,8 +10,6 @@
 
 说来话长。现在维护着一个原生 TypeScript 微信小程序，早期用自定义 Gulp 管理构建流程，后来引入了 `weapp-tailwindcss` 处理样式。Gulp 的增量更新在当时还行，但随着项目膨胀，首次编译 TS 的时间越来越长，而它对小程序分包的支持也相对薄弱。
 
-之后遇见了 [`weapp-vite`](https://github.com/weapp-vite/weapp-vite)，接入后最满意是它对原生小程序的各种支持。但用久了发现项目大起来之后，**每次修改 WXML 或 Less，都会触发全量重新编译（TS + WXML + Less）**，哪怕只是给按钮加了一个 `bindtap`，也需要等待十几秒。想回退 Gulp，又舍不得 Vite 生态对 TS 和 Tailwind 的支持。
-
 所以做了 `weapp-dev`——**把构建拆成独立阶段（NPM → WXSS → WXML → Copy → TS），按需执行，互不阻塞**。改样式只编译样式，改模板只处理模板，TS 只有重新编译ts。
 
 ## 关于本项目
