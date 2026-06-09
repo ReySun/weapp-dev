@@ -1,7 +1,7 @@
 import { Listr, color, type PresetTimer } from "listr2";
 
 import { copyAssets } from "@/compiler/copy/copyAssets";
-import { buildWeappAllNpm } from "@/compiler/npm/buildNpm";
+import { buildWeappAllNpm, hasNpmToBeBuild } from "@/compiler/npm/buildNpm";
 import { compileAllTs } from "@/compiler/typescript/compileTs";
 import { transformAllWxmlFiles } from "@/compiler/wxml/transformWxml";
 import { compileAllWxss } from "@/compiler/wxss/compileWxss";
@@ -36,12 +36,18 @@ export async function buildAllTasks({
   const taskConfigList: Array<{
     type: BuildTaskTypeEnum;
     title: string;
-    task: () => Promise<void>;
+    task: (ctx: unknown, t: { skip: (message: string) => void }) => Promise<void>;
   }> = [
     {
       type: BuildTaskTypeEnum.npm,
       title: "构建 NPM",
-      task: async () => {
+      task: async (_ctx, _task) => {
+        const hasNpmBuild = await hasNpmToBeBuild();
+
+        if (!hasNpmBuild) {
+          _task?.skip("构建 NPM（已跳过）");
+          return;
+        }
         await buildWeappAllNpm();
       },
     },
@@ -61,7 +67,7 @@ export async function buildAllTasks({
     },
     {
       type: BuildTaskTypeEnum.copy,
-      title: "复制 JSON/JS",
+      title: "复制 JSON/JS/WXSS",
       task: async () => {
         await copyAssets();
       },

@@ -1,6 +1,6 @@
 export type BuildNpmResult = any;
 
-import { statSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 
 import { WeappDevContext } from "@/config/mergedConfig";
 import { WEABB_DEV_VERSION } from "@/constants/version";
@@ -17,11 +17,37 @@ import {
   setWeappNpmBuildFileCache,
 } from "./npmCache";
 
+/**
+ * 是否需要构建npm
+ * 需要满足以下条件：
+ * 1. npm.enable 开启
+ * 2. package.json 中存在 dependencies 字段，且有依赖项
+ * @returns
+ */
+export async function hasNpmToBeBuild(): Promise<boolean> {
+  try {
+    const { npm } = WeappDevContext.config;
+    if (!npm?.enable) {
+      return false;
+    }
+
+    const packageJsonPath = resolve("package.json");
+    const isPkgExists = existsSync(packageJsonPath);
+    if (!isPkgExists) {
+      return false;
+    }
+
+    const pkg = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
+    return pkg.dependencies && Object.keys(pkg.dependencies).length > 0;
+  } catch {
+    return false;
+  }
+}
+
 export async function buildWeappAllNpm(params?: {
   emptyDir?: boolean;
   showLog?: boolean;
 }): Promise<void> {
-  const ci = (await import("miniprogram-ci")).default;
   const { emptyDir, showLog = false } = params || {};
   const { outDir, npm } = WeappDevContext.config;
 
@@ -48,6 +74,7 @@ export async function buildWeappAllNpm(params?: {
     if (showLog) {
       npmLogger.info("开始构建npm");
     }
+    const ci = (await import("miniprogram-ci")).default;
     await ci.packNpmManually({
       packageJsonPath,
       miniprogramNpmDistDir: `./${outDir}/`,
