@@ -4,6 +4,7 @@ import { WeappDevContext } from "@/config/mergedConfig";
 import { getNodeModulesCacheDir } from "@/constants/pkg";
 import { ensureFile } from "@/utils/fs/ensureFile";
 import { fsCopy, fsRemove, fsStat } from "@/utils/fs/fs";
+import { isDirectory } from "@/utils/fs/isDirectory";
 import { resolve } from "@/utils/fs/resolve";
 import { weappNpmDir } from "@/weapp/platform";
 
@@ -43,6 +44,9 @@ export function getWeappNpmDirs() {
  */
 export async function setWeappNpmBuildFileCache(cacheKey: string) {
   const { outDir } = WeappDevContext.config;
+  if (!isDirectory(resolve(outDir, weappNpmDir))) {
+    return;
+  }
   await fsCopy(resolve(outDir, weappNpmDir), resolve(getNodeModulesCacheDir(), npmCacheDir));
 
   await setCachedKey(cacheKey);
