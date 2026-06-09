@@ -1,5 +1,7 @@
 import ora from "ora";
 
+import { checkMiniprogramRoot } from "@/weapp/projectConfigJson";
+
 import type { BuildTaskTypeEnum } from "./constants";
 
 export async function initCommand({
@@ -24,6 +26,7 @@ export async function initCommand({
       isProd,
       buildTaskType,
     });
+    checkMiniprogramRoot();
   } catch {
     spinner.fail("weapp dev 初始化失败");
   }
