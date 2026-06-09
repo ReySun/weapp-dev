@@ -2,7 +2,7 @@
 
 > 微信小程序原生开发增强工具。保留 Vite 的 TypeScript / 样式编译能力，同时实现真正的增量构建——改 WXML 不用等 TS 重编。
 
-> 顺便说一句，如果是新开项目，不是特别在意性能和代码体积的话，可以优先考虑uniapp/tarojs/weapp-vite的wevu哦，他们已经做的够好了。
+> 顺便说一句，如果是新开项目，不是特别在意性能和代码体积的话，可以优先考虑uniapp/tarojs/weapp-vite，他们已经做的够好了。
 
 ## 为什么做它？
 
@@ -13,8 +13,6 @@
 之后遇见了 [`weapp-vite`](https://github.com/weapp-vite/weapp-vite)，接入后最满意是它对原生小程序的各种支持。但用久了发现项目大起来之后，**每次修改 WXML 或 Less，都会触发全量重新编译（TS + WXML + Less）**，哪怕只是给按钮加了一个 `bindtap`，也需要等待十几秒。想回退 Gulp，又舍不得 Vite 生态对 TS 和 Tailwind 的支持。
 
 所以做了 `weapp-dev`——**把构建拆成独立阶段（NPM → WXSS → WXML → Copy → TS），按需执行，互不阻塞**。改样式只编译样式，改模板只处理模板，TS 只有重新编译ts。
-
-最后更多的是想试试tsdown/rolldown/oxc的威力，学习为主。
 
 ## 关于本项目
 
