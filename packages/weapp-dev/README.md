@@ -38,38 +38,45 @@ export default defineConfig({
 });
 ```
 
-### 2. 开发模式
+### 2. 配置 package.json scripts
+
+```json
+{
+  "scripts": {
+    "dev": "weapp-dev dev",
+    "build": "weapp-dev build"
+  }
+}
+```
+
+### 3. 开发模式
 
 ```bash
-npx weapp-dev dev
+pnpm dev
 ```
 
 启动开发服务器，监听文件变更并自动重新编译。
 
-### 3. 生产构建
+### 4. 生产构建
 
 ```bash
-npx weapp-dev build
+pnpm build
 ```
 
 执行全量构建，输出到 `dist` 目录。
 
 ## CLI 命令
 
-| 命令                            | 别名  | 描述           |
-| ------------------------------- | ----- | -------------- |
-| `weapp-dev` / `weapp-dev serve` | `dev` | 启动开发服务器 |
-| `weapp-dev build`               | -     | 构建生产版本   |
+| 命令              | 别名    | 描述           |
+| ----------------- | ------- | -------------- |
+| `weapp-dev dev`   | `serve` | 启动开发服务器 |
+| `weapp-dev build` | -       | 构建生产版本   |
 
 ### 构建选项
 
 ```bash
 # 构建全部
 weapp-dev build
-
-# 仅构建指定类型（ts | wxss | wxml | copy | npm）
-weapp-dev build ts
-weapp-dev build ts wxss
 
 # 清空输出目录后构建
 weapp-dev build --empty
@@ -100,7 +107,8 @@ export default defineConfig({
     // 平台
     platform: "weapp",
 
-    // 输出格式: 'esm' | 'cjs'
+    // 输出格式: 'esm' | 'cjs'，建议保持默认 esm 以获得更好的 tree-shaking
+    // 在微信开发者工具中开启「增强编译」或「ES6 转 ES5」即可兼容
     format: "esm",
 
     // 复制文件配置。配置与 tsdown 的 copy 配置一致，与 tsdown 不同的是，开发环境会监听文件新增之后如果满足条件则增量复制
@@ -203,7 +211,7 @@ export default defineConfig({
 1. **NPM 构建** — 使用 `miniprogram-ci` 构建 npm 依赖
 2. **WXSS 编译** — 通过 Vite + `weapp-tailwindcss/vite` 编译样式，输出 `.wxss`
 3. **WXML 转译** — 使用 `weapp-tailwindcss/core` 转义 Tailwind 类名；自动检测 Vant 组件并注册到 page.json
-4. **资源复制** — 复制 JSON/JS 等静态资源
+4. **资源复制** — 复制 JSON/JS/WXS 等静态资源
 5. **TS 编译** — 使用 `tsdown` 编译 TypeScript，支持自动分包代码拆分
 
 ## 技术栈
@@ -217,6 +225,7 @@ export default defineConfig({
 
 ```
 project/
+├── project.config.json     # 小程序项目配置文件（必须存在，与 src 同级）
 ├── src/                    # 源码目录（可配置 srcRoot）
 │   ├── app.ts
 │   ├── app.json
@@ -234,7 +243,6 @@ project/
 
 ## 注意事项
 
-- **分包编译尚不稳定**：TypeScript 分包编译功能仍在完善中
 - **CDN 开发环境**：启用 `cdn.dev.enabled` 后，开发时静态资源走本地 Vite 服务，手机真机预览需开启代理；否则建议禁用 `cdn.dev.enabled` 并配置 `cdn.url`，让开发环境也走线上/测试 CDN 地址
 - **CDN 与 copy 配置**：启用 CDN 后，框架会自动处理资源复制逻辑，`weapp.copy` 中应尽量避免手动配置复制 CDN 目录下的文件
 - **本工具处于 Beta 阶段**，API 和功能可能会发生变化，请谨慎在生产环境中使用
