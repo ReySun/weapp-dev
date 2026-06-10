@@ -118,7 +118,11 @@ async function handleFileEvent(path: string, event: string) {
       else if (path.endsWith(".json")) {
         // copyLogger.info(`${event}: ${path}`);
         // await copyFile(absolutePath);
-        await transformWxmlFile({ wxmlList: absolutePath, isIncremental: true, isJsonChanged: true });
+        await transformWxmlFile({
+          wxmlList: absolutePath,
+          isIncremental: true,
+          isJsonChanged: true,
+        });
       }
       break;
 

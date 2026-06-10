@@ -85,7 +85,7 @@ export async function transformWxmlFile(options: TransformWxmlFileOptions) {
       const content = readFileSync(wxmlFile, "utf-8");
 
       // 文件未修改，直接跳过
-      if (!isWxmlFileChanged(wxmlFile, content)) {
+      if (!isJsonChanged && !isWxmlFileChanged(wxmlFile, content)) {
         continue;
       }
 
