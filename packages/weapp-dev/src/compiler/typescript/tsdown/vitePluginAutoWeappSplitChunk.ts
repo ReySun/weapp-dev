@@ -6,7 +6,11 @@ import type { Plugin } from "vite";
 import { WeappDevContext } from "@/config/mergedConfig";
 
 let buildStartTime: number | null = null;
-const graph = new Map<string, { importers: string[]; importedIds: string[] }>();
+interface IGraphInfo {
+  importers: string[];
+  importedIds: string[];
+}
+const graph = new Map<string, IGraphInfo>();
 const moduleToPkg = new Map<string, Set<string>>();
 const entryLikeSet = new Set<string>();
 
@@ -40,6 +44,10 @@ export function vitePluginAutoWeappSplitChunk({ unbundle = false } = {}): Plugin
       }
       for (const id of this.getModuleIds()) {
         const info = this.getModuleInfo(id);
+
+        if (!info) {
+          continue;
+        }
 
         graph.set(id, {
           importedIds: info.importedIds,
@@ -112,7 +120,7 @@ export function vitePluginAutoWeappSplitChunk({ unbundle = false } = {}): Plugin
   };
 }
 
-export function isEntryLike(id, info) {
+export function isEntryLike(id: string, info: IGraphInfo) {
   if (!id.endsWith(".ts")) return false;
 
   // Page / Component
@@ -125,7 +133,7 @@ export function isEntryLike(id, info) {
   return false;
 }
 
-function getPackageName(id) {
+function getPackageName(id: string) {
   const rel = path.relative(WeappDevContext.config.srcRoot, id);
   const [top] = rel.split(path.sep);
 
@@ -133,7 +141,7 @@ function getPackageName(id) {
   return top;
 }
 
-function collect(id, pkg, visited = new Set()) {
+function collect(id: string, pkg: string, visited = new Set()) {
   if (visited.has(id)) return;
   visited.add(id);
 
@@ -141,7 +149,7 @@ function collect(id, pkg, visited = new Set()) {
     moduleToPkg.set(id, new Set());
   }
 
-  moduleToPkg.get(id).add(pkg);
+  moduleToPkg.get(id)?.add(pkg);
 
   const deps = graph.get(id)?.importedIds || [];
   deps.forEach((dep) => collect(dep, pkg, visited));
