@@ -13,11 +13,15 @@
     "lint:fix": "oxlint --fix",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
-    "release": "tsx scripts/release.ts"
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "changeset publish"
   },
   "devDependencies": {
-    "@types/node": "25.6.0",
-    "oxfmt": "^0.53.0",
+    "@changesets/changelog-github": "^0.7.0",
+    "@changesets/cli": "^2.27.11",
+    "@types/node": "25.9.3",
+    "oxfmt": "^0.54.0",
     "oxlint": "^1.68.0",
     "tsx": "catalog:"
   },
