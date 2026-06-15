@@ -43,7 +43,9 @@ export function vitePluginDevFileWatcher(): Plugin {
           getDebounceHandler(path, "add")();
         });
         server.watcher.on("change", (path) => {
-          if (!isSrcRoot(path)) {
+          // src 外部、项目内的 TS 依赖，后续会注册到 vite watcher
+          // src外的非ts文件变化直接跳过
+          if (!path.endsWith(".ts") && !isSrcRoot(path)) {
             return;
           }
           getDebounceHandler(path, "change")();

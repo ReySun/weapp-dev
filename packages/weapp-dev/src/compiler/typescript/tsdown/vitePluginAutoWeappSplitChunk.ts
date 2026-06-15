@@ -13,6 +13,8 @@ interface IGraphInfo {
 const graph = new Map<string, IGraphInfo>();
 const moduleToPkg = new Map<string, Set<string>>();
 const entryLikeSet = new Set<string>();
+// src 外部被引用的 TS 文件（如根目录 packages 下的源码）
+const externalTsFiles = new Set<string>();
 
 export function setBuildStartTime(startTime: number) {
   buildStartTime = startTime;
@@ -21,11 +23,20 @@ export function getBuildStartTime() {
   return buildStartTime;
 }
 
+export function getExternalTsFiles() {
+  return Array.from(externalTsFiles);
+}
+
+export function clearExternalTsFiles() {
+  externalTsFiles.clear();
+}
+
 export function resetBuildCollectedCache() {
   buildStartTime = null;
   graph.clear();
   moduleToPkg.clear();
   entryLikeSet.clear();
+  clearExternalTsFiles();
 }
 
 export function vitePluginAutoWeappSplitChunk({ unbundle = false } = {}): Plugin {
@@ -42,6 +53,8 @@ export function vitePluginAutoWeappSplitChunk({ unbundle = false } = {}): Plugin
       if (unbundle) {
         return;
       }
+      const srcRoot = path.resolve(WeappDevContext.config.cwd, WeappDevContext.config.srcRoot);
+
       for (const id of this.getModuleIds()) {
         const info = this.getModuleInfo(id);
 
@@ -53,6 +66,17 @@ export function vitePluginAutoWeappSplitChunk({ unbundle = false } = {}): Plugin
           importedIds: info.importedIds,
           importers: info.importers,
         });
+
+        // 收集 src 外部、项目内的 TS 依赖，用于后续注册到 vite watcher
+        if (
+          id.endsWith(".ts") &&
+          !id.includes("node_modules") &&
+          !id.startsWith(srcRoot + path.sep) &&
+          // npm包不算绝对路径，不搜集
+          path.isAbsolute(id)
+        ) {
+          externalTsFiles.add(id);
+        }
       }
 
       // 1️⃣ 找 entry-like

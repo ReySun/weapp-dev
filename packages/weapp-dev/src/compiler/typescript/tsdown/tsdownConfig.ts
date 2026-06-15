@@ -2,12 +2,15 @@ import type { InlineConfig } from "tsdown";
 
 import { vitePluginReplaceAssetPaths } from "@/compiler/replace";
 import { WeappDevContext } from "@/config/mergedConfig";
+import { fsExists } from "@/utils/fs/fs";
 import { tsLogger } from "@/utils/logger";
 
 import { copyDistNodeModules, deleteDistNodeModules } from "./hooks";
 import {
   vitePluginAutoWeappSplitChunk,
   getBuildStartTime,
+  getExternalTsFiles,
+  clearExternalTsFiles,
   resetBuildCollectedCache,
 } from "./vitePluginAutoWeappSplitChunk";
 import { vitePluginDeleteEmptyExport } from "./vitePluginDeleteEmptyExport";
@@ -80,7 +83,18 @@ export async function getTsdownConfig(params?: {
         } catch {}
       },
     },
-    onSuccess() {
+    async onSuccess() {
+      // src 外部、项目内的 TS 依赖，用于后续注册到 vite watcher，以便外部ts变更时也能change触发重编译
+      const server = WeappDevContext.viteDevServer;
+      if (server) {
+        for (const file of getExternalTsFiles()) {
+          if (await fsExists(file)) {
+            server.watcher.add(file);
+          }
+        }
+        clearExternalTsFiles();
+      }
+
       const buildStartTime = getBuildStartTime();
       if (buildStartTime) {
         if (buildStartTime && !isFirstWatchSuccess) {
