@@ -21,7 +21,7 @@ export function getAppJson(): WeappAppJson | null {
   }
 
   if (!app) {
-    console.warn("未找到 app.json 文件");
+    // console.warn("未找到 app.json 文件");
     return app;
   }
 

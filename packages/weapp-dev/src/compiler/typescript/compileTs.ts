@@ -4,7 +4,6 @@ import { taskManager } from "@/worker/taskManager";
 import { WorkerTaskEnum } from "@/worker/types";
 
 import { getTsdownConfig } from "./tsdown/tsdownConfig";
-import { resetBuildCollectedCache } from "./tsdown/vitePluginAutoWeappSplitChunk";
 
 /**
  * 编译单个TS 文件
@@ -24,41 +23,39 @@ export async function compileTs(input: string) {
   tsLogger.success(`编译 TS 完成 (${duration}ms)`);
 }
 
-let stop: (() => Promise<void>) | null = null;
+// 是否正在编译所有 TS 文件，避免重复编译
+let isBuildAllTs = false;
 
 /**
  * 编译所有 TS 文件
  */
 export async function compileAllTs(isProd: boolean = false) {
-  if (stop) {
-    await stop();
+  if (isBuildAllTs) {
+    return;
   }
 
   const { build } = await import("tsdown");
   const entryTsFiles = getEntryTsFiles();
 
-  let resolveReady!: () => void;
-
-  const ready = new Promise<void>((resolve) => {
-    resolveReady = resolve;
-  });
-
-  const bundles = await build({
-    entry: entryTsFiles,
-    ...(await getTsdownConfig({ isProd, onFirstWatchSuccess: resolveReady })),
-  });
-
-  if (!isProd && bundles.length > 0) {
-    stop = async () => {
-      const asyncDispose: typeof Symbol.asyncDispose =
-        Symbol.asyncDispose || Symbol.for("Symbol.asyncDispose");
-      resetBuildCollectedCache();
-
-      await Promise.all(bundles.map(async (i) => await i?.[asyncDispose]?.()));
-    };
+  if (!entryTsFiles || entryTsFiles.length === 0) {
+    return;
   }
 
-  return await ready;
+  try {
+    isBuildAllTs = true;
+
+    await build({
+      entry: entryTsFiles,
+      ...(await getTsdownConfig({
+        isProd,
+        // onFirstWatchSuccess: resolveReady,
+      })),
+    });
+
+    isBuildAllTs = false;
+  } catch {
+    isBuildAllTs = false;
+  }
 }
 
 /**

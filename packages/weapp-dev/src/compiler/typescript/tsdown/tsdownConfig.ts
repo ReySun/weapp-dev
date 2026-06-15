@@ -24,9 +24,30 @@ export async function getTsdownConfig(params?: {
 
   const unbundle = config.tsdown?.unbundle ?? false;
 
+  const viteAlias = WeappDevContext.viteConfig.resolve?.alias;
+  const tsdownAlias = Array.isArray(viteAlias)
+    ? viteAlias.reduce<Record<string, string>>((acc, entry) => {
+        if (
+          typeof entry === "object" &&
+          entry !== null &&
+          "find" in entry &&
+          "replacement" in entry
+        ) {
+          if (typeof entry.find === "string") {
+            acc[entry.find] = entry.replacement;
+          } else {
+            tsLogger.warn(
+              `tsdown 不支持正则形式的 alias（find: ${entry.find}），已跳过。详情请参考: https://tsdown.dev/reference/api/Interface.InlineConfig#alias`,
+            );
+          }
+        }
+        return acc;
+      }, {})
+    : viteAlias;
+  // console.log(tsdownAlias);
   return {
-    logLevel: !isProd ? "silent" : "warn",
-    watch: !isProd,
+    logLevel: !isProd ? "error" : "error",
+    watch: false,
     report: isProd,
     dts: false,
     clean: false,
@@ -38,7 +59,7 @@ export async function getTsdownConfig(params?: {
     hash: false,
     // 增量更新ts不关心复制文件
     copy: !isIncremental ? (config.copy as any) : undefined,
-    alias: WeappDevContext.viteConfig.resolve?.alias as any,
+    alias: tsdownAlias as any,
     env: WeappDevContext.viteConfig.env,
     envFile: WeappDevContext.viteConfig.envFile,
     envPrefix: WeappDevContext.viteConfig.envPrefix || ["TSDOWN_", "VITE_"],
@@ -61,8 +82,10 @@ export async function getTsdownConfig(params?: {
     },
     onSuccess() {
       const buildStartTime = getBuildStartTime();
-      if (buildStartTime && !isFirstWatchSuccess) {
-        tsLogger.success(`TS编译完成 (${Date.now() - buildStartTime}ms)`);
+      if (buildStartTime) {
+        if (buildStartTime && !isFirstWatchSuccess) {
+          tsLogger.success(`TS编译完成 (${Date.now() - buildStartTime}ms)`);
+        }
         resetBuildCollectedCache();
       }
 
