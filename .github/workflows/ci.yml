@@ -37,4 +37,4 @@ jobs:
 
       - run: pnpm fmt:check
 
-      - run: pnpm -r build
+      - run: pnpm --filter "./packages/*" build

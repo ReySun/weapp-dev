@@ -41,6 +41,8 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - run: pnpm --filter "./packages/*" build
+
       - uses: changesets/action@v1
         with:
           version: pnpm changeset version
