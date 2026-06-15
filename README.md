@@ -14,7 +14,7 @@
 
 ## 关于本项目
 
-本项目部分代码及 README 文档由 AI 辅助共同开发完成。如果在使用中发现问题或有改进建议，欢迎提交 [Issue](https://github.com/RangerPixel/weapp-dev/issues) 反馈，也欢迎 Fork 仓库一起参与维护。
+本项目部分代码及 README 文档由 AI 辅助共同开发完成。如果在使用中发现问题或有改进建议，欢迎提交 [Issue](https://github.com/ReySun/weapp-dev/issues) 反馈，也欢迎 Fork 仓库一起参与维护。
 
 ## Packages
 

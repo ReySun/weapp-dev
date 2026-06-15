@@ -14,7 +14,7 @@
   "author": "",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/RangerPixel/weapp-dev.git",
+    "url": "git+https://github.com/ReySun/weapp-dev.git",
     "directory": "packages/miniprogram-json-schema"
   },
   "files": [
