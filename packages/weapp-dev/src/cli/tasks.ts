@@ -12,7 +12,6 @@ import { deleteDir } from "@/utils/fs/deleteDir";
 import { resolve } from "@/utils/fs/resolve";
 import { getEntryTsFiles } from "@/weapp/ts";
 import { getAllWxmlGlobPattern } from "@/weapp/wxml";
-import { getAllWxssSrcPaths } from "@/weapp/wxss";
 
 import { BuildTaskTypeEnum, type BuildOptions } from "./constants";
 
@@ -60,11 +59,6 @@ export async function buildAllTasks({
       type: BuildTaskTypeEnum.wxss,
       title: "编译 WXSS",
       task: async (_ctx, _task) => {
-        const styles = await getAllWxssSrcPaths();
-        if (!styles.length) {
-          _task?.skip("编译 WXSS（已跳过）");
-          return;
-        }
         await compileAllWxss(isProd);
       },
     },

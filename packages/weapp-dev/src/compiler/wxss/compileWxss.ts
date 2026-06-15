@@ -52,6 +52,10 @@ export async function compileAllWxss(isProd: boolean = false) {
   const styles = await getAllWxssSrcPaths();
 
   if (!isProd) {
+    if (styles.length === 0) {
+      // 不用await，主要目的是保持dev background持续运行
+      ensureGetViteDevServer();
+    }
     // const limit = pLimit(2000); // 👈 推荐 4~8
     await Promise.all(styles.map(async (input) => await compileWxss(input, false)));
   } else {
