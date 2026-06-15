@@ -73,7 +73,12 @@ export function vitePluginReplaceAssetPaths(isProd: boolean): Plugin {
           const fileName = chunk.fileName || "";
           if (fileName.endsWith(".wxss")) {
             const source = chunk.source.toString();
-            const newSource = replaceAssetPaths({ content: source, fileType: "wxss", dirs, prefix });
+            const newSource = replaceAssetPaths({
+              content: source,
+              fileType: "wxss",
+              dirs,
+              prefix,
+            });
             if (newSource !== source) {
               chunk.source = newSource;
             }

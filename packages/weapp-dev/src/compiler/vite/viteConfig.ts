@@ -1,5 +1,5 @@
-import type { InlineConfig } from "vite";
 import { globSync } from "tinyglobby";
+import type { InlineConfig } from "vite";
 
 import { vitePluginReplaceAssetPaths } from "@/compiler/replace";
 import { WeappDevContext } from "@/config/mergedConfig";

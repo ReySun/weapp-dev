@@ -1,4 +1,4 @@
-import { existsSync, statSync } from 'node:fs';
+import { existsSync, statSync } from "node:fs";
 
 export function isDirectory(path: string): boolean {
   try {
