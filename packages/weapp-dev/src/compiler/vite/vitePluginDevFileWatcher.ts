@@ -1,4 +1,4 @@
-import path, { resolve } from "node:path";
+import path, { relative, resolve } from "node:path";
 
 import { debounce } from "lodash-es";
 import type { Plugin } from "vite";
@@ -28,16 +28,30 @@ export function vitePluginDevFileWatcher(): Plugin {
       // 不监听dist下的文件变化
       server.watcher.unwatch(`${path.resolve(process.cwd(), WeappDevContext.config.outDir)}/**`);
 
+      // 判断是 src 目录下的文件变化
+      const isSrcRoot = (_path: string) => {
+        return _path.startsWith(`${path.resolve(process.cwd(), WeappDevContext.config.srcRoot)}`);
+      };
+
       server.watcher.once("ready", () => {
         console.log("监听就绪...");
 
         server.watcher.on("add", (path) => {
+          if (!isSrcRoot(path)) {
+            return;
+          }
           getDebounceHandler(path, "add")();
         });
         server.watcher.on("change", (path) => {
+          if (!isSrcRoot(path)) {
+            return;
+          }
           getDebounceHandler(path, "change")();
         });
         server.watcher.on("unlink", (path) => {
+          if (!isSrcRoot(path)) {
+            return;
+          }
           getDebounceHandler(path, "unlink")();
         });
       });
@@ -52,6 +66,7 @@ const debounceHandlers = new Map<string, ReturnType<typeof debounce>>();
 function getDebounceHandler(path: string, event: string) {
   const key = `${path}:${event}`;
   if (!debounceHandlers.has(key)) {
+    console.log(`${event} -> ${relative(process.cwd(), path)}`);
     debounceHandlers.set(
       key,
       debounce(
