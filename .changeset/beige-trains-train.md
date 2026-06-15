@@ -2,6 +2,8 @@
 "weapp-dev": patch
 ---
 
+本次更新包含以下内容：
+
 - 增强 vite 文件监视功能，支持外部 TS 依赖变更触发重编译
 - dev 模式下 vite 始终保持 devServer 状态
 - 优化 dev 模式文件监听逻辑，取消 tsdown watch 配置
