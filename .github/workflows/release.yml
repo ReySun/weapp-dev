@@ -5,52 +5,49 @@ on:
     branches:
       - main
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  pnpm_config_registry: https://registry.npmjs.org
+  pnpm_config_provenance: true
+  NPM_CONFIG_PROVENANCE: true
+
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: release-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   release:
-    name: Release
     runs-on: ubuntu-latest
+
     permissions:
       contents: write
       pull-requests: write
       id-token: write
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v4
         with:
           version: 10.24.0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 24
-          registry-url: https://registry.npmjs.org/
           cache: pnpm
+          registry-url: https://registry.npmjs.org
 
-      - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile
 
-      - name: Build Packages
-        run: pnpm -r build
-
-      - name: Create Release Pull Request or Publish to npm
-        id: changesets
-        uses: changesets/action@v1
+      - uses: changesets/action@v1
         with:
-          publish: pnpm changeset publish
           version: pnpm changeset version
-          commit: "chore: version packages"
+          publish: pnpm changeset publish
           title: "chore: version packages"
+          commit: "chore: version packages"
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
